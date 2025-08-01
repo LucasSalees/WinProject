@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
 import com.project.system.dto.StandardResponseDTO;
+import com.project.system.entity.Department;
 import com.project.system.entity.Occupation;
 import com.project.system.entity.Project;
 import com.project.system.repositories.DepartmentRepository;
@@ -127,7 +128,11 @@ public class DirectorProjectService {
         }
     }
     
-    public List<Occupation> searchProjects(String filter) {
+    public List<Project> searchProjects(String filter) {
         return projectRepository.searchByFilter(filter);
+    }
+    
+    public List<Department> searchDepartmens(String filter) {
+        return departmentRepository.searchByFilter(filter);
     }
 }
