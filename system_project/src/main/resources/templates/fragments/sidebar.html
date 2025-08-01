@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- Fragmento principal da Sidebar -->
+<div th:fragment="sidebar">
+    <aside id="sidebar" class="sidebar sidebar-closed">
+        <div class="sidebar-header">
+            <h2 class="sidebar-title">Menu de Navegação</h2>
+        </div>
+        <div class="sidebar-menu">
+            <nav>
+                <ul class="sidebar-nav">
+                
+                    <!-- ------------------------------- -->
+                    <!-- Perfil do usuário (sempre visível) -->
+                    <li>
+                        <div class="sidebar-item-profile">
+                            <img class="sidebar-avatar" th:src="@{'/user-photos/' + ${LoggedUser.photoPath}}"
+                                onerror="this.onerror=null; this.src='/images/DefaultAvatar.png';"
+                                alt="Foto do usuário" />
+                            <div class="user-info">
+                                <span class="user-name" th:text="${LoggedUser.userName}">Nome</span>
+                                <span class="user-email" th:text="${LoggedUser.userEmail}">Email</span>
+                            </div>
+                        </div>
+                    </li>
+                    <!-- ------------------------------- -->
+                    <!-- Página inicial (sempre visível) -->
+                    
+					<!-- ------------------------------- -->
+                    <!-- Página inicial (sempre visível) -->
+                    <li>
+                        <a href="/home" class="sidebar-item active">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                <polyline points="9 22 9 12 15 12 15 22" />
+                            </svg>
+                            Página inicial
+                        </a>
+                    </li>
+                    <!-- ------------------------------- -->
+                    <!-- Página inicial (sempre visível) -->
+					
+					<!-- ----------------------- -->
+                    <!-- Perfil (sempre visível) -->
+                    <li th:if="${#authorization.expression('isAuthenticated()')}">
+                        <a th:href="@{${urlPrefix} + '/users/profile'}" class="sidebar-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <circle cx="12" cy="7" r="4" />
+                                <path d="M20 21v-2a4 4 0 0 0-3-3.87" />
+                                <path d="M4 21v-2a4 4 0 0 1 3-3.87" />
+                            </svg>
+                            Meu Perfil
+                        </a>
+                    </li>
+                    <!-- ----------------------- -->
+                    <!-- Perfil (sempre visível) -->
+
+                    <!-- ----------------------------------- -->
+                    <!-- Menu Auxiliares (apenas para ADMIN) -->
+                    <li th:if="${#authorization.expression('hasRole(''ADMIN'')') and 
+					             (#authorization.expression('hasAuthority(''USER_LIST'') or hasAuthority(''DEPARTMENT_LIST'') or hasAuthority(''OCCUPATION_LIST'') or hasAuthority(''FUNCTION_LIST'')'))}">
+                        <a href="javascript:void(0);" class="sidebar-item" onclick="toggleMenu('cadastroSubmenu')">
+                            <!-- Ícone geral do menu "Auxiliares" -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                <line x1="3" y1="9" x2="21" y2="9" />
+                                <line x1="9" y1="21" x2="9" y2="9" />
+                            </svg>
+                            Auxiliares
+                        </a>
+
+                        <div id="cadastroSubmenu" class="submenu-list">
+                            <!-- Profissões -->
+                            <a th:href="@{${urlPrefix} + '/occupations/list'}" class="submenu-item"
+                                th:if="${#authorization.expression('hasAuthority(''OCCUPATION_LIST'')')}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" style="margin-right: 8px;">
+                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                                    <path d="M16 3h-8a2 2 0 0 0-2 2v2h12V5a2 2 0 0 0-2-2z" />
+                                    <path d="M12 12v4" />
+                                    <path d="M2 12h20" />
+                                </svg>
+                                Profissões
+                            </a>
+
+                            <!-- Funções -->
+                            <a th:href="@{${urlPrefix} + '/functions/list'}" class="submenu-item"
+                                th:if="${#authorization.expression('hasAuthority(''FUNCTION_LIST'')')}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" style="margin-right: 8px;">
+                                    <circle cx="12" cy="12" r="3" />
+                                    <path
+                                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.09a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                                </svg>
+                                Funções
+                            </a>
+
+                            <!-- Departamentos -->
+                            <a th:href="@{${urlPrefix} + '/departments/list'}" class="submenu-item"
+                                th:if="${#authorization.expression('hasAuthority(''DEPARTMENT_LIST'')')}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" style="margin-right: 8px;">
+                                    <path d="M3 21V3h18v18" />
+                                    <path d="M9 21V9h6v12" />
+                                    <path d="M9 12h6" />
+                                    <path d="M9 15h6" />
+                                    <path d="M9 18h6" />
+                                </svg>
+                                Departamentos
+                            </a>
+
+                            <!-- Usuários -->
+                            <a th:href="@{${urlPrefix} + '/users/list'}" class="submenu-item"
+                                th:if="${#authorization.expression('hasAuthority(''USER_LIST'')')}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 18"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" style="margin-right: 8px;">
+                                    <!-- Usuário da frente -->
+                                    <circle cx="14" cy="7" r="4" />
+                                    <path d="M10 15c0-2 8-2 8 0v2h-8v-2z" />
+
+                                    <!-- Usuário atrás à esquerda -->
+                                    <circle cx="7" cy="9" r="3" />
+                                    <path d="M5 15c0-1.5 4-1.5 4 0v1H5v-1z" />
+                                </svg>
+                                Usuários
+                            </a>
+                            
+                            <a th:href="@{${urlPrefix} + '/projects/list'}" class="submenu-item"
+                                th:if="${#authorization.expression('hasAuthority(''PROJECT_LIST'')')}">
+							    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 18"
+								    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+								    stroke-linejoin="round" style="margin-right: 8px;">
+								    <!-- Pasta base -->
+								    <path d="M3 5h5l2 2h11v8H3V5z" />
+								    <!-- Aba da pasta -->
+								    <path d="M3 5V3h6l2 2" />
+								</svg>
+
+                                Projetos
+                            </a>
+                        </div>
+                    </li>
+                    <!-- ----------------------------------- -->
+                    <!-- Menu Auxiliares (apenas para ADMIN) -->
+
+                    <!-- ------------------------------------- -->
+                    <!-- Menu Auxiliares (apenas para MANAGER) -->
+                    <li
+                        th:if="${#authorization.expression('hasRole(''MANAGER'')') and 
+					             (#authorization.expression('hasAuthority(''USER_LIST'') or hasAuthority(''DEPARTMENT_LIST'') or hasAuthority(''OCCUPATION_LIST'') or hasAuthority(''FUNCTION_LIST'')'))}">
+                        <a href="javascript:void(0);" class="sidebar-item" onclick="toggleMenu('cadastroSubmenu')">
+                            <!-- Ícone geral do menu "Auxiliares" -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                <line x1="3" y1="9" x2="21" y2="9" />
+                                <line x1="9" y1="21" x2="9" y2="9" />
+                            </svg>
+                            Auxiliares
+                        </a>
+
+                        <div id="cadastroSubmenu" class="submenu-list">
+                            <!-- Profissões -->
+                            <a th:href="@{${urlPrefix} + '/occupations/list'}" class="submenu-item"
+                                th:if="${#authorization.expression('hasAuthority(''OCCUPATION_LIST'')')}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" style="margin-right: 8px;">
+                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                                    <path d="M16 3h-8a2 2 0 0 0-2 2v2h12V5a2 2 0 0 0-2-2z" />
+                                    <path d="M12 12v4" />
+                                    <path d="M2 12h20" />
+                                </svg>
+                                Profissões
+                            </a>
+
+                            <!-- Funções -->
+                            <a th:href="@{${urlPrefix} + '/functions/list'}" class="submenu-item"
+                                th:if="${#authorization.expression('hasAuthority(''FUNCTION_LIST'')')}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" style="margin-right: 8px;">
+                                    <circle cx="12" cy="12" r="3" />
+                                    <path
+                                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.09a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                                </svg>
+                                Funções
+                            </a>
+
+                            <!-- Departamentos -->
+                            <a th:href="@{${urlPrefix} + '/departments/list'}" class="submenu-item"
+                                th:if="${#authorization.expression('hasAuthority(''DEPARTMENT_LIST'')')}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" style="margin-right: 8px;">
+                                    <path d="M3 21V3h18v18" />
+                                    <path d="M9 21V9h6v12" />
+                                    <path d="M9 12h6" />
+                                    <path d="M9 15h6" />
+                                    <path d="M9 18h6" />
+                                </svg>
+                                Departamentos
+                            </a>
+
+                            <!-- Usuários -->
+                            <a th:href="@{${urlPrefix} + '/users/list'}" class="submenu-item"
+                                th:if="${#authorization.expression('hasAuthority(''USER_LIST'')')}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 18"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" style="margin-right: 8px;">
+                                    <!-- Usuário da frente -->
+                                    <circle cx="14" cy="7" r="4" />
+                                    <path d="M10 15c0-2 8-2 8 0v2h-8v-2z" />
+
+                                    <!-- Usuário atrás à esquerda -->
+                                    <circle cx="7" cy="9" r="3" />
+                                    <path d="M5 15c0-1.5 4-1.5 4 0v1H5v-1z" />
+                                </svg>
+                                Usuários
+                            </a>
+                            
+                            <a th:href="@{${urlPrefix} + '/projects/list'}" class="submenu-item"
+                                th:if="${#authorization.expression('hasAuthority(''PROJECT_LIST'')')}">
+							    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 18"
+								    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+								    stroke-linejoin="round" style="margin-right: 8px;">
+								    <!-- Pasta base -->
+								    <path d="M3 5h5l2 2h11v8H3V5z" />
+								    <!-- Aba da pasta -->
+								    <path d="M3 5V3h6l2 2" />
+								</svg>
+
+                                Projetos
+                            </a>
+							
+                        </div>
+                    </li>
+                    <!-- ------------------------------------- -->
+                    <!-- Menu Auxiliares (apenas para MANAGER) -->
+
+                    <!-- ---------------------------------- -->
+                    <!-- Menu Auxiliares (apenas para USER) -->
+                    <li th:if="${#authorization.expression(
+   						'hasRole(''USER'') and hasAuthority(''USER_LIST'')')}">
+                        <a href="javascript:void(0);" class="sidebar-item" onclick="toggleMenu('cadastroSubmenu')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                <line x1="3" y1="9" x2="21" y2="9" />
+                                <line x1="9" y1="21" x2="9" y2="9" />
+                            </svg>
+                            Auxiliares
+                        </a>
+
+                        <div id="cadastroSubmenu" class="submenu-list">
+                            <a th:href="@{${urlPrefix} + '/users/list'}" class="submenu-item"
+                                th:if="${#authorization.expression('hasAuthority(''USER_LIST'')')}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 18"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" style="margin-right: 8px;">
+                                    <!-- Usuário da frente -->
+                                    <circle cx="14" cy="7" r="4" />
+                                    <path d="M10 15c0-2 8-2 8 0v2h-8v-2z" />
+
+                                    <!-- Usuário atrás à esquerda -->
+                                    <circle cx="7" cy="9" r="3" />
+                                    <path d="M5 15c0-1.5 4-1.5 4 0v1H5v-1z" />
+                                </svg>
+                                Usuários
+                            </a>
+                        </div>
+                    </li>
+                    <!-- ---------------------------------- -->
+                    <!-- Menu Auxiliares (apenas para USER) -->
+
+                    <!-- ----------------------------------- -->
+                    <!-- Menu Auxiliares (apenas para DIRECTOR) -->
+                    <li th:if="${#authorization.expression(
+   						'hasRole(''DIRECTOR'') and hasAuthority(''USER_LIST'')')}">
+                        <a href="javascript:void(0);" class="sidebar-item" onclick="toggleMenu('cadastroSubmenu')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                <line x1="3" y1="9" x2="21" y2="9" />
+                                <line x1="9" y1="21" x2="9" y2="9" />
+                            </svg>
+                            Auxiliares
+                        </a>
+
+                        <div id="cadastroSubmenu" class="submenu-list">
+
+                            <a th:href="@{${urlPrefix} + '/occupations/list'}" class="submenu-item"
+                                th:if="${#authorization.expression('hasAuthority(''OCCUPATION_LIST'')')}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" style="margin-right: 8px;">
+                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                                    <path d="M16 3h-8a2 2 0 0 0-2 2v2h12V5a2 2 0 0 0-2-2z" />
+                                    <path d="M12 12v4" />
+                                    <path d="M2 12h20" />
+                                </svg>
+                                Profissões
+                            </a>
+
+                            <!-- Funções -->
+                            <a th:href="@{${urlPrefix} + '/functions/list'}" class="submenu-item"
+                                th:if="${#authorization.expression('hasAuthority(''FUNCTION_LIST'')')}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" style="margin-right: 8px;">
+                                    <circle cx="12" cy="12" r="3" />
+                                    <path
+                                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.09a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                                </svg>
+                                Funções
+                            </a>
+
+                            <!-- Departamentos -->
+                            <a th:href="@{${urlPrefix} + '/departments/list'}" class="submenu-item"
+                                th:if="${#authorization.expression('hasAuthority(''DEPARTMENT_LIST'')')}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" style="margin-right: 8px;">
+                                    <path d="M3 21V3h18v18" />
+                                    <path d="M9 21V9h6v12" />
+                                    <path d="M9 12h6" />
+                                    <path d="M9 15h6" />
+                                    <path d="M9 18h6" />
+                                </svg>
+                                Departamentos
+                            </a>
+
+                            <a th:href="@{${urlPrefix} + '/users/list'}" class="submenu-item"
+                                th:if="${#authorization.expression('hasAuthority(''USER_LIST'')')}">
+							    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 18"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" style="margin-right: 8px;">
+                                    <!-- Usuário da frente -->
+                                    <circle cx="14" cy="7" r="4" />
+                                    <path d="M10 15c0-2 8-2 8 0v2h-8v-2z" />
+
+                                    <!-- Usuário atrás à esquerda -->
+                                    <circle cx="7" cy="9" r="3" />
+                                    <path d="M5 15c0-1.5 4-1.5 4 0v1H5v-1z" />
+                                </svg>
+                                Usuários
+                            </a>
+                            
+                            <a th:href="@{${urlPrefix} + '/projects/list'}" class="submenu-item"
+                                th:if="${#authorization.expression('hasAuthority(''PROJECT_LIST'')')}">
+							    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 18"
+								    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+								    stroke-linejoin="round" style="margin-right: 8px;">
+								    <!-- Pasta base -->
+								    <path d="M3 5h5l2 2h11v8H3V5z" />
+								    <!-- Aba da pasta -->
+								    <path d="M3 5V3h6l2 2" />
+								</svg>
+
+                                Projetos
+                            </a>
+
+                       </div> 
+                    </li>
+                    <!-- -------------------------------------- -->
+                    <!-- Menu Auxiliares (apenas para DIRECTOR) -->
+                    <li>
+                        <!-- Alterar Senha (sempre visível para usuários autenticados) -->
+                        <a href="#" class="sidebar-item" id="alterarSenhaBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4">
+                                </path>
+                            </svg>
+                            Alterar Senha
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </aside>
+    <!-- Overlay para quando o sidebar estiver aberto em dispositivos móveis -->
+    <div id="sidebar-overlay" class="sidebar-overlay hidden"></div>
+</div>
+
+<!-- Fragmento dos Modais -->
+<div th:fragment="modals">
+    <div id="alterarSenhaModal" class="modal">
+        <div class="modal-container">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Alterar senha</h2>
+                    <button type="button" class="modal-close" id="fecharModal">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div th:if="${user != null and user.primeiroAcesso}" class="alert alert-warning" role="alert"
+                        id="primeiroAcessoAlert">
+                        Esse é o seu primeiro acesso, por favor troque sua senha.
+                    </div>
+                    <div id="mensagemErro" class="alert alert-danger" style="display: none;"></div>
+                    <form id="formAlterarSenha">
+                        <input type="hidden" name="alterarMinhaSenha" value="true">
+                        <div class="form-group">
+                            <label for="novaSenha">Nova Senha</label>
+                            <div class="input-group">
+                                <input type="password" name="senha" class="form-control" id="novaSenha" maxlength="15"
+                                    placeholder="Nova Senha" required>
+                                <button type="button" class="toggle-password" id="toggleNovaSenha">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmarSenha">Confirmar Senha</label>
+                            <div class="input-group">
+                                <input type="password" name="confirmarSenha" class="form-control" id="confirmarSenha"
+                                    maxlength="15" placeholder="Confirme a Senha" required>
+                                <button type="button" class="toggle-password" id="toggleConfirmarSenha">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="cancelarSenha">Cancelar</button>
+                            <button type="button" class="btn btn-primary" id="salvarSenha">Alterar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="mensagemModal" class="modal">
+        <div class="modal-container">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Aviso</h2>
+                    <button type="button" class="modal-close" id="fecharMensagemModal">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="mensagemTexto"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="okMensagem">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

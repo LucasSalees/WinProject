@@ -1,0 +1,117 @@
+:root {
+    /* --------- CORES CLARAS --------- */
+    
+    --color-light-white: #ffffff;          /* Branco claro */
+    --color-light-gray: #f5f5f5;           /* Cinza claro */
+    --color-light-green: #28a745;          /* Verde claro */
+    --color-light-blue-1: #4F8EF7;         /* Azul claro */
+    --color-light-blue-2: #3D6FD1;         /* Azul claro */
+    --color-light-red: #ff7f7f;             /* Vermelho claro */
+    --color-light-yellow: #fffacd;          /* Amarelo claro (lemon chiffon) */
+    --color-light-purple: #d8baf7;          /* Roxo claro */
+    --color-light-black: #666666;           /* Preto claro (cinza escuro) */
+
+    /* --------- CORES INTERMEDIÃƒÂRIAS --------- */
+
+    --color-medium-gray: #cccccc;           /* Cinza mÃƒÂ©dio */
+    --color-medium-blue: #003DA6;           /* Azul mÃƒÂ©dio */
+    --color-medium-red: #d9534f;            /* Vermelho mÃƒÂ©dio */
+    --color-medium-yellow: #f0ad4e;         /* Amarelo mÃƒÂ©dio */
+    --color-medium-purple: #7e57c2;         /* Roxo mÃƒÂ©dio */
+    --color-medium-black: #333333;           /* Preto mÃƒÂ©dio (cinza escuro) */
+    --color-medium-green: #218838;          /* Verde mÃƒÂ©dio */
+
+    /* --------- CORES ESCURAS --------- */
+
+    --color-dark-gray: #222222;             /* Cinza escuro */
+    --color-dark-gray1: #444444; 				/* Cinza mÃƒÂ©dio escuro */
+    --color-dark-blue-1: #0a0a2a ;           /* Azul escuro */
+    --color-dark-blue-2: #002366;           /* Azul escuro profundo */
+    --color-dark-red: #8b0000;              /* Vermelho escuro */
+    --color-dark-yellow: #b8860b;           /* Amarelo escuro (dark goldenrod) */
+    --color-light-purple: #4b0082;           /* Roxo escuro (indigo) */
+    --color-dark-black: #000000;            /* Preto puro */
+    --color-dark-green-1: #1b4d1b;          /* Verde escuro */
+    --color-dark-green-2: #145214;          /* Verde muito escuro */
+
+    /* --------- TIPOGRAFIA E ELEMENTOS --------- */
+    
+     --shadow-dark-blue-2: 0 0 0 0.2rem rgba(0, 35, 102, 0.25);
+
+    --font-family-main: 'Inter', sans-serif;
+
+    --input-height: 46px;
+    --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    
+    --border-radius: 8px;
+}
+
+
+body {
+    font-family: var(--font-family-main);
+    background-color: var(--color-light-white);
+    color: var(--color-light-white);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Conteúdo principal */
+.main-content {
+    display: flex;
+    justify-content: center; 
+    align-items: center;    
+    min-height: 100vh;      
+    padding: 0;
+    flex-direction: column;  
+    text-align: center;      
+    background-color: var(----color-light-gray);
+}
+
+/* Container centralizado */
+.container {
+    max-width: 750px;
+    padding: 1.5rem 1rem;
+    margin: 0 auto;
+}
+
+/* Título da página */
+.page-title,
+h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-medium-red);
+    margin-bottom: 20px;
+}
+
+/* Texto de apoio */
+p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    color: var(--color-dark-black);
+}
+
+/* Botão/link */
+a {
+    display: inline-block;
+    background-color: var(--color-dark-blue-1);
+    color:var(--color-light-white);
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+a:hover {
+    background-color:var(--color-dark-blue-2);
+}
+
+/* Cartão opcional */
+.card {
+    background-color: var(--color-light-white);
+    border-radius: 0.5rem;
+    box-shadow: var(--box-shadow);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}

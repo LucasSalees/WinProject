@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema - WinProject</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/base.css?v=1.0}">
+    <link rel="stylesheet" th:href="@{/css/components.css?v=1.0}">
+    <link rel="stylesheet" th:href="@{/css/registrations/registerUsers.css?v=1.0}">
+    <link rel="stylesheet" th:href="@{/css/lists/usersList.css?v=1.0}">
+</head>
+
+<body>
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    
+    <div th:replace="~{fragments/navbar :: navbar(pageTitle='Cadastro de usuário')}"></div>
+    
+    <main id="main-content" class="main-content">
+	    <div class="container">
+	        <div class="card">
+	            <form action="/input/manager/users/save" th:object="${user}" method="POST" enctype="multipart/form-data" id="formulario">
+	                
+	                <!-- Seção: Dados Pessoais -->
+                    <div class="section-card access-config-section">
+				        <h3 class="section-title">
+				            <i class="fas fa-user"></i>
+				            Foto de Perfil
+				        </h3>
+				        <div class="row g-3 justify-content-center">
+				            <div class="col-md-4 text-center">
+				            
+				                <img id="photoPreview"
+				                     class="img-preview rounded-circle shadow d-block mx-auto mb-2"
+				                     src="/images/DefaultAvatar.png"
+				                     alt="Preview" />
+				
+				                <input type="file"
+				                       id="profileImage"
+				                       name="profileImage"
+				                       accept="image/*"
+				                       class="d-none"
+				                       onchange="previewPhoto(this)" />
+
+				                <label for="profileImage" class="btn btn-primary">
+				                    Escolher arquivo
+				                </label>
+
+								<a href="#"
+								   class="btn btn-danger"
+								   id="btnRemovePhoto"
+								   style="display: none;"
+								   onclick="openExclusaoFotoModal(); return false;">
+								    <i class="fa-solid fa-trash"></i> Excluir
+								</a>
+				            </div>
+				        </div>
+				    </div>
+	                
+	                <div class="section-card personal-info-section">
+	                    <h3 class="section-title">
+	                        <i class="fas fa-user"></i>
+	                        Dados Pessoais
+	                    </h3>
+	                    
+						<div class="row g-3">
+	                        <div class="col-md-6">
+	                            <label class="form-label shadow-text">Nome completo</label>
+	                            <input type="text" name="userName" placeholder="Digite o nome completo"
+	                                class="form-control shadow-cantos" required maxlength="40" th:field="*{userName}"/>
+	                        </div>
+	                        
+	                        <div class="col-md-6">
+	                            <label class="form-label shadow-text">Telefone</label>
+	                            <input type="text" name="userTel" placeholder="(00) 00000-0000" id="UserDepartmentManager"
+	                                class="form-control shadow-cantos" required th:field="*{userTel}"/>
+	                        </div>
+	                        
+	                       <div class="form-section-header-department col-md-6">
+							   <div class="d-flex align-items-center mb-2">
+								   <label class="form-label shadow-text me-2 mb-0">
+							       <i class="fas fa-user-tie me-1"></i>
+								       Profissão
+								   </label>
+								</div>
+									<label class="form-label text-muted small">Cod - Nome</label>
+								<div class="time-range-container">
+								    <div class="form-control shadow-cantos" id="campoProfissao" style="cursor: pointer;">
+								    	<span id="textoProfissaoSelecionada">Selecione uma profissão</span>
+									</div>
+							        <input type="hidden" name="userOccupation" id="userOccupation">
+							    </div>
+							</div>
+							
+							<div class="form-section-header-department col-md-6">
+							   <div class="d-flex align-items-center mb-2">
+								   <label class="form-label shadow-text me-2 mb-0">
+							       <i class="fas fa-user-tie me-1"></i>
+								       Função
+								   </label>
+								</div>
+									<label class="form-label text-muted small">Cod - Nome</label>
+								<div class="time-range-container">
+								    <div class="form-control shadow-cantos" id="campoFuncao" style="cursor: pointer;">
+								    	<span id="textoFuncaoSelecionada">Selecione uma função</span>
+									</div>
+							        <input type="hidden" name="userFunction" id="userFunction">
+							    </div>
+							</div>
+							
+							<div class="form-section-header-department col-md-6">
+							   <div class="d-flex align-items-center mb-2">
+								   <label class="form-label shadow-text me-2 mb-0">
+							       <i class="fas fa-business-time me-1"></i>
+								       Departamento
+								   </label>
+								</div>
+									<label class="form-label text-muted small">Cod - Nome - Gerente</label>
+								<div class="time-range-container">
+								    <div class="form-control shadow-cantos" id="campoDepartamento" style="cursor: pointer;">
+								    	<span id="textoDepartamentoSelecionada">Selecione um departamento</span>
+									</div>
+							        <input type="hidden" name="userDepartment" id="userDepartment">
+							    </div>
+							</div>
+							
+							<div class="form-section-header-department col-md-6">
+							    <div class="d-flex align-items-center mb-2">
+							        <label class="form-label shadow-text me-2 mb-0">
+							            <i class="fas fa-location-dot me-1"></i>
+							            Região
+							        </label>
+							    </div>
+							    <label class="form-label text-muted small">UF</label>
+							    <div class="time-range-container">
+							        <select th:field="*{userRegion}" class="form-control shadow-cantos" required>
+									    <option value="" disabled selected>Selecione uma região</option>
+									    <option th:each="reg : ${T(com.project.system.enums.input.UserRegion).values()}"
+									            th:value="${reg}"
+									            th:text="${reg.label}">Região</option>
+									</select>
+							    </div>
+							</div>
+	                    </div>
+	                </div>
+
+	                <!-- Seção: Configurações de Acesso -->
+	                <div class="section-card access-config-section">
+	                    <h3 class="section-title">
+	                        <i class="fas fa-key"></i>
+	                        Configurações de Acesso
+	                    </h3>
+	                    
+	                    <div class="row g-3">
+							<div class="col-md-6">
+							    <label for="email-usuario" class="form-label">E-mail</label>
+							    <div class="input-group has-validation">
+							        <input type="email" name="userEmail" id="email-usuario" 
+							               class="form-control shadow-cantos" required
+							               placeholder="Digite o e-mail completo (ex: usuario@email.com)" 
+							               maxlength="60"
+							               aria-describedby="emailFeedback inputGroupPrependEmail"
+							               oninput="validarEmail(this)">
+							        <div id="emailFeedback" class="invalid-feedback">
+							            Este email já está cadastrado. Por favor, use outro email.
+							        </div>
+							        <div id="emailSuccess" class="valid-feedback">
+							            Email disponível!
+							        </div>
+							    </div>
+							</div>
+	                        
+	                        <div class="col-md-6">
+	                           <div class="d-flex align-items-center mb-2">
+								   <label class="form-label shadow-text me-2 mb-0">Senha</label>
+								   <div class="tooltip-container">
+								       <i class="fas fa-info-circle text-primary" style="cursor: help;"></i>
+								       <span class="tooltip-text">Senha padrão atribuída automaticamente: "Senha123@"</span>
+							       </div>                            
+							   </div>
+								
+								<div class="input-with-icon">
+								    <input type="password" name="userPassword" id="senha" 
+								           placeholder="Senha123@" value="Senha123@" 
+								           class="form-control shadow-cantos input-senha" 
+								           maxlength="15" th:field="*{userPassword}" readonly />
+								    <i class="fas fa-lock"></i>
+								</div>
+																
+							   <div class="mt-2">
+								   <small class="text-muted">
+									   <i class="fas fa-lock"></i>
+									   A senha padrão "Senha123@" será usada no primeiro acesso.
+								   </small>
+							   </div>
+
+	                        </div>
+	                    </div>
+	                    
+	                    <div class="row g-3 mt-2">
+						    <div class="col-md-12">
+						        <label class="form-label shadow-text">Tipo de Usuário</label>
+						        <select id="userRoleSelect" name="userRole" class="form-control shadow-cantos" th:field="*{userRole}" required>
+						            <option value="" disabled selected>Selecione o tipo</option>
+						            <option th:each="userRole : ${T(com.project.system.enums.input.UserRole).values()}"
+						                    th:value="${userRole}"
+						                    th:text="${userRole.label}">Tipo</option>
+						        </select>
+						
+						        <!-- Aqui aparece a descrição -->
+						        <div id="roleDescription" class="mt-2 text-muted"></div>
+						    </div>
+						</div>
+	                </div>
+
+	               	<div class="section-card access-config-section permission-group user-group">
+	                   <h3 class="section-title">
+	                       <i class="fas fa-lock"></i>
+	                       Permissões de usuários
+	                   </h3>
+    
+						<div class="form-switch mb-2">
+						    <input class="form-check-input"
+						           type="checkbox"
+						           id="checkAllUser"
+						           th:checked="${#lists.containsAll(
+						                user?.permissions != null ? user.permissions.![name()] : {},
+						                T(com.project.system.enums.input.UserPermission).values().?[name().startsWith('USER_')].![name()]
+						           )}">
+						    <label class="form-check-label" for="checkAllUser">Marcar Todos</label>
+						</div>
+					    
+					    <div class="dias-container">
+					        <div th:each="permission : ${T(com.project.system.enums.input.UserPermission).values()}"
+					             th:if="${permission.name().startsWith('USER_')}"
+					             class="dia-item form-switch">
+					
+					            <input class="form-check-input shadow-cantos"
+					                   type="checkbox"
+					                   th:id="${'perm_' + permission.name()}"
+					                   th:name="permissions"
+					                   th:value="${permission.name()}"
+					                   th:checked="${#lists.contains(user?.permissions?.![name()], permission.name())}">
+					
+					            <label class="form-check-label"
+					                   th:for="${'perm_' + permission.name()}"
+					                   th:text="${permission.label}">Permissão</label>
+					        </div>
+					    </div>
+					</div>
+					
+					<!-- Permissões de Departamento -->
+	               <div class="section-card access-config-section permission-group department-group">
+	                   <h3 class="section-title">
+	                       <i class="fas fa-lock"></i>
+	                       Permissões de departamentos
+	                   </h3>
+	                   
+	                   <div class="form-switch mb-2">
+					        <input class="form-check-input"
+						           type="checkbox"
+						           id="checkAllDepartment"
+						           th:checked="${#lists.containsAll(
+						                user?.permissions != null ? user.permissions.![name()] : {},
+						                T(com.project.system.enums.input.UserPermission).values().?[name().startsWith('DEPARTMENT_')].![name()]
+						           )}">
+					        <label class="form-check-label" for="checkAllDepartment">Marcar Todos</label>
+					    </div>
+					    
+					    <div class="dias-container">
+					        <div th:each="permission : ${T(com.project.system.enums.input.UserPermission).values()}"
+					             th:if="${permission.name().startsWith('DEPARTMENT_')}"
+					             class="dia-item form-switch">
+					
+					            <input class="form-check-input shadow-cantos"
+					                   type="checkbox"
+					                   th:id="${'perm_' + permission.name()}"
+					                   th:name="permissions"
+					                   th:value="${permission.name()}"
+					                   th:checked="${#lists.contains(user?.permissions?.![name()], permission.name())}">
+					
+					            <label class="form-check-label"
+					                   th:for="${'perm_' + permission.name()}"
+					                   th:text="${permission.label}">
+					                Permissão
+					            </label>
+					        </div>
+					    </div>
+					</div>
+					
+					<!-- Permissões de Profissões -->
+	               <div class="section-card access-config-section permission-group occupation-group">
+	                   <h3 class="section-title">
+	                       <i class="fas fa-lock"></i>
+	                       Permissões de profissões
+	                   </h3>
+	                   
+	                   	<div class="form-switch mb-2">
+					        <input class="form-check-input"
+						           type="checkbox"
+						           id="checkAllOccupation"
+						           th:checked="${#lists.containsAll(
+						                user?.permissions != null ? user.permissions.![name()] : {},
+						                T(com.project.system.enums.input.UserPermission).values().?[name().startsWith('OCCUPATION_')].![name()]
+						           )}">
+					        <label class="form-check-label" for="checkAllOccupation">Marcar Todos</label>
+					    </div>
+					    
+					    <div class="dias-container">
+					        <div th:each="permission : ${T(com.project.system.enums.input.UserPermission).values()}"
+					             th:if="${permission.name().startsWith('OCCUPATION_')}"
+					             class="dia-item form-switch">
+					
+					            <input class="form-check-input shadow-cantos"
+					                   type="checkbox"
+					                   th:id="${'perm_' + permission.name()}"
+					                   th:name="permissions"
+					                   th:value="${permission.name()}"
+					                   th:checked="${#lists.contains(user?.permissions?.![name()], permission.name())}">
+					
+					            <label class="form-check-label"
+					                   th:for="${'perm_' + permission.name()}"
+					                   th:text="${permission.label}">
+					                Permissão
+					            </label>
+					        </div>
+					    </div>
+					</div>
+					
+					<!-- Permissões de Funções -->
+					<div class="section-card access-config-section permission-group function-group">
+	                   <h3 class="section-title">
+	                       <i class="fas fa-lock"></i>
+	                       Permissões de funções
+	                   </h3>
+	                   
+	                   <div class="form-switch mb-2">
+					        <input class="form-check-input"
+						           type="checkbox"
+						           id="checkAllFunction"
+						           th:checked="${#lists.containsAll(
+						                user?.permissions != null ? user.permissions.![name()] : {},
+						                T(com.project.system.enums.input.UserPermission).values().?[name().startsWith('FUNCTION_')].![name()]
+						           )}">
+					        <label class="form-check-label" for="checkAllFunction">Marcar Todos</label>
+					    </div>
+					    
+					    <div class="dias-container">
+					        <div th:each="permission : ${T(com.project.system.enums.input.UserPermission).values()}"
+					             th:if="${permission.name().startsWith('FUNCTION_')}"
+					             class="dia-item form-switch">
+					
+					            <input class="form-check-input shadow-cantos"
+					                   type="checkbox"
+					                   th:id="${'perm_' + permission.name()}"
+					                   th:name="permissions"
+					                   th:value="${permission.name()}"
+					                   th:checked="${#lists.contains(user?.permissions?.![name()], permission.name())}">
+					
+					            <label class="form-check-label"
+					                   th:for="${'perm_' + permission.name()}"
+					                   th:text="${permission.label}">
+					                Permissão
+					            </label>
+					        </div>
+					    </div>
+					</div>
+					
+					<!-- Permissões de Projetos -->
+					<div class="section-card access-config-section permission-group project-group">
+	                   <h3 class="section-title">
+	                       <i class="fas fa-lock"></i>
+	                       Permissões de projetos
+	                   </h3>
+	                   
+	                   <div class="form-switch mb-2">
+					        <input class="form-check-input"
+						           type="checkbox"
+						           id="checkAllProject"
+						           th:checked="${#lists.containsAll(
+						                user?.permissions != null ? user.permissions.![name()] : {},
+						                T(com.project.system.enums.input.UserPermission).values().?[name().startsWith('PROJECT_')].![name()]
+						           )}">
+					        <label class="form-check-label" for="checkAllProject">Marcar Todos</label>
+					    </div>
+					    
+					    <div class="dias-container">
+					        <div th:each="permission : ${T(com.project.system.enums.input.UserPermission).values()}"
+					             th:if="${permission.name().startsWith('PROJECT_')}"
+					             class="dia-item form-switch">
+					
+					            <input class="form-check-input shadow-cantos"
+					                   type="checkbox"
+					                   th:id="${'perm_' + permission.name()}"
+					                   th:name="permissions"
+					                   th:value="${permission.name()}"
+					                   th:checked="${#lists.contains(user?.permissions?.![name()], permission.name())}">
+					
+					            <label class="form-check-label"
+					                   th:for="${'perm_' + permission.name()}"
+					                   th:text="${permission.label}">
+					                Permissão
+					            </label>
+					        </div>
+					    </div>
+					</div>
+					
+	                <!-- Seção: Permissões de Horário e Dias -->
+					<div class="section-card access-config-section">
+					    <h3 class="section-title">
+					        <i class="fas fa-clock"></i>
+					        Permissões de Horário e Dias
+					    </h3>
+					    
+					    <!-- Horários Permitidos -->
+					    <div class="form-section-header">
+					        <div class="d-flex align-items-center mb-2">
+					            <label class="form-label shadow-text me-2 mb-0">
+					                <i class="fas fa-business-time me-1"></i>
+					                Horário Permitido
+					            </label>
+					            <div class="tooltip-container">
+					                <i class="fas fa-info-circle text-primary" style="cursor: help;"></i>
+					                <span class="tooltip-text">Para não ter restrições de horário, deixe os campos em branco. O usuário poderá acessar o sistema 24 horas.</span>
+					            </div>
+					        </div>
+					        <div class="time-range-container">
+					            <div class="flex-grow-1">
+					                <label class="form-label text-muted small">Início</label>
+					                <input type="time" name="startTime" class="form-control shadow-cantos" th:field="*{startTime}">
+					            </div>
+					            <span class="ate">até</span>
+					            <div class="flex-grow-1">
+					                <label class="form-label text-muted small">Fim</label>
+					                <input type="time" name="endTime" class="form-control shadow-cantos" th:field="*{endTime}">
+					            </div>
+					        </div>
+					    </div>
+					    
+					    <!-- Dias Permitidos -->
+					    <div class="mt-4">
+					        <label class="form-label shadow-text">
+					            <i class="fas fa-calendar-week me-1"></i>
+					            Dias da Semana Permitidos
+					        </label>
+					        <div class="dias-container">
+					            <!-- Dias da semana com switch -->
+					            <div class="dia-item form-switch">
+					                <input class="form-check-input shadow-cantos" type="checkbox" name="allowedDays" value="Segunda" id="segunda" th:field="*{allowedDays}" checked>
+					                <label class="form-check-label" for="segunda">Segunda</label>
+					            </div>
+					            <div class="dia-item form-switch">
+					                <input class="form-check-input shadow-cantos" type="checkbox" name="allowedDays" value="Terça" id="terca" th:field="*{allowedDays}" checked>
+					                <label class="form-check-label" for="terca">Terça</label>
+					            </div>
+					            <div class="dia-item form-switch">
+					                <input class="form-check-input shadow-cantos" type="checkbox" name="allowedDays" value="Quarta" id="quarta" th:field="*{allowedDays}" checked>
+					                <label class="form-check-label" for="quarta">Quarta</label>
+					            </div>
+					            <div class="dia-item form-switch">
+					                <input class="form-check-input shadow-cantos" type="checkbox" name="allowedDays" value="Quinta" id="quinta" th:field="*{allowedDays}" checked>
+					                <label class="form-check-label" for="quinta">Quinta</label>
+					            </div>
+					            <div class="dia-item form-switch">
+					                <input class="form-check-input shadow-cantos" type="checkbox" name="allowedDays" value="Sexta" id="sexta" th:field="*{allowedDays}" checked>
+					                <label class="form-check-label" for="sexta">Sexta</label>
+					            </div>
+					            <div class="dia-item form-switch">
+					                <input class="form-check-input shadow-cantos" type="checkbox" name="allowedDays" value="Sábado" id="sabado" th:field="*{allowedDays}" checked>
+					                <label class="form-check-label" for="sabado">Sábado</label>
+					            </div>
+					            <div class="dia-item form-switch">
+					                <input class="form-check-input shadow-cantos" type="checkbox" name="allowedDays" value="Domingo" id="domingo" th:field="*{allowedDays}" checked>
+					                <label class="form-check-label" for="domingo">Domingo</label>
+					            </div>
+					        </div>	
+					        
+					        <!-- Botões de Seleção Rápida (mantidos como estão) -->
+					        <div class="mt-3 d-flex gap-2 flex-wrap">
+					            <button type="button" class="btn btn-success" onclick="selectAll()">
+					                <i class="fas fa-check-double"></i> Selecionar Todos
+					            </button>
+					            <button type="button" class="btn btn-secondary" onclick="weekdaySelect()">
+					                <i class="fas fa-briefcase"></i> Apenas Dias Úteis
+					            </button>
+					            <button type="button" class="btn btn-warning" onclick="weekendSelect()">
+					                <i class="fas fa-calendar"></i> Apenas Fim de Semana
+					            </button>
+					            <button type="button" class="btn btn-danger" onclick="disableAll()">
+					                <i class="fas fa-times"></i> Desmarcar Todos
+					            </button>
+					        </div>
+					    </div>
+					</div>
+
+	                <div class="navegacaoLista custom-button-container">
+	                    <a href="#" id="btnImprimir">
+	                    </a>
+	                    <div>
+	                        <button 
+	                            type="submit" 
+	                            class="btn btn-primary"
+	                            onclick="salvar(event, this.form)">
+	                            <i class="fa-solid fa-floppy-disk"></i> 
+	                            Salvar
+	                        </button>
+	                    </div>
+	                </div>
+	            </form>
+	        </div>
+	    </div>
+	</main>
+	
+	<div id="exclusaoModal" class="modal">
+	    <div class="modal-container">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h2 class="modal-title">Confirmação</h2>
+	                <button type="button" class="modal-close" id="fecharExclusaoModal">
+	                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+	                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+	                        <line x1="18" y1="6" x2="6" y2="18"></line>
+	                        <line x1="6" y1="6" x2="18" y2="18"></line>
+	                    </svg>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	                <p>Tem certeza que deseja excluir?</p>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-secondary" id="cancelarExclusao">Cancelar</button>
+	                <a id="confirmarExclusaoBtn" class="btn btn-danger">Excluir</a>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	
+	<!-- MODAL DE SELEÇÃO DE PROFISSÃO -->
+	<div id="modalListaProfissoes" class="modal">
+	    <div class="modal-container" style="max-width: 90vw; width: 1000px;">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h2 class="modal-title">Selecionar profissão</h2>
+	                <button type="button" class="modal-close" id="fecharModalLista">
+	                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+	                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+	                        <line x1="18" y1="6" x2="6" y2="18"></line>
+	                        <line x1="6" y1="6" x2="18" y2="18"></line>
+	                    </svg>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	
+	                <!-- BARRA DE FILTRO E DROPDOWN -->
+	                <div class="form-inline mb-3">
+	                    <div class="navegacaoLista custom-button-container">
+						    <!-- Botão à esquerda -->
+						    <div class="botoes-esquerda">
+						        
+						    </div>
+						    <!-- Campo de pesquisa + botão de dropdown à direita -->
+						    <div class="botoes-direita">
+						        <input type="text" id="filtro" class="form-control shadow-cantos" placeholder="Pesquisar...">
+								<div class="dropdown botoes">
+								  <button class="btn btn-primary" type="button" id="dropdownMenuButton">
+								      Selecionar
+								  </button>
+								  <div class="dropdown-menu" id="dropdownCampos">
+								      <h1 class="dropdown-item-titulo text-center">Campos Visíveis</h1>
+								      <label class="dropdown-item-1"><input type="checkbox" id="selecionarTodos"> <span>Selecionar Todos</span></label>
+								      <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoCodigo" checked> <span>Codigo</span></label>
+								      <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoNome" checked> <span>Nome</span></label>
+								  </div>
+								</div>
+						    </div>
+						</div>
+	                </div>
+	
+	                <!-- TABELA DE PROFISSÕES -->
+	                <div class="table-container-modal">
+	                    <table class="table table-striped" id="tabela">
+	                        <thead>
+	                            <tr>
+	                                <th class="text-left">Cod</th>
+	                                <th class="text-left">Nome</th>
+	                            </tr>
+	                        </thead>
+	                        <tbody>
+	                            <tr th:each="occupation : ${occupations}" class="linha-profissao" style="cursor: pointer;"
+	                                th:data-id="${occupation.occupationId}" th:data-nome="${occupation.occupationName}">
+	                                <td th:text="${occupation.occupationId}"></td>
+	                                <td th:text="${occupation.occupationName}"></td>
+	                            </tr>
+	                        </tbody>
+	                    </table>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	
+	<!-- MODAL DE SELEÇÃO DE PROFISSÃO -->
+	<div id="modalListaFuncoes" class="modal">
+	    <div class="modal-container" style="max-width: 90vw; width: 1000px;">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h2 class="modal-title">Selecionar função</h2>
+	                <button type="button" class="modal-close" id="fecharModalListaFuncao">
+	                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+	                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+	                        <line x1="18" y1="6" x2="6" y2="18"></line>
+	                        <line x1="6" y1="6" x2="18" y2="18"></line>
+	                    </svg>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	
+	                <!-- BARRA DE FILTRO E DROPDOWN -->
+	                <div class="form-inline mb-3">
+	                    <div class="navegacaoLista custom-button-container">
+						    <!-- Botão à esquerda -->
+						    <div class="botoes-esquerda">
+						        
+						    </div>
+						    <!-- Campo de pesquisa + botão de dropdown à direita -->
+						    <div class="botoes-direita">
+						        <input type="text" id="filtroFuncoes" class="form-control shadow-cantos" placeholder="Pesquisar...">
+								<div class="dropdown botoes">
+								  <button class="btn btn-primary" type="button" id="dropdownMenuButtonFuncoes">
+								      Selecionar
+								  </button>
+								  <div class="dropdown-menu" id="dropdownCamposFuncoes">
+								      <h1 class="dropdown-item-titulo text-center">Campos Visíveis</h1>
+								      <label class="dropdown-item-1"><input type="checkbox" id="selecionarTodosFuncoes"> <span>Selecionar Todos</span></label>
+								      <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoCodigoFuncao" checked> <span>Codigo</span></label>
+								      <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoNomeFuncao" checked> <span>Nome</span></label>
+								  </div>
+								</div>
+						    </div>
+						</div>
+	                </div>
+	
+	                <!-- TABELA DE PROFISSÕES -->
+	                <div class="table-container-modal">
+	                    <table class="table table-striped" id="tabela">
+	                        <thead>
+	                            <tr>
+	                                <th class="text-left">Cod</th>
+	                                <th class="text-left">Nome</th>
+	                            </tr>
+	                        </thead>
+	                        <tbody>
+	                            <tr th:each="function : ${functions}" class="linha-funcao" style="cursor: pointer;"
+	                                th:data-id="${function.functionId}" th:data-nome="${function.functionName}">
+	                                <td th:text="${function.functionId}"></td>
+	                                <td th:text="${function.functionName}"></td>
+	                            </tr>
+	                        </tbody>
+	                    </table>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	
+	<!-- MODAL DE SELEÇÃO DE PROFISSÃO -->
+	<div id="modalListaDepartamentos" class="modal">
+	    <div class="modal-container" style="max-width: 90vw; width: 1000px;">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h2 class="modal-title">Selecionar departamento</h2>
+	                <button type="button" class="modal-close" id="fecharModalListaDepartamento">
+	                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+	                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+	                        <line x1="18" y1="6" x2="6" y2="18"></line>
+	                        <line x1="6" y1="6" x2="18" y2="18"></line>
+	                    </svg>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	
+	                <!-- BARRA DE FILTRO E DROPDOWN -->
+	                <div class="form-inline mb-3">
+	                    <div class="navegacaoLista custom-button-container">
+						    <!-- Botão à esquerda -->
+						    <div class="botoes-esquerda">
+						        
+						    </div>
+						    <!-- Campo de pesquisa + botão de dropdown à direita -->
+						    <div class="botoes-direita">
+						        <input type="text" id="filtroDepartamentos" class="form-control shadow-cantos" placeholder="Pesquisar...">
+								<div class="dropdown botoes">
+							  <button class="btn btn-primary" type="button" id="dropdownMenuButtonDepartamentos">
+							      Selecionar
+							  </button>
+								  <div class="dropdown-menu" id="dropdownCamposDepartamentos">
+								      <h1 class="dropdown-item-titulo text-center">Campos Visíveis</h1>
+								      <label class="dropdown-item-1"><input type="checkbox" id="selecionarTodosDepartamentos"> <span>Selecionar Todos</span></label>
+								      <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoCodigoDepartamento" checked> <span>Codigo</span></label>
+								      <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoNomeDepartamento" checked> <span>Nome</span></label>
+								  </div>
+								</div>
+						    </div>
+						</div>
+	                </div>
+	
+	                <!-- TABELA DE PROFISSÕES -->
+	                <div class="table-container-modal">
+	                    <table class="table table-striped" id="tabela">
+	                        <thead>
+	                            <tr>
+	                                <th class="text-left">Cod</th>
+	                                <th class="text-left">Nome</th>
+	                            </tr>
+	                        </thead>
+	                        <tbody>
+	                            <tr th:each="department : ${departments}" class="linha-departamento" style="cursor: pointer;"
+	                                th:data-id="${department.departmentId}" th:data-nome="${department.departmentName}">
+	                                <td th:text="${department.departmentId}"></td>
+	                                <td th:text="${department.departmentName}"></td>
+	                            </tr>
+	                        </tbody>
+	                    </table>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	
+	<div th:replace="~{fragments/sidebar :: modals}"></div>
+	 
+	<div th:replace="~{fragments/footer :: footer}"></div>
+	
+<script>
+		document.addEventListener('DOMContentLoaded', function () {
+		    const select = document.getElementById('userRoleSelect');
+		
+		    function updatePermissionGroups() {
+		        const role = select.value;
+		
+		        const userGroup = document.querySelector('.user-group');
+		        const departmentGroup = document.querySelector('.department-group');
+		        const occupationGroup = document.querySelector('.occupation-group');
+		        const functionGroup = document.querySelector('.function-group');
+		        const projectGroup = document.querySelector('.project-group');
+		
+		        // Sempre mostra as permissões de usuário
+		        userGroup.style.display = 'block';
+		
+		        if (role === 'ADMIN' || role === 'DIRECTOR' || role === 'MANAGER') {
+		            departmentGroup.style.display = 'block';
+		            occupationGroup.style.display = 'block';
+		            functionGroup.style.display = 'block';
+		            projectGroup.style.display = 'block';
+		        } else {
+		            departmentGroup.style.display = 'none';
+		            occupationGroup.style.display = 'none';
+		            functionGroup.style.display = 'none';
+		            projectGroup.style.display = 'none';
+		        }
+		    }
+		
+		    // Executa na inicialização (útil para edição de usuários)
+		    updatePermissionGroups();
+		
+		    // Atualiza sempre que o select mudar
+		    select.addEventListener('change', updatePermissionGroups);
+		});
+		
+		document.addEventListener('DOMContentLoaded', function () {
+		    function addCheckAllHandler(groupClass, checkAllId) {
+		        const checkAll = document.getElementById(checkAllId);
+		        const group = document.querySelector('.' + groupClass);
+	
+		        if (checkAll && group) {
+		            checkAll.addEventListener('change', function () {
+		                const checkboxes = group.querySelectorAll('input[type="checkbox"]:not(#' + checkAllId + ')');
+		                checkboxes.forEach(cb => cb.checked = checkAll.checked);
+		            });
+		        }
+		    }
+	
+		    // Ativa para cada grupo
+		    addCheckAllHandler('user-group', 'checkAllUser');
+		    addCheckAllHandler('department-group', 'checkAllDepartment');
+		    addCheckAllHandler('occupation-group', 'checkAllOccupation');
+		    addCheckAllHandler('function-group', 'checkAllFunction');
+		    addCheckAllHandler('project-group', 'checkAllProject');
+		});
+		
+		document.addEventListener('DOMContentLoaded', function () {
+		    const select = document.getElementById('userRoleSelect');
+		    const description = document.getElementById('roleDescription');
+	
+		    const roleDescriptions = {
+		        'DIRECTOR': 'Diretor: possui acesso total ao sistema, incluindo todas as configurações e permissões.',
+		        'MANAGER': 'Gerente: gerencia usuários, departamentos e relatórios, com acesso administrativo intermediário.',
+		        'ADMIN': 'Administrador: controla cadastros, permissões e gerencia os principais módulos do sistema.',
+		        'USER': 'Usuário: acesso básico, limitado às suas próprias funções e permissões atribuídas.'
+		    };
+	
+		    function updateDescription() {
+		        const role = select.value;
+		        description.textContent = roleDescriptions[role] || '';
+		    }
+	
+		    select.addEventListener('change', updateDescription);
+	
+		    // Atualiza caso esteja em modo de edição e já tenha um valor selecionado
+		    updateDescription();
+		});
+	</script>
+    
+	<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
+	
+	<script th:src="@{/js/manager/components.js}"></script>
+	
+	<script th:src="@{/js/manager/registrations/registerUsers.js}"></script>
+	
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+	
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

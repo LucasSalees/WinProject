@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="utf-8"> <!-- Define a codificação de caracteres como UTF-8, suportando caracteres especiais -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Configura a página para ser responsiva em dispositivos móveis -->
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Asar&display=swap" rel="stylesheet">
+
+    <title>Editar sêmen</title>
+
+    <!--icone rosamystica-->
+    <link rel="icon"
+        href="https://imgs.search.brave.com/zy0sfkgKeppdWAXGyYDnopeaDcBoxZyy_1tEfu-gL8c/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2Q5NDZhNTVl/NmM5YzdiNDc3ZDMw/NGVmYzExZmMxNjY4/NDQzZmVhYWVkODQ2/NTVhMmYyNTJjMGE5/MTcwNTYwMS93d3cu/aGFyYXNyb3NhbXlz/dGljYS5jb20uYnIv"
+        type="image/x-icon">
+
+    <style>
+        body {
+            font-family: "Asar", Sans-serif;
+            background-color: #C0C0C0;
+        }
+
+        /*marca d'agua*/
+        .watermark {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+            font-family: 'Arial, sans-serif';
+        }
+
+        /*fundo secundario*/
+        .form-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+            margin-bottom: 10px;
+            max-width: 900px;
+            width: 100%;
+            border-top: 4px solid #808080;
+            border-bottom: 4px solid #808080;
+        }
+
+        .form-control {
+            border-radius: 8px;
+        }
+
+        .form-row {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            border-radius: 8px;
+        }
+
+        .custom-divider {
+            margin: 10px 0;
+            border-top: 1px solid #e1e1e1;
+        }
+
+        /*textos em cima dos inputs*/
+        label {
+            display: inline-block;
+            margin-bottom: .5rem;
+            font-weight: 600;
+        }
+
+        /*titulo*/
+        h1 {
+            font-size: 32px;
+            color: #cf8311;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            font-family: "Asar", Sans-serif;
+        }
+
+        /*botões*/
+        .btn {
+            border-radius: 50px;
+        }
+
+        /*botão preto*/
+        .btn-light {
+            background-color: #1b1e21;
+            color: white;
+            border: none;
+        }
+
+        .btn-light:hover {
+            background-color: #cf8311;
+            color: white;
+            border: none;
+        }
+
+        /*botão amarelo*/
+        .btn-dark {
+            background-color: #cf8311;
+            color: white;
+            border: none;
+        }
+
+        .btn-dark:hover {
+            background-color: #1b1e21;
+        }
+
+        /*botão vermelho*/
+        .btn-danger {
+            background-color: #ff0000;
+            color: white;
+            border: none;
+        }
+
+        .btn-danger:hover {
+            background-color: #B22222;
+        }
+
+        /*estilo para os botões*/
+        .btn-sm {
+            font-size: 14px;
+            padding: 10px 20px;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        /*voltar*/
+        .custom-link {
+            color: rgb(15, 15, 15);
+            font-size: 32px;
+            text-decoration: none;
+        }
+
+        .custom-link:hover {
+            color: #cf8311;
+        }
+
+        /*dropdown*/
+        .dropdown-item:hover {
+            background-color: transparent;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .dropdown {
+            font-family: "Asar", Sans-serif;
+        }
+
+        /*nome usuario*/
+        .dropdown-item-nome {
+            display: block;
+            width: 100%;
+            padding: .25rem 1.5rem;
+            clear: both;
+            font-weight: 400;
+            color: #ffffff;
+            text-align: inherit;
+            white-space: nowrap;
+            background-color: transparent;
+            border: 0;
+            font-family: "Asar", Sans-serif;
+        }
+
+        /*espaçamento entre os icones*/
+        .dropdown-item i {
+            margin-right: 8px;
+            font-size: 1.6rem;
+        }
+
+        .dropdown-item i {
+            font-size: 2rem;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        /*icone de sair*/
+        .dropdown-item i.fa-right-from-bracket:hover {
+            color: #0000ff;
+            transform: rotate(15deg);
+        }
+
+        /*nav bar**/
+        .navbar {
+            font-size: 1rem;
+            width: 100%;
+            height: 138.86px;
+            background-color: #000000C4;
+            border-style: solid;
+            border-width: 0 0 4px;
+            border-color: #fc0;
+        }
+
+        .navbar-brand img {
+            width: 300px;
+            height: 100px;
+        }
+
+        .navbar-background {
+            background: linear-gradient(45deg, #363636, #000000);
+            background-size: 400% 400%;
+            animation: gradientAnimation 8s ease infinite;
+            height: 138.86px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            font-family: 'Roboto', sans-serif;
+            position: relative;
+        }
+
+        /* Animação do navbar e dos cards */
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* submenu com o nome de usuário e administrador */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: #333;
+            padding: 0.5rem 0.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            width: 100%;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu .dropdown-item {
+            margin-bottom: 0.5rem;
+            font-size: 14px;
+            color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        /*dropdown mais esquerda */
+        .dropdown-menu-left {
+            left: -60px;
+            right: auto;
+        }
+
+        .dropdown-item i {
+            margin-left: 8px;
+        }
+
+        /* hover dentro do submenu */
+        .dropdown-item span:hover {
+            background-color: #cf8311;
+            color: #fff;
+            border-color: #cf8311;
+        }
+
+        /* Para o item de 'Administrador', centraliza o conteúdo e a bolinha verde */
+        .dropdown-item span {
+            width: 100%;
+            text-align: center;
+        }
+
+        /*modal*/
+        .fechar-modal {
+            background: none;
+            /* Remove qualquer fundo */
+            border: none;
+            /* Remove a borda */
+            box-shadow: none;
+            /* Remove sombras ao focar */
+            padding: 0;
+            /* Remove o espaçamento interno */
+            cursor: pointer;
+            /* Mantém o cursor como ponteiro */
+        }
+
+        .fechar-modal i {
+            font-size: 2rem;
+            /* Ajuste o tamanho */
+            color: #ff0000;
+            /* Mantém a cor vermelha */
+        }
+
+        /* Fundo do modal semi-transparente */
+        .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Estilização do título */
+        .modal-title {
+            font-weight: bold;
+            color: #ff0000;
+            /* Vermelho do Bootstrap */
+        }
+
+        /* Botão de fechar sem fundo e com hover */
+        .fechar-modal {
+            background: none;
+            border: none;
+            box-shadow: none;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .fechar-modal i {
+            font-size: 2rem;
+            color: #ff0000;
+            /* Vermelho */
+            transition: 0.3s;
+        }
+
+        /* Efeito ao passar o mouse no botão de fechar */
+        .fechar-modal i:hover {
+            color: #B22222;
+            /* Vermelho mais escuro */
+            transform: scale(1.2);
+        }
+
+        /* Corpo do modal estilizado */
+        .modal-body {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        /* Texto do aviso maior e centralizado */
+        h5 {
+            font-size: 1.8rem;
+            /* Aumenta o tamanho do texto */
+            font-weight: bold;
+            color: #d9534f;
+            /* Vermelho Bootstrap */
+            text-align: center;
+            /* Centraliza o texto */
+            width: 100%;
+            /* Garante que o alinhamento funcione */
+        }
+
+        /*ICONES*/
+        .user-icon {
+            font-size: 28px;
+            color: #ffffff;
+            transition: transform 0.3s ease, color 0.3s ease;
+            /* Animação para transformação e cor */
+        }
+
+        .user-icon:hover {
+            transform: scale(1.2);
+            /* Aumenta o tamanho do ícone quando o mouse passa por cima */
+        }
+
+        .vault-icon {
+            font-size: 28px;
+            color: #ffffff;
+            transition: transform 0.3s ease, color 0.3s ease;
+            /* Animação para transformação e cor */
+        }
+
+        .vault-icon:hover {
+            transform: scale(1.2);
+            /* Aumenta o tamanho do ícone quando o mouse passa por cima */
+        }
+
+        .home-icon {
+            font-size: 28px;
+            color: #ffffff;
+            transition: transform 0.3s ease, color 0.3s ease;
+            /* Animação para transformação e cor */
+        }
+
+        .home-icon:hover {
+            transform: scale(1.2);
+            /* Aumenta o tamanho do ícone quando o mouse passa por cima */
+        }
+
+        /*ICONES FINAL*/
+
+        /* Estilo do Footer */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            /* Garante que o conteúdo ocupe a altura total da tela */
+        }
+
+        .footer {
+            font-size: 1rem;
+            width: 100%;
+            background-color: #000000C4;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            font-family: 'Roboto', sans-serif;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            /* Deixe a posição como 'relative' para que o footer fique abaixo do conteúdo */
+            margin-top: auto;
+            /* Isso vai empurrar o footer para o final da página */
+            transition: background-color 0.5s ease, box-shadow 0.5s ease;
+            border-style: solid;
+            border-width: 4px 0 0 0;
+            border-color: #fc0;
+        }
+
+        /* Animação de transição para o fundo do footer */
+        @keyframes gradientFooterAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .footer {
+            background: linear-gradient(45deg, #363636, #000000);
+            background-size: 400% 400%;
+            animation: gradientFooterAnimation 8s ease infinite;
+        }
+        
+                /* Animação para o modal descer de cima */
+		@keyframes slideDown {
+		    0% {
+		        transform: translateY(-100%);
+		        opacity: 0;
+		    }
+		    100% {
+		        transform: translateY(0);
+		        opacity: 1;
+		    }
+		}
+		
+		/* Animação para o modal fechar com slide up */
+		@keyframes slideUp {
+		    0% {
+		        transform: translateY(0);
+		        opacity: 1;
+		    }
+		    100% {
+		        transform: translateY(-100%);
+		        opacity: 0;
+		    }
+		}
+		
+		/* Estilos para o botão de fechar */
+		.fechar-modal {
+		    background: none;
+		    border: none;
+		    box-shadow: none;
+		    padding: 0;
+		    cursor: pointer;
+		}
+		
+		.fechar-modal i {
+		    font-size: 2rem;
+		    color: #ff0000; /* Cor vermelha */
+		    transition: 0.3s;
+		}
+		
+		/* Efeito ao passar o mouse no botão de fechar */
+		.fechar-modal i:hover {
+		    color: #B22222; /* Vermelho mais escuro */
+		    transform: scale(1.2);
+		}
+		
+		/* Corpo do modal estilizado */
+		.modal-content {
+		    background: rgba(255, 255, 255, 0.95);
+		    border-radius: 10px;
+		    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+		    animation: slideDown 0.5s ease; /* Aplica a animação de entrada */
+		}
+		
+		/* Estilização do título */
+		.modal-title {
+		    font-weight: bold;
+		    color: #ff0000; /* Vermelho */
+		}
+		
+		/* Corpo do modal */
+		.modal-body {
+		    text-align: center;
+		    font-size: 1.2rem;
+		    font-weight: 500;
+		}
+        
+    </style>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark navbar-background">
+        <div class="container">
+            <!-- Logo à esquerda -->
+            <a class="navbar-brand" href="/home">
+                <img src="https://www.harasrosamystica.com.br/wp-content/uploads/2024/07/logo-header-novo.webp"
+                    alt="Logo Haras Rosa Mystica">
+            </a>
+
+            <!-- Botão do menu responsivo -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#conteudoNavbarSuportado"
+                aria-controls="conteudoNavbarSuportado" aria-expanded="false" aria-label="Alterna navegação">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Div vazia para centralizar o menu de navegação -->
+            <div class="d-none d-lg-flex flex-grow-1"></div>
+
+            <!-- Conteúdo centralizado -->
+            <div class="collapse navbar-collapse justify-content-center flex-grow-0" id="conteudoNavbarSuportado">
+
+                <a href="/home" class="dropdown-item home-icon">
+                    <i class="fa-solid fa-house"></i> <!-- Ícone de "casinha" -->
+                </a>
+
+                <div class="dropdown">
+                    <a class="dropdown-item user-icon" href="#" id="userMenu" role="button">
+                        <i class="fa-solid fa-user" style="color: #ffffff;"></i>
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-left" style="width: 250px; background-color: #363636;">
+
+                        <a class="dropdown-item" href="/administrativo/usuarios/perfil"
+                            style="display: flex; align-items: center; justify-content: space-between;">
+
+                            <span th:text="${usuario.nome_usuario}" style="border: 2px solid #ccc; padding: 5px 10px; border-radius: 5px; cursor: pointer; 
+	                         transition: all 0.3s ease; display: inline-block;">
+                            </span>
+
+                            <i class="fa-solid fa-circle"
+                                style="color: #00ff00; font-size: 12px; margin-left: 15px;"></i>
+                        </a>
+
+                        <a class="dropdown-item" th:if="${usuario.tipo == 'ADMIN'}"
+                            href="/administrativo/usuarios/listar"
+                            style="display: flex; align-items: center; justify-content: space-between;">
+                            <span style="border: 2px solid #ccc; padding: 5px 10px; border-radius: 5px; 
+	                         cursor: pointer; transition: all 0.3s ease;">
+                                Administrador
+                            </span>
+
+                            <i class="fa-solid fa-circle"
+                                style="color: #363636; font-size: 12px; margin-left: 15px;"></i>
+                        </a>
+                        <a class="dropdown-item" href="/ajuda"
+                            style="display: flex; align-items: center; justify-content: space-between;">
+                            <span style="border: 2px solid #ccc; padding: 5px 10px; border-radius: 5px; 
+						           cursor: pointer; transition: all 0.3s ease;">
+                                Manual
+                            </span>
+                            <i class="fa-solid fa-circle"
+                                style="color: #363636; font-size: 12px; margin-left: 15px;"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <a class="dropdown-item" href="/sair">
+                    <i class="fa-solid fa-right-from-bracket" style="color: #ff0000;"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container d-flex justify-content-center align-items-center">
+        <div class="form-container" style="width: 800px; max-width: 900px;">
+            <form action="/administrativo/garanhoes/editarGaranhao" th:object="${garanhao}" method="POST"
+                id="garanhaoForm">
+
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <a href="/administrativo/garanhoes/listar" class="custom-link">
+                        <i class="fa-solid fa-circle-left"></i>
+                    </a>
+                    </a>
+                    <h1 class="m-0 text-center flex-grow-1">
+                        Garanhão - [[${garanhao.nome_garanhao}]]
+                    </h1>
+
+                    <div style="width: 100px;"></div>
+                </div>
+
+                <div class="custom-divider"></div>
+
+                <div class="form-row">
+                    <div class="col-12 col-md-6">
+                        <label for="nome_garanhao" class="label-info">Nome do Garanhão</label>
+                        <input type="text" required id="nome_garanhao" th:field="*{nome_garanhao}" class="form-control"
+                            th:readonly="${usuario.tipo != 'ADMIN'}" maxlength="40" />
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label for="CorPalhetaSelect">Cor da Palheta</label>
+                        <select id="CorPalhetaSelect" th:data-cor-garanhao="${garanhao.cor_palheta}" required
+                            th:field="*{cor_palheta}" class="form-control select2" onchange="gerenciarCores(this)"
+                            th:attr="disabled=${usuario.tipo != 'ADMIN'}">
+                            <option value="">Escolha uma cor</option>
+                            <option value="adicionar">+ Adicionar nova cor</option>
+                            <option value="excluir">🗑️ Excluir uma cor</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <!-- Modal para Adicionar Cor -->
+                <div class="modal fade" id="modalAdicionarCor" tabindex="-1" aria-labelledby="modalAdicionarCorLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalAdicionarCorLabel">Adicionar Nova Cor</h5>
+                                <button type="button" class="fechar-modal" data-bs-dismiss="modal" aria-label="Fechar">
+                                    <i class="fa-solid fa-circle-xmark"></i>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="text" id="inputNovaCor" class="form-control"
+                                    placeholder="Digite o nome da nova cor">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn btn-primary"
+                                    onclick="confirmarAdicionarCor()">Adicionar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal para Excluir Cor -->
+                <div class="modal fade" id="modalExcluirCor" tabindex="-1" aria-labelledby="modalExcluirCorLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalExcluirCorLabel">Excluir Cor</h5>
+                                <button type="button" class="fechar-modal" data-bs-dismiss="modal" aria-label="Fechar">
+                                    <i class="fa-solid fa-circle-xmark"></i>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <select id="selectExcluirCor" class="form-control">
+                                    <option value="">Selecione uma cor para excluir</option>
+                                </select>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn btn-danger"
+                                    onclick="confirmarExcluirCor()">Excluir</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Dinâmico -->
+                <div class="modal fade" id="modalMensagem" tabindex="-1" aria-labelledby="modalMensagemLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalMensagemLabel">Aviso</h5>
+                                <button type="button" class="fechar-modal" data-bs-dismiss="modal" aria-label="Fechar">
+                                    <i class="fa-solid fa-circle-xmark"></i>
+                                </button>
+                            </div>
+                            <div class="modal-body" id="modalMensagemTexto">
+                                <!-- Mensagem será inserida via JavaScript -->
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" id="btnFecharModalMensagem">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-12 col-md-6">
+                        <label for="botijaoSelect">Botijão</label>
+                        <select id="botijaoSelect" required th:field="*{botijao}" class="form-control select2"
+                            th:disabled="${usuario.tipo != 'ADMIN'}">
+                            <option value="">Escolha uma letra</option>
+                            <option value="A" th:selected="${botijao == 'A'}">A</option>
+                            <option value="B" th:selected="${botijao == 'B'}">B</option>
+                            <option value="C" th:selected="${botijao == 'C'}">C</option>
+                            <option value="D" th:selected="${botijao == 'D'}">D</option>
+                            <option value="E" th:selected="${botijao == 'E'}">E</option>
+                            <option value="F" th:selected="${botijao == 'F'}">F</option>
+                            <option value="G" th:selected="${botijao == 'G'}">G</option>
+                            <option value="H" th:selected="${botijao == 'H'}">H</option>
+                            <option value="I" th:selected="${botijao == 'I'}">I</option>
+                            <option value="J" th:selected="${botijao == 'J'}">J</option>
+                            <option value="K" th:selected="${botijao == 'K'}">K</option>
+                            <option value="L" th:selected="${botijao == 'L'}">L</option>
+                            <option value="M" th:selected="${botijao == 'M'}">M</option>
+                            <option value="N" th:selected="${botijao == 'N'}">N</option>
+                            <option value="O" th:selected="${botijao == 'O'}">O</option>
+                            <option value="P" th:selected="${botijao == 'P'}">P</option>
+                            <option value="Q" th:selected="${botijao == 'Q'}">Q</option>
+                            <option value="R" th:selected="${botijao == 'R'}">R</option>
+                            <option value="S" th:selected="${botijao == 'S'}">S</option>
+                            <option value="T" th:selected="${botijao == 'T'}">T</option>
+                            <option value="U" th:selected="${botijao == 'U'}">U</option>
+                            <option value="V" th:selected="${botijao == 'V'}">V</option>
+                            <option value="W" th:selected="${botijao == 'W'}">W</option>
+                            <option value="X" th:selected="${botijao == 'X'}">X</option>
+                            <option value="Y" th:selected="${botijao == 'Y'}">Y</option>
+                            <option value="Z" th:selected="${botijao == 'Z'}">Z</option>
+                        </select>
+
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label for="data_contagem_inicial" class="label-info">Data contagem inicial</label>
+                        <input type="date" th:field="*{data_contagem_inicial}" class="form-control"
+                            th:disabled="${usuario.tipo != 'ADMIN'}">
+                    </div>
+                </div>
+
+                <!-- Modal de Aviso -->
+                <div class="modal fade" id="canecaModal" tabindex="-1" aria-labelledby="canecaModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="canecaModalLabel">Aviso</h5>
+                                <button type="button" class="fechar-modal" data-bs-dismiss="modal" aria-label="Fechar">
+                                    <i class="fa-solid fa-circle-xmark"></i>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Números negativos não são permitidos.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-12 col-md-6">
+                        <label for="caneca" class="label-info">Número da Caneca</label>
+                        <input type="number" required id="caneca" th:field="*{caneca}" class="form-control"
+                            th:readonly="${usuario.tipo != 'ADMIN'}" min="1" />
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label for="saldo_atual_palhetas" class="label-info">Saldo atual de Palhetas</label>
+							<input type="number" id="saldo_atual_palhetas" th:field="*{saldo_atual_palhetas}"
+							       class="form-control" th:readonly="${usuario.tipo != 'ADMIN'}"
+							       onchange="atualizarSaldo();">
+                    </div>
+                </div>
+
+                <!-- Modal de Aviso -->
+                <div class="modal fade" id="saldoAtualModal" tabindex="-1" aria-labelledby="saldoAtualModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="saldoAtualModalLabel">Aviso</h5>
+                                <button type="button" class="fechar-modal" data-bs-dismiss="modal" aria-label="Fechar">
+                                    <i class="fa-solid fa-circle-xmark"></i>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Números negativos não são permitidos.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row justify-content-center">
+			    <div class="col-12 col-md-6 text-center">
+                        
+                    
+                    
+                    <label for="data_cadastro" class="label-info">Data do cadastro</label>
+                        <input type="text" th:field="*{data_cadastro}"
+					       th:value="${#dates.format(data_cadastro, 'dd/MM/yyyy HH:mm:ss')}" 
+					       class="form-control" 
+					       readonly 
+					       style="text-align: center;" />
+
+                    </div>
+                </div>
+
+                <div class="form-row">
+                
+                <!-- Modalidade -->
+                <div class="col-12 col-md-6" th:if="${usuario.tipo == 'ADMIN'}">
+                    <label for="modalidadeSelect">Modalidade</label>
+                    <select id="modalidadeSelect" required th:field="*{modalidade}" class="form-control select2"
+                        th:disabled="${usuario.tipo != 'ADMIN'}">
+                        <option value="">Escolha uma letra</option>
+                        <option value="palheta" th:selected="${modalidade == 'palheta'}">Palheta</option>
+                        <option value="prenhes" th:selected="${modalidade == 'prenhes'}">Prenhes</option>
+                        <option value="outros" th:selected="${modalidade == 'outros'}">Outros</option>
+                    </select>
+                </div>
+                    
+                 <!-- Exibir os campos apenas para ADMIN -->
+                 <div class="col-12 col-md-6" th:if="${usuario.tipo == 'ADMIN'}">
+                     <label for="valor" class="label-info">Valor</label>
+                     <div class="input-group">
+                         <input type="number" id="valor" th:field="*{valor}" class="form-control" min="1"
+                             step="0.01" />
+                         <select id="moeda" th:field="*{moeda}" class="form-control">
+                             <option value="BRL">R$ Real</option>
+                             <option value="USD">$ Dólar</option>
+                             <option value="EUR">€ Euro</option>
+                         </select>
+                     </div>
+                 </div>
+                 
+                </div>
+
+                <div class="custom-divider"></div>
+
+                <div class="d-flex justify-content-between mt-3">
+
+                    <!-- Modal de Confirmação de Exclusão -->
+                    <div class="modal fade" id="exclusaoModal" tabindex="-1" aria-labelledby="exclusaoModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exclusaoModalLabel">Confirmação</h5>
+                                    <button type="button" class="fechar-modal" data-bs-dismiss="modal"
+                                        aria-label="Fechar">
+                                        <i class="fa-solid fa-circle-xmark"></i>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Tem certeza que deseja excluir este garanhão?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancelar</button>
+                                    <a id="confirmarExclusaoBtn" class="btn btn-danger">Excluir</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <a th:if="${usuario.tipo == 'ADMIN'}"
+                        th:href="@{/removerGaranhao/{id_garanhao}(id_garanhao=${garanhao.id_garanhao})}"
+                        class="btn btn-danger btn-sm" onclick="openExclusaoModal(this); return false;">
+                        <i class="fa-solid fa-trash" style="color: #ffffff;"></i> Excluir
+                    </a>
+
+
+                    <a th:if="${usuario.tipo != 'ADMIN'}" class="btn btn-danger btn-sm"
+                        style="pointer-events: none; color: #ffffff; cursor: not-allowed; background-color: #C0C0C0;">
+                        <i class="fa-solid fa-trash" style="color: #ffffff;"></i> Excluir
+                    </a>
+
+                    <a href="#" id="btnImprimir" class="btn btn-dark btn-sm" onclick="imprimirFormulario()">
+                        <i class="fa-solid fa-print"></i> Imprimir
+                    </a>
+
+                    <!-- Botão clicável para ADMIN -->
+                    <button th:if="${usuario.tipo == 'ADMIN'}" type="submit" class="btn btn-light btn-sm"
+                        id="btnEditarGaranhao">
+                        <i class="fa-solid fa-plus"></i> Editar Garanhão
+                    </button>
+
+                    <!-- Botão desativado para não ADMIN -->
+                    <button th:if="${usuario.tipo != 'ADMIN'}" type="button" class="btn btn-light btn-sm"
+                        style="pointer-events: none; color: #ffffff; cursor: not-allowed; background-color: #C0C0C0;">
+                        <i class="fa-solid fa-plus" style="color: #ffffff;"></i> Editar Garanhão
+                    </button>
+
+                    <input type="hidden" th:field="*{id_garanhao}" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Início do Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Input Center.</p>
+            <p>Todos os direitos reservados.</a></p>
+
+        </div>
+    </footer>
+    <!-- Fim do Footer -->
+
+    <!-- Importando Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+    <!-- Bootstrap JS (Necessário para o modal funcionar) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+
+        function inicializar() {
+            $(document).ready(function () {
+                inicializarSelectGaranhao();
+                configurarValidacaoQuantidade();
+            });
+        }
+
+        $(document).ready(function () {
+            $('#botijaoSelect').select2({
+                dropdownAutoWidth: true,
+                width: '100%',
+                dropdownParent: $('body') // Garante que abra para baixo
+            });
+        });
+
+        $(document).ready(function () {
+            $('#CorPalhetaSelect').select2({
+                dropdownAutoWidth: true,
+                width: '100%',
+                dropdownParent: $('body') // Garante que abra para baixo
+            });
+        });
+
+        // Função para inicializar o Select2 e configurar o evento de alteração
+        function inicializarSelectGaranhao() {
+            $('#garanhaoSelect').select2();
+
+            $('#garanhaoSelect').on('change', function () {
+                var idGaranhao = $(this).val();
+
+                if (idGaranhao) {
+                    buscarDadosGaranhao(idGaranhao);
+                } else {
+                    limparCamposGaranhao();
+                }
+            });
+        }
+
+        document.getElementById("saldo_atual_palhetas").addEventListener("input", function (event) {
+            const input = event.target;
+            if (input.value < 0) {
+                input.value = "0"; // substitui o valor negativo para 0
+                let modal = new bootstrap.Modal(document.getElementById("saldoAtualModal")); // Instancia o modal
+                modal.show(); // Exibe o modal
+            }
+        });
+
+        document.getElementById("caneca").addEventListener("input", function (event) {
+            const input = event.target;
+            if (input.value < 0) {
+                input.value = "0"; // substitui o valor negativo para 0
+                let modal = new bootstrap.Modal(document.getElementById("canecaModal")); // Instancia o modal
+                modal.show(); // Exibe o modal
+            }
+        });
+
+        function openExclusaoModal(link) {
+            // Exibe o modal de confirmação
+            const modal = new bootstrap.Modal(document.getElementById('exclusaoModal'));
+            modal.show();
+
+            // Define a ação do botão "Excluir" dentro do modal para seguir o href original
+            document.getElementById('confirmarExclusaoBtn').onclick = function () {
+                window.location.href = link.href;
+            };
+        }
+
+        // Função para buscar os dados do garanhão selecionado via AJAX
+        function buscarDadosGaranhao(idGaranhao) {
+            $.ajax({
+                url: "/administrativo/garanhoes/dados/" + idGaranhao,
+                method: "GET",
+                success: function (data) {
+                    preencherCamposGaranhao(data);
+                }
+            });
+        }
+
+        // Função para preencher os campos com os dados do garanhão
+        function preencherCamposGaranhao(data) {
+            $("#botijao").val(data.botijao);
+            $("#caneca").val(data.caneca);
+            $("#cor_palheta").val(data.cor_palheta);
+            $("#saldo-atual-palhetas").text(data.saldo_atual_palhetas);
+            $("#quantidade").attr('max', data.saldo_atual_palhetas);
+        }
+
+        // Função para limpar os campos do garanhão
+        function limparCamposGaranhao() {
+            $("#botijao, #caneca, #cor_palheta").val("");
+            $("#saldo-atual-palhetas").text("0");
+            $("#quantidade").attr('max', 0);
+        }
+
+        // Função para configurar a validação de quantidade
+        function configurarValidacaoQuantidade() {
+            const quantidadeInput = document.getElementById('quantidade');
+            const saldoAtualSpan = document.getElementById('saldo-atual-palhetas');
+
+            quantidadeInput.addEventListener('input', (event) => {
+                const saldoAtual = parseInt(saldoAtualSpan.textContent, 10);
+                const valorDigitado = parseInt(event.target.value, 10);
+
+                if (valorDigitado > saldoAtual) {
+                    event.target.value = saldoAtual;
+                    alert('Você não pode selecionar mais do que o saldo restante.');
+                }
+            });
+        }
+
+        // Função para atualizar o valor máximo do campo de quantidade
+        function atualizarMaximo() {
+            const saldoAtual = parseInt(document.getElementById('saldo-atual-palhetas').textContent, 10);
+            document.getElementById('quantidade').max = saldoAtual;
+        }
+
+        // Função para exibir campos adicionais baseados no destino
+        function mostrarCampoAdicional() {
+            const destino = document.getElementById("destino").value;
+            const campos = {
+                venda: "campoVenda",
+                uso_interno: "campoUsoInterno",
+                transferencia: "campoTransferencia",
+            };
+
+            Object.values(campos).forEach(id => document.getElementById(id).style.display = "none");
+
+            if (campos[destino]) {
+                const campoAtivo = document.getElementById(campos[destino]);
+                campoAtivo.style.display = "block";
+
+                campoAtivo.addEventListener("input", function () {
+                    this.value = limparValor(this.value);
+                });
+            }
+        }
+
+        // Função para limpar o valor do campo
+        function limparValor(valor) {
+            return valor
+                .replace(/,+/g, ",")
+                .replace(/^,|,$/g, "")
+                .trim();
+        }
+
+        // Função para salvar dados no banco
+        function salvarDados() {
+            const venda = limparValor(document.getElementById("campoVenda").value);
+            const usoInterno = limparValor(document.getElementById("campoUsoInterno").value);
+            const transferencia = limparValor(document.getElementById("campoTransferencia").value);
+
+            console.log("Venda:", venda);
+            console.log("Uso Interno:", usoInterno);
+            console.log("Transferência:", transferencia);
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const select = document.getElementById('CorPalhetaSelect');
+            const coresSalvas = JSON.parse(localStorage.getItem('coresPersonalizadas')) || [];
+
+            // 1. Adiciona as cores salvas do localStorage ao select, se ainda não existirem.
+            coresSalvas.forEach(cor => {
+                if (![...select.options].some(option => option.value.toLowerCase() === cor.toLowerCase())) {
+                    // Inserir logo após a primeira opção ("Escolha uma cor")
+                    const novaOpcao = document.createElement('option');
+                    novaOpcao.value = cor;
+                    novaOpcao.text = cor;
+                    select.insertBefore(novaOpcao, select.options[1]);
+                }
+            });
+
+            // 2. Pega a cor do garanhão (do banco) a partir do atributo data
+            const corDoGaranhao = select.getAttribute('data-cor-garanhao');
+
+            if (corDoGaranhao && corDoGaranhao.trim() !== "") {
+                // Se essa cor não existir ainda no select, adiciona antes da opção "adicionar"
+                if (![...select.options].some(option => option.value === corDoGaranhao)) {
+                    // Procura a posição da opção "adicionar"
+                    const indexAdicionar = [...select.options].findIndex(option => option.value === "adicionar");
+                    const novaOpcao = document.createElement('option');
+                    novaOpcao.value = corDoGaranhao;
+                    novaOpcao.text = corDoGaranhao;
+                    if (indexAdicionar !== -1) {
+                        select.insertBefore(novaOpcao, select.options[indexAdicionar]);
+                    } else {
+                        select.appendChild(novaOpcao);
+                    }
+                }
+                // Define o valor do select como a cor do garanhão
+                select.value = corDoGaranhao;
+            } else {
+                // Se não houver cor no banco, usa o valor do localStorage (se houver)
+                const corSelecionada = localStorage.getItem('corSelecionada');
+                if (corSelecionada && corSelecionada.trim() !== "") {
+                    select.value = corSelecionada;
+                }
+            }
+        });
+
+        let modalAnterior = null; // Guarda o último modal aberto
+        let modalAdicionarCorInstance = null; // Guarda a instância do modal "Adicionar Nova Cor"
+
+        document.addEventListener("DOMContentLoaded", function () {
+            carregarCoresSalvas(); // Carrega as cores salvas quando o DOM for carregado
+        });
+
+        function carregarCoresSalvas() {
+            const select = document.getElementById('CorPalhetaSelect');
+            const coresSalvas = JSON.parse(localStorage.getItem('coresPersonalizadas')) || [];
+
+            // Adiciona cores salvas ao select, se não estiverem já presentes
+            coresSalvas.forEach(cor => {
+                if (![...select.options].some(option => option.value.toLowerCase() === cor.toLowerCase())) {
+                    const novaOpcao = document.createElement('option');
+                    novaOpcao.value = cor;
+                    novaOpcao.text = cor;
+                    select.insertBefore(novaOpcao, select.options[select.options.length - 2]);
+                }
+            });
+        }
+
+        function gerenciarCores(select) {
+            if (select.value === 'adicionar') {
+                abrirModalAdicionar(); // Abre o modal para adicionar cor
+            } else if (select.value === 'excluir') {
+                abrirModalExcluir(); // Abre o modal para excluir cor
+            }
+        }
+
+        function abrirModalAdicionar() {
+            if (modalAnterior) {
+                // Fecha o modal anterior, se houver
+                const modalAnteriorInstance = bootstrap.Modal.getInstance(modalAnterior._element);
+                modalAnteriorInstance.hide();
+            }
+
+            // Abre o modal de adicionar cor
+            modalAdicionarCorInstance = new bootstrap.Modal(document.getElementById('modalAdicionarCor'));
+            modalAdicionarCorInstance.show();
+        }
+
+        function abrirModalExcluir() {
+            const selectExcluir = document.getElementById('selectExcluirCor');
+            selectExcluir.innerHTML = '<option value="">Selecione uma cor para excluir</option>';
+
+            const coresSalvas = JSON.parse(localStorage.getItem('coresPersonalizadas')) || [];
+
+            if (coresSalvas.length === 0) {
+                // Exibe mensagem se não houver cores para excluir
+                exibirModal('Não há cores personalizadas para excluir.');
+                return;
+            }
+
+            // Preenche o select com as cores salvas
+            coresSalvas.forEach(cor => {
+                const option = document.createElement('option');
+                option.value = cor;
+                option.textContent = cor;
+                selectExcluir.appendChild(option);
+            });
+
+            if (modalAnterior) {
+                // Fecha o modal anterior, se houver
+                const modalAnteriorInstance = bootstrap.Modal.getInstance(modalAnterior._element);
+                modalAnteriorInstance.hide();
+            }
+
+            // Abre o modal de excluir cor
+            modalAnterior = new bootstrap.Modal(document.getElementById('modalExcluirCor'));
+            modalAnterior.show();
+        }
+
+        function confirmarAdicionarCor() {
+            const inputNovaCor = document.getElementById('inputNovaCor').value.trim();
+            const select = document.getElementById('CorPalhetaSelect');
+
+            if (inputNovaCor !== '') {
+                // Verifica se a cor já existe na lista
+                const existe = Array.from(select.options).some(option => option.value.toLowerCase() === inputNovaCor.toLowerCase());
+
+                if (!existe) {
+                    // Adiciona nova cor ao select e ao localStorage
+                    const novaOpcao = document.createElement('option');
+                    novaOpcao.value = inputNovaCor;
+                    novaOpcao.text = inputNovaCor;
+                    select.insertBefore(novaOpcao, select.options[select.options.length - 2]);
+
+                    let coresSalvas = JSON.parse(localStorage.getItem('coresPersonalizadas')) || [];
+                    coresSalvas.push(inputNovaCor);
+                    localStorage.setItem('coresPersonalizadas', JSON.stringify(coresSalvas));
+
+                    select.value = inputNovaCor;
+                } else {
+                    // Exibe mensagem se a cor já estiver na lista
+                    exibirModal('Essa cor já está na lista.');
+                    bootstrap.Modal.getInstance(document.getElementById('modalAdicionarCor')).hide();
+                }
+            }
+
+            document.getElementById('inputNovaCor').value = '';
+            bootstrap.Modal.getInstance(document.getElementById('modalAdicionarCor')).hide();
+        }
+
+        function confirmarExcluirCor() {
+            const selectExcluir = document.getElementById('selectExcluirCor');
+            const corParaExcluir = selectExcluir.value;
+
+            if (corParaExcluir) {
+                const select = document.getElementById('CorPalhetaSelect');
+
+                // Remove a cor selecionada do select
+                Array.from(select.options).forEach(option => {
+                    if (option.value === corParaExcluir) {
+                        select.removeChild(option);
+                    }
+                });
+
+                // Atualiza o localStorage, removendo a cor excluída
+                let coresSalvas = JSON.parse(localStorage.getItem('coresPersonalizadas')) || [];
+                const novasCores = coresSalvas.filter(cor => cor !== corParaExcluir);
+                localStorage.setItem('coresPersonalizadas', JSON.stringify(novasCores));
+
+                // Exibe o modal com a mensagem de sucesso
+                exibirModal(`A cor "${corParaExcluir}" foi excluída com sucesso.`);
+
+                // Fecha o modal de exclusão
+                bootstrap.Modal.getInstance(document.getElementById('modalExcluirCor')).hide();
+            }
+        }
+
+        function exibirModal(mensagem) {
+            document.getElementById('modalMensagemTexto').innerText = mensagem;
+            var modalMensagem = new bootstrap.Modal(document.getElementById('modalMensagem'));
+            modalMensagem.show();
+        }
+
+        document.getElementById('btnFecharModalMensagem').addEventListener('click', function () {
+            // Fecha o modal de mensagem sem reabrir o modal de adicionar cor
+            var modalMensagemInstance = bootstrap.Modal.getInstance(document.getElementById('modalMensagem'));
+            if (modalMensagemInstance) {
+                modalMensagemInstance.hide();
+            }
+        });
+
+        document.getElementById('btnEditarGaranhao').addEventListener('click', function (event) {
+            const select = document.getElementById('CorPalhetaSelect');
+            const selectedValue = select.value;
+
+            // Verifica se a opção selecionada é "adicionar" ou "excluir"
+            if (selectedValue === 'adicionar' || selectedValue === 'excluir') {
+                // Impede o salvamento
+                exibirModal('Você não pode salvar com a opção "Adicionar" ou "Excluir" selecionada. \n Por favor, selecione uma cor válida.');
+                // Impede o envio do formulário ou a execução de qualquer ação de salvamento
+                event.preventDefault(); // Impede a ação do botão de salvar
+                return; // Não prossegue com o salvamento
+            }
+
+            salvarGaranhao();
+        });
+
+        // Função para exibir o modal
+        function exibirModal(mensagem) {
+            document.getElementById('modalMensagemTexto').innerText = mensagem;
+            var modalMensagem = new bootstrap.Modal(document.getElementById('modalMensagem'));
+            modalMensagem.show();
+        }
+
+
+        // Função para imprimir o formulário
+        function imprimirFormulario(event) {
+            const select = document.getElementById('CorPalhetaSelect');
+            const selectedValue = select.value;
+
+            // Verifica se a opção selecionada é "adicionar" ou "excluir"
+            if (selectedValue === 'adicionar' || selectedValue === 'excluir') {
+                // Impede o salvamento
+                exibirModal('Você não pode imprimir com a opção "Adicionar" ou "Excluir" selecionada. \n Por favor, selecione uma cor válida.');
+
+                // Impede o envio do formulário ou a execução de qualquer ação de salvamento
+                event.preventDefault(); // Impede a ação do botão de salvar
+                return; // Não prossegue com o salvamento
+            }
+
+            // Captura os valores dos campos do formulário
+            const nomeGaranhao = document.getElementById('nome_garanhao').value;
+            const corPalheta = document.querySelector('select[name="cor_palheta"]').value;
+            const botijao = document.querySelector('select[name="botijao"]').value;
+
+            // Captura o valor do input de data (yyyy-MM-dd)
+            const dataInputElement = document.getElementById('data_contagem_inicial');
+            let dataContagemInicial = "";
+
+            // Verifica se o campo existe e tem valor antes de processar
+            if (dataInputElement && dataInputElement.value) {
+                const dataInput = dataInputElement.value; // Obtém o valor do input
+                const [ano, mes, dia] = dataInput.split('-'); // Divide a string "yyyy-MM-dd"
+                dataContagemInicial = `${dia}/${mes}/${ano}`; // Monta no formato dd/MM/yyyy
+            }
+
+            // Captura os outros valores normalmente
+            const caneca = document.getElementById('caneca').value;
+            const dataCadastro = document.getElementById('data_cadastro').value;
+            const saldoAtualPalhetas = document.getElementById('saldo_atual_palhetas').value;
+
+            // Abre uma nova janela para impressão
+            const janelaImpressao = window.open('', '', 'width=800,height=600');
+            janelaImpressao.document.write(`
+				<html>
+				    <head>
+				        <title>Impressão - Haras Rosa Mystica</title>
+				        <style>
+				            /* Estilo geral */
+				            body {
+				                font-family: 'Arial', sans-serif;
+				                margin: 0;
+				                padding: 0;
+				                color: #000;
+				                background-color: #fff;
+				            }
+
+				            /* Cabeçalho */
+				            .header {
+				                display: flex;
+				                align-items: center;
+				                justify-content: space-between;
+				                padding: 20px;
+				                border-bottom: 1px solid #000;
+				            }
+
+				            .header-img img {
+				                width: 120px;
+				                height: auto;
+				            }
+
+				            .header-title {
+				                font-size: 28px;
+				                font-weight: bold;
+				                text-transform: uppercase;
+				                color: #000;
+				                margin: 0 20px;
+				                text-align: center;
+				                flex-grow: 1;
+				            }
+
+				            /* Conteúdo */
+				            .content {
+				                width: 90%; /* Ajuste para consistência com o primeiro exemplo */
+				                margin: 20px auto;
+				            }
+
+				            table {
+				                width: 100%;
+				                border-collapse: collapse;
+				                margin: 20px auto; /* Adicionado para centralizar */
+				                font-size: 14px; /* Garantindo consistência com o primeiro exemplo */
+				                color: #000;
+				            }
+
+				            th, td {
+				                border: 1px solid #000;
+				                padding: 8px; /* Ajuste no padding para consistência */
+				                text-align: left;
+				            }
+
+				            th {
+				                font-weight: bold;
+				                text-transform: uppercase;
+				            }
+
+				            table td:first-child {
+				                font-weight: bold;
+				                width: 30%;
+				            }
+
+				            /* Área para assinatura */
+				            .signature {
+				                width: 90%; /* Ajustado para consistência com margens */
+				                margin: 30px auto;
+				                font-size: 12px; /* Alterado para consistência geral */
+				                display: flex;
+				                justify-content: space-between;
+				                gap: 20px;
+				            }
+
+				            .signature .label {
+				                text-align: center;
+				                margin-bottom: 20px;
+				            }
+
+				            /* Rodapé */
+				            .footer {
+				                text-align: center;
+				                font-size: 12px; /* Garantindo consistência com tamanho do texto no corpo */
+				                color: #000;
+				                padding: 10px 0;
+				                border-top: 1px solid #000;
+				                position: relative;
+				            }
+
+				            /* Configurações para impressão */
+				            @media print {
+
+				                .footer {
+				                    position: fixed;
+				                    bottom: 0;
+				                    width: 100%;
+				                    border: none;
+				                }
+
+				                .header, .content {
+				                    page-break-inside: avoid;
+				                }
+				            }
+				        </style>
+				    </head>
+				    <body>
+				        <div class="header">
+				            <div class="header-img">
+				            <img src="https://www.harasrosamystica.com.br/wp-content/uploads/2024/07/logo-header-novo.webp" alt="Logo Haras Rosa Mystica">
+				            </div>
+				            <h2 class="header-title">Detalhes do Garanhão</h2>
+				        </div>
+
+				        <div class="content">
+				            <table>
+				                <tr>
+				                    <td>Nome do Garanhão:</td>
+				                    <td>${nomeGaranhao}</td>
+				                </tr>
+				                <tr>
+				                    <td>Letra do Botijão:</td>
+				                    <td>${botijao}</td>
+				                </tr>
+				                <tr>
+				                    <td>Número da Caneca:</td>
+				                    <td>${caneca}</td>
+				                </tr>
+				                <tr>
+				                    <td>Cor da Palheta:</td>
+				                    <td>${corPalheta}</td>
+				                </tr>
+				                <tr>
+				                    <td>Saldo Atual de Palhetas:</td>
+				                    <td>${saldoAtualPalhetas}</td>
+				                </tr>
+				                <tr>
+				                    <td>Data da Contagem:</td>
+				                    <td>${dataContagemInicial}</td>
+				                </tr>
+				                <tr>
+				                    <td>Data do Cadastro:</td>
+				                    <td>${dataCadastro}</td>
+				                </tr>
+				            </table>
+				        </div>
+
+				        <div class="footer">
+				            <div class="signature">
+				                <div class="signature-block">
+				                    <div class="label">___________________________________________</div>
+				                    <div class="label">Assinatura do veterinário</div>
+				                </div>
+				            </div>
+				            <div class="footer-text">
+				                © 2024 Haras Rosa Mystica - Todos os direitos reservados.
+				            </div>
+				        </div>
+				    </body>
+				</html>
+
+			    `);
+
+            // Fecha o conteúdo e prepara para impressão
+            janelaImpressao.document.close();
+            janelaImpressao.focus();
+
+            // Aguarda meio segundo antes de iniciar a impressão
+            setTimeout(function () {
+                janelaImpressao.print();
+                janelaImpressao.close();
+            }, 500);
+        }
+
+        // Função para exibir o modal com a mensagem
+        function exibirModal(mensagem) {
+            document.getElementById('modalMensagemTexto').innerText = mensagem;
+            var modalMensagem = new bootstrap.Modal(document.getElementById('modalMensagem'));
+            modalMensagem.show();
+        }
+
+        // Inicializa o script ao carregar
+        inicializar();
+
+    	document.getElementById("movimentacaoForm").addEventListener("submit", function (event) {
+    	    const senha = document.getElementById("novaSenha").value;
+    	    const confirmarSenha = document.getElementById("confirmarSenha").value;
+    	    const mensagemErro = document.getElementById("mensagemErro");
+    	
+    	    if (senha !== confirmarSenha) {
+    	        event.preventDefault(); // Impede o envio do formulário
+    	        mensagemErro.style.display = "block"; // Exibe a mensagem de erro
+    	    } else {
+    	        mensagemErro.style.display = "none"; // Oculta a mensagem se estiver correta
+    	        event.preventDefault(); // Impede o envio real para simular o modal
+    	        abrirModal(); // Exibe o modal de sucesso
+    	    }
+    	});
+    	
+    	// Função para exibir o modal
+    	function abrirModal() {
+    	    document.getElementById("modalSucesso").style.display = "block";
+    	}
+    	
+    	// Função para fechar o modal
+    	function fecharModal() {
+    	    document.getElementById("modalSucesso").style.display = "none";
+    	    document.getElementById("movimentacaoForm").submit(); // Envia o formulário após fechar o modal
+    	}
+    	
+    	// Função para alternar a visibilidade da senha
+    	function togglePassword(inputId, toggleId) {
+    	    const input = document.getElementById(inputId);
+    	    const toggle = document.getElementById(toggleId);
+    	
+    	    toggle.addEventListener("click", function () {
+    	        if (input.type === "password") {
+    	            input.type = "text"; // Torna a senha visível
+    	            toggle.classList.remove("fa-eye"); // Remove o ícone de olho fechado
+    	            toggle.classList.add("fa-eye-slash"); // Adiciona o ícone de olho aberto
+    	        } else {
+    	            input.type = "password"; // Torna a senha invisível
+    	            toggle.classList.remove("fa-eye-slash"); // Remove o ícone de olho aberto
+    	            toggle.classList.add("fa-eye"); // Adiciona o ícone de olho fechado
+    	        }
+    	    });
+    	}
+    	
+    	// Inicializando a função para os campos de senha
+    	togglePassword("novaSenha", "toggleNovaSenha");
+    	togglePassword("confirmarSenha", "toggleConfirmarSenha");
+
+
+    </script>
+
+</body>
+
+</html>

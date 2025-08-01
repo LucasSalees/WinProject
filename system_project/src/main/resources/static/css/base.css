@@ -1,0 +1,141 @@
+:root {
+    /* --------- CORES CLARAS --------- */
+    
+    --color-light-white: #ffffff;          /* Branco claro */
+    --color-light-gray: #f5f5f5;           /* Cinza claro */
+    --color-light-green: #28a745;          /* Verde claro */
+    --color-light-blue-1: #4F8EF7;         /* Azul claro */
+    --color-light-blue-2: #3D6FD1;         /* Azul claro */
+    --color-light-red: #ff7f7f;             /* Vermelho claro */
+    --color-light-yellow: #fffacd;          /* Amarelo claro (lemon chiffon) */
+    --color-light-purple: #d8baf7;          /* Roxo claro */
+    --color-light-black: #666666;           /* Preto claro (cinza escuro) */
+
+    /* --------- CORES INTERMEDIÃƒÂRIAS --------- */
+
+    --color-medium-gray: #cccccc;           /* Cinza mÃƒÂ©dio */
+    --color-medium-blue: #003DA6;           /* Azul mÃƒÂ©dio */
+    --color-medium-red: #d9534f;            /* Vermelho mÃƒÂ©dio */
+    --color-medium-yellow: #f0ad4e;         /* Amarelo mÃƒÂ©dio */
+    --color-medium-purple: #7e57c2;         /* Roxo mÃƒÂ©dio */
+    --color-medium-black: #333333;           /* Preto mÃƒÂ©dio (cinza escuro) */
+    --color-medium-green: #218838;          /* Verde mÃƒÂ©dio */
+
+    /* --------- CORES ESCURAS --------- */
+
+    --color-dark-gray: #222222;             /* Cinza escuro */
+    --color-dark-gray1: #444444; 				/* Cinza mÃƒÂ©dio escuro */
+    --color-dark-blue-1: #0a0a2a ;           /* Azul escuro */
+    --color-dark-blue-2: #002366;           /* Azul escuro profundo */
+    --color-dark-red: #8b0000;              /* Vermelho escuro */
+    --color-dark-yellow: #b8860b;           /* Amarelo escuro (dark goldenrod) */
+    --color-light-purple: #4b0082;           /* Roxo escuro (indigo) */
+    --color-dark-black: #000000;            /* Preto puro */
+    --color-dark-green-1: #1b4d1b;          /* Verde escuro */
+    --color-dark-green-2: #145214;          /* Verde muito escuro */
+
+    /* --------- TIPOGRAFIA E ELEMENTOS --------- */
+    
+     --shadow-dark-blue-2: 0 0 0 0.2rem rgba(0, 35, 102, 0.25);
+
+    --font-family-main: 'Inter', sans-serif;
+
+    --input-height: 46px;
+    --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    
+    --border-radius: 8px;
+}
+
+/* Reset padrÃƒÂ£o */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family-main);
+    background-color: var(--color-light-white);
+    color: var(--color-light-white);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+a {
+    text-decoration: none;
+    color: var(--color-light-white);
+}
+
+ul {
+    list-style: none;
+}
+
+/* Elemento principal */
+.main-content {
+    flex: 1;
+}
+
+/* ConteÃƒÂºdo principal */
+.main-content {
+    padding-top: 60px;
+    flex: 1;
+    transition: margin-left 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--color-dark-blue-2);
+}
+
+.card {
+    background-color: var(--color-light-white);
+    border-radius: 0.5rem;
+    box-shadow: var(--box-shadow);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--color-dark-blue-2);
+}
+
+.card-text {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    color: var(--color-dark-black);
+}
+
+.card-text:last-child {
+    margin-bottom: 0;
+}
+
+.shadow-cantos {
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.shadow-text {
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+
+

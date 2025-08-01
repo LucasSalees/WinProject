@@ -1,0 +1,229 @@
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  width: 250px;
+  background-color: var(--color-dark-gray);
+  color: var(--color-white);
+  text-align: center;
+  border-radius: var(--border-radius);
+  padding: 8px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* aparece acima */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: var(--transition);
+  font-size: 0.85rem;
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* seta apontando para baixo */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--color-dark-gray) transparent transparent transparent;
+}
+
+.form-check {
+    margin-right: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.form-check-input {
+    margin-right: 6px;
+    cursor: pointer;
+}
+
+.form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.ate {
+    font-weight: 500;
+}
+
+.dias-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.dia-item {
+    background-color: var(--light-bg);
+    border-radius: var(--border-radius);
+    padding: 8px 12px;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+}
+
+.dia-item:hover {
+    background-color: #e9ecef;
+}
+      
+.input-group .form-control {
+    position: relative;
+    flex: 1 1 auto;
+    width: 1%;
+    margin-bottom: 0;
+    border-top-right-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+}
+
+.input-with-icon {
+	position: relative;
+	height: var(--input-height); /* Altura fixa para o container */
+}
+
+.input-with-icon i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-black);
+    z-index: 2;
+    opacity: 0.7;
+}
+
+.input-senha {
+	padding: 10px 40px !important;
+}
+
+#comentarios {
+	resize: vertical; /* permite apenas alteração de altura */
+	width: 100%; /* largura fixa, pode ajustar conforme necessário */
+    min-height: 125px;
+    max-height: 215px;
+}
+
+.section-card {
+    background: var(--color-lightGray);
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: box-shadow 0.3s ease;
+}
+
+.section-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+    color: #495057;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--color-primary);
+}
+
+.shadow-text {
+    font-weight: 500;
+    color: #495057;
+}
+
+.shadow-cantos {
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.shadow-cantos:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.form-group-inline {
+    display: flex;
+    gap: 1rem;
+    align-items: end;
+}
+
+.permissions-section,
+.personal-info-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #f8f9fa 100%);
+}
+
+.access-config-section {
+    background: linear-gradient(135deg, #dee2e6 0%, #dee2e6 100%);
+}
+
+input[readonly] {
+    background-color: #e9ecef; /* estilo visual para campo readonly */
+    cursor: not-allowed;
+}
+
+.progress {
+  display: flex;
+  height: 1rem;
+  overflow: hidden;
+  background-color: #e9ecef;
+  border-radius: 0.25rem;
+}
+
+.progress-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  background-color: #0d6efd;
+  transition: width 0.6s ease;
+}
+
+.progress-bar-striped {
+  background-image: linear-gradient(45deg, rgba(255,255,255,.15) 25%, transparent 25%, 
+    transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent);
+  background-size: 1rem 1rem;
+}
+
+.progress-bar-animated {
+  animation: progress-bar-stripes 1s linear infinite;
+}
+
+@keyframes progress-bar-stripes {
+  from { background-position: 1rem 0; }
+  to { background-position: 0 0; }
+}
+
+.progress-bar-vermelha {
+  background-color: #dc3545 !important; /* Vermelho (Não iniciado) */
+}
+
+.progress-bar-amarela {
+  background-color: #ffc107 !important; /* Amarelo (Em planejamento) */
+}
+
+.progress-bar-verde {
+  background-color: #28a745 !important; /* Verde (Em execução) */
+}
+
+.progress-bar-laranja {
+  background-color: #fd7e14 !important; /* Laranja (Atrasado) */
+}
+
+.progress-bar-azul {
+  background-color: #0d6efd !important; /* Azul (Concluído) */
+}
+        

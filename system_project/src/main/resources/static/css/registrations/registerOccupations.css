@@ -1,0 +1,379 @@
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  width: 250px;
+  background-color: var(--color-light-black);
+  color: var(--color-light-white);
+  text-align: center;
+  border-radius: var(--border-radius);
+  padding: 8px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* aparece acima */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: var(--transition);
+  font-size: 0.85rem;
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* seta apontando para baixo */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--color-light-black) transparent transparent transparent;
+}
+
+.ate {
+    font-weight: 500;
+}
+
+.form-check {
+    margin-right: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.form-check-input {
+    margin-right: 6px;
+    cursor: pointer;
+}
+
+.form-check-input:checked {
+    background-color: var(--color-dark-blue-2);
+    border-color: var(--color-dark-blue-2);
+}
+
+.dias-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.dia-item {
+    background-color: var(--light-bg);
+    border-radius: var(--border-radius);
+    padding: 8px 12px;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+}
+
+.dia-item:hover {
+    background-color: #e9ecef;
+}
+      
+.input-group .form-control {
+    position: relative;
+    flex: 1 1 auto;
+    width: 1%;
+    margin-bottom: 0;
+    border-top-right-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+}
+
+.input-group {
+    position: relative;
+  }
+
+  .input-group input {
+    padding-right: 40px; /* espaÃƒÂ§o para o olho */
+  }
+
+  #iconeOlho {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #999;
+  }
+  
+  .input-group .form-control {
+    position: relative;
+    flex: 1 1 auto;
+    width: 1%;
+    margin-bottom: 0;
+    border-top-right-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+}
+
+.input-with-icon {
+	position: relative;
+	height: var(--input-height); /* Altura fixa para o container */
+}
+
+.input-with-icon i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-black);
+    z-index: 2;
+    opacity: 0.7;
+}
+
+.input-senha {
+	padding: 10px 40px !important;
+}
+
+.section-card {
+    background: var(--color-lightGray);
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: box-shadow 0.3s ease;
+}
+
+.section-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+    color: var(--color-dark-black);
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--color-dark-blue-2);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.shadow-text {
+    font-weight: 500;
+    color: var(--color-black);
+}
+
+.shadow-cantos {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    transition: all 0.15s ease-in-out;
+}
+
+.shadow-cantos:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    transform: translateY(-1px);
+}
+
+.permissions-section,
+.personal-info-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #f8f9fa 100%);
+}
+
+.access-config-section {
+    background: linear-gradient(135deg, #dee2e6 0%, #dee2e6 100%);
+}
+
+.dias-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.dia-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.dia-item:hover {
+    background: var(--color-lightGray);
+    border-color: var(--color-primary);
+}
+
+.dia-item input:checked + span {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.time-range-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.ate {
+    font-weight: 500;
+    color: #6c757d;
+    white-space: nowrap;
+}
+
+.email-preview {
+    background: #e9ecef;
+    padding: 0.5rem;
+    border-radius: 6px;
+    margin-top: 0.5rem;
+    font-family: monospace;
+    font-size: 0.9rem;
+    color: #495057;
+}
+
+.form-section-header {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.form-section-header-department{
+    background: rgba(255, 255, 255, 0.8);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+
+}
+
+.fast-section {
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+
+.has-validation .input-group-text {
+    border-top-right-radius: 0.375rem !important;
+    border-bottom-right-radius: 0.375rem !important;
+}
+
+.invalid-feedback {
+    display: none;
+    width: 100%;
+    margin-top: 0.5rem;
+    font-size: 0.875em;
+    padding: 0.5rem;
+    background: #FFB6C1;
+    color: #495057;
+    font-family: monospace;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.valid-feedback {
+    display: none;
+    width: 100%;
+    margin-top: 0.5rem;
+    font-size: 0.875em;
+    padding: 0.5rem;
+    background: #3CB371;
+    color: #495057;
+    font-family: monospace;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.is-invalid ~ .invalid-feedback,
+.is-valid ~ .valid-feedback {
+    display: block;
+}
+
+.is-invalid {
+    border-color: #dc3545;
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+.is-valid {
+    border-color: #198754;
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+	/* Keeps the picture circular, consistent size, and nicely cropped */
+.img-preview {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;   /* crops edges without distortion */
+}
+	
+.img-preview {
+    border-radius: 50%;
+}
+
+/* Estilos para o Switch */
+.form-switch {
+    padding-left: 0em;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.form-switch .form-check-input {
+    width: 2em;
+    height: 1em;
+    margin-left: 0em;
+    background-color: var(--color-dark-red);
+    border-color: var(--color-light-gray);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e" );
+    background-position: left center;
+    border-radius: 2em;
+    transition: background-position 0.15s ease-in-out;
+    cursor: pointer;
+}
+
+.form-switch .form-check-input:focus {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e" );
+}
+
+.form-switch .form-check-input:checked {
+    background-position: right center;
+    background-color: var(--color-dark-blue-2); /* Cor principal do seu tema */
+    border-color: var(--color-dark-blue-2);
+}
+
+.form-switch .form-check-label {
+    margin-left: 0.5em;
+    font-weight: 500;
+    color: var(--color-dark-black);
+}
+
+/* Ajustes no container dos dias */
+.dias-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Ajuste para melhor espaçamento */
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.dia-item {
+    background-color: var(--color-light-white);
+    border-radius: 8px;
+    padding: 0.75rem 1.25rem;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+}
+
+.dia-item:hover {
+    background-color: var(--color-light-gray);
+}

@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Manual do Usuário</title>
+
+    <!-- Ícone -->
+    <link rel="icon"
+        href="https://imgs.search.brave.com/zy0sfkgKeppdWAXGyYDnopeaDcBoxZyy_1tEfu-gL8c/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvN2Q5NDZhNTVl/NmM5YzdiNDc3ZDMw/NGVmYzExZmMxNjY4/NDQzZmVhYWVkODQ2/NTVhMmYyNTJjMGE5/MTcwNTYwMS93d3cu/aGFyYXNyb3NhbXlz/dGljYS5jb20uYnIv"
+        type="image/x-icon">
+
+    <!-- CSS externo -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Asar&display=swap" rel="stylesheet">
+
+    <style>
+        /*marca d'agua*/
+        .watermark {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+            font-family: 'Arial, sans-serif';
+        }
+
+        /* Estilo para o título */
+        h1 {
+            font-size: 32px;
+            color: #cf8311;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            font-family: "Asar", Sans-serif;
+        }
+
+        h2 {
+            font-size: 25px;
+            color: #cf8311;
+            font-weight: bold;
+            margin-bottom: 33px;
+            text-align: center;
+            font-family: "Asar", Sans-serif;
+        }
+
+        /* Estilo para o fundo secundário do formulário */
+        .form-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+            margin-bottom: 10px;
+            max-width: 900px;
+            width: 100%;
+            border-top: 4px solid #808080;
+            border-bottom: 4px solid #808080;
+        }
+
+        .form-control {
+            border-radius: 8px;
+        }
+
+        /* Estilo para o divisor */
+        .custom-divider {
+            margin: 10px 0;
+            border-top: 1px solid #e1e1e1;
+        }
+
+        /* Estilo geral para o corpo */
+        body {
+            font-family: "Asar", Sans-serif;
+            background-color: #C0C0C0;
+        }
+
+        /* Customizações */
+        h5 {
+            text-align: justify;
+            margin-top: 35px;
+            margin-bottom: 10px;
+            font-size: 22px;
+            color: #495057;
+        }
+
+        .text-ultimo {
+            text-align: justify;
+            margin-top: 35px;
+            font-size: 22px;
+            color: #495057;
+            margin-bottom: 0px;
+        }
+
+        /*dropdown*/
+        .dropdown-item:hover {
+            background-color: transparent;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .dropdown {
+            font-family: "Asar", Sans-serif;
+        }
+
+        /*espaçamento entre os icones*/
+        .dropdown-item i {
+            margin-right: 8px;
+            font-size: 1.6rem;
+        }
+
+        .dropdown-item i {
+            font-size: 2rem;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        /*icone de sair*/
+        .dropdown-item i.fa-right-from-bracket:hover {
+            color: #0000ff;
+            transform: rotate(15deg);
+        }
+
+        /*nav bar**/
+        .navbar {
+            font-size: 1rem;
+            width: 100%;
+            height: 138.86px;
+            background-color: #000000C4;
+            border-style: solid;
+            border-width: 0 0 4px;
+            border-color: #fc0;
+        }
+
+        .navbar-brand img {
+            width: 300px;
+            height: 100px;
+        }
+
+        .navbar-background {
+            background: linear-gradient(45deg, #363636, #000000);
+            background-size: 400% 400%;
+            animation: gradientAnimation 8s ease infinite;
+            height: 138.86px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            font-family: 'Roboto', sans-serif;
+            position: relative;
+        }
+
+        /* Animação do navbar e dos cards */
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* submenu com o nome de usuário e administrador */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: #333;
+            padding: 0.5rem 0.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            width: 100%;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu .dropdown-item {
+            margin-bottom: 0.5rem;
+            font-size: 14px;
+            color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        /*dropdown mais esquerda */
+        .dropdown-menu-left {
+            left: -60px;
+            right: auto;
+        }
+
+        .dropdown-item i {
+            margin-left: 8px;
+        }
+
+        /* hover dentro do submenu */
+        .dropdown-item span:hover {
+            background-color: #cf8311;
+            color: #fff;
+            border-color: #cf8311;
+        }
+
+        /* Para o item de 'Administrador', centraliza o conteúdo e a bolinha verde */
+        .dropdown-item span {
+            width: 100%;
+            text-align: center;
+        }
+
+        /*botão*/
+        .btn {
+            border-radius: 50px;
+            font-size: 14px;
+        }
+
+        .btn-light {
+            background-color: #1b1e21;
+            color: white;
+            border: none;
+        }
+
+        .btn-light:hover {
+            background-color: #cf8311;
+
+        }
+
+        .btn-sm {
+            font-size: 14px;
+            padding: 10px 20px;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .imagem-padrao {
+            width: 930px;
+            max-width: 930px;
+            height: 442px;
+            object-fit: cover;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /*voltar*/
+        .custom-link {
+            color: rgb(15, 15, 15);
+            font-size: 32px;
+            text-decoration: none;
+        }
+
+        .custom-link:hover {
+            color: #cf8311;
+        }
+
+        .titulo-ajuda {
+            margin-left: 5rem !important;
+        }
+
+        .link-ajuda {
+            text-decoration: none;
+            color: #495057;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .link-ajuda:hover {
+            text-decoration: underline;
+            color: #cf8311;
+        }
+
+        .link-ajuda-ultimo {
+            text-decoration: none;
+            color: #495057;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+
+        .link-ajuda-ultimo:hover {
+            text-decoration: underline;
+            color: #cf8311;
+        }
+
+        .titulo-ajuda {
+            margin-left: 5rem !important;
+        }
+
+        .mb-3,
+        .my-3 {
+            margin-bottom: 3rem !important;
+        }
+
+        /*ICONES*/
+        .user-icon {
+            font-size: 28px;
+            color: #ffffff;
+            transition: transform 0.3s ease, color 0.3s ease;
+            /* Animação para transformação e cor */
+        }
+
+        .user-icon:hover {
+            transform: scale(1.2);
+            /* Aumenta o tamanho do ícone quando o mouse passa por cima */
+        }
+
+        .vault-icon {
+            font-size: 28px;
+            color: #ffffff;
+            transition: transform 0.3s ease, color 0.3s ease;
+            /* Animação para transformação e cor */
+        }
+
+        .vault-icon:hover {
+            transform: scale(1.2);
+            /* Aumenta o tamanho do ícone quando o mouse passa por cima */
+        }
+
+        .home-icon {
+            font-size: 28px;
+            color: #ffffff;
+            transition: transform 0.3s ease, color 0.3s ease;
+            /* Animação para transformação e cor */
+        }
+
+        .home-icon:hover {
+            transform: scale(1.2);
+            /* Aumenta o tamanho do ícone quando o mouse passa por cima */
+        }
+
+        /*ICONES FINAL*/
+
+        /* Estilo do Footer */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            /* Garante que o conteúdo ocupe a altura total da tela */
+        }
+
+        .footer {
+            font-size: 1rem;
+            width: 100%;
+            background-color: #000000C4;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            font-family: 'Roboto', sans-serif;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            /* Deixe a posição como 'relative' para que o footer fique abaixo do conteúdo */
+            margin-top: auto;
+            /* Isso vai empurrar o footer para o final da página */
+            transition: background-color 0.5s ease, box-shadow 0.5s ease;
+            border-style: solid;
+            border-width: 4px 0 0 0;
+            border-color: #fc0;
+        }
+
+        /* Animação de transição para o fundo do footer */
+        @keyframes gradientFooterAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .footer {
+            background: linear-gradient(45deg, #363636, #000000);
+            background-size: 400% 400%;
+            animation: gradientFooterAnimation 8s ease infinite;
+        }
+        
+                 /* Animação para o modal descer de cima */
+		@keyframes slideDown {
+		    0% {
+		        transform: translateY(-100%);
+		        opacity: 0;
+		    }
+		    100% {
+		        transform: translateY(0);
+		        opacity: 1;
+		    }
+		}
+		
+		/* Animação para o modal fechar com slide up */
+		@keyframes slideUp {
+		    0% {
+		        transform: translateY(0);
+		        opacity: 1;
+		    }
+		    100% {
+		        transform: translateY(-100%);
+		        opacity: 0;
+		    }
+		}
+		
+		/* Estilos para o botão de fechar */
+		.fechar-modal {
+		    background: none;
+		    border: none;
+		    box-shadow: none;
+		    padding: 0;
+		    cursor: pointer;
+		}
+		
+		.fechar-modal i {
+		    font-size: 2rem;
+		    color: #ff0000; /* Cor vermelha */
+		    transition: 0.3s;
+		}
+		
+		/* Efeito ao passar o mouse no botão de fechar */
+		.fechar-modal i:hover {
+		    color: #B22222; /* Vermelho mais escuro */
+		    transform: scale(1.2);
+		}
+		
+		/* Corpo do modal estilizado */
+		.modal-content {
+		    background: rgba(255, 255, 255, 0.95);
+		    border-radius: 10px;
+		    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+		    animation: slideDown 0.5s ease; /* Aplica a animação de entrada */
+		}
+		
+		/* Estilização do título */
+		.modal-title {
+		    font-weight: bold;
+		    color: #ff0000; /* Vermelho */
+		}
+		
+		/* Corpo do modal */
+		.modal-body {
+		    text-align: center;
+		    font-size: 1.2rem;
+		    font-weight: 500;
+		}
+    </style>
+
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-background">
+        <div class="container">
+            <!-- Logo à esquerda -->
+            <a class="navbar-brand" href="/home">
+                <img src="https://www.harasrosamystica.com.br/wp-content/uploads/2024/07/logo-header-novo.webp"
+                    alt="Logo Haras Rosa Mystica">
+            </a>
+
+            <!-- Botão do menu responsivo -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#conteudoNavbarSuportado"
+                aria-controls="conteudoNavbarSuportado" aria-expanded="false" aria-label="Alterna navegação">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Div vazia para centralizar o menu de navegação -->
+            <div class="d-none d-lg-flex flex-grow-1"></div>
+
+            <!-- Conteúdo centralizado -->
+            <div class="collapse navbar-collapse justify-content-center flex-grow-0" id="conteudoNavbarSuportado">
+
+                <a href="/home" class="dropdown-item home-icon">
+                    <i class="fa-solid fa-house"></i> <!-- Ícone de "casinha" -->
+                </a>
+
+                <div class="dropdown">
+                    <a class="dropdown-item user-icon" href="#" id="userMenu" role="button">
+                        <i class="fa-solid fa-user" style="color: #ffffff;"></i>
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-left" style="width: 250px; background-color: #363636;">
+
+                        <a class="dropdown-item" href="/administrativo/usuarios/perfil"
+                            style="display: flex; align-items: center; justify-content: space-between;">
+
+                            <span th:text="${usuario.nome_usuario}" style="border: 2px solid #ccc; padding: 5px 10px; border-radius: 5px; cursor: pointer; 
+	                         transition: all 0.3s ease; display: inline-block;">
+                            </span>
+
+                            <i class="fa-solid fa-circle"
+                                style="color: #00ff00; font-size: 12px; margin-left: 15px;"></i>
+                        </a>
+
+                        <a class="dropdown-item" th:if="${usuario.tipo == 'ADMIN'}"
+                            href="/administrativo/usuarios/listar"
+                            style="display: flex; align-items: center; justify-content: space-between;">
+                            <span style="border: 2px solid #ccc; padding: 5px 10px; border-radius: 5px; 
+	                         cursor: pointer; transition: all 0.3s ease;">
+                                Administrador
+                            </span>
+
+                            <i class="fa-solid fa-circle"
+                                style="color: #363636; font-size: 12px; margin-left: 15px;"></i>
+                        </a>
+                        <a class="dropdown-item" href="/ajuda"
+                            style="display: flex; align-items: center; justify-content: space-between;">
+                            <span style="border: 2px solid #ccc; padding: 5px 10px; border-radius: 5px; 
+						           cursor: pointer; transition: all 0.3s ease;">
+                                Manual
+                            </span>
+                            <i class="fa-solid fa-circle"
+                                style="color: #363636; font-size: 12px; margin-left: 15px;"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="dropdown">
+                    <a class="dropdown-item vault-icon" href="#" id="userMenu" role="button">
+                        <i class="fa-solid fa-key" style="color: #ffffff; margin-right: 10px;"></i>
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-left"
+                        style="width: 250px; background-color: #363636; padding: 10px;">
+
+                        <!-- Formulário para alteração de senha -->
+                        <form action="/administrativo/usuarios/editarUsuarioSenha" th:object="${usuario}" method="POST"
+                            id="movimentacaoForm" class="dropdown-item"
+                            style="display: flex; flex-direction: column; align-items: center;">
+
+                            <!-- Nova senha -->
+                            <div style="position: relative; width: 100%; margin-top: 5px;">
+                                <input type="password" th:field="*{senha}" id="novaSenha" placeholder="Nova Senha"
+                                    required
+                                    style="border: 2px solid #ccc; padding: 5px 10px; border-radius: 5px; background: transparent; color: #ffffff; width: 100%; padding-right: 40px; margin-bottom: 12px; margin-top: -18px;">
+                                <i class="fa-solid fa-eye" id="toggleNovaSenha"
+                                    style="position: absolute; right: 11px; top: 11px; transform: translateY(-50%); cursor: pointer; color: #ffffff; font-size: 16px;"></i>
+                            </div>
+
+                            <!-- Confirmação da senha -->
+                            <div style="position: relative; width: 100%; margin-top: 5px;">
+                                <input type="password" id="confirmarSenha" placeholder="Confirme a Senha" required
+                                    style="border: 2px solid #ccc; padding: 5px 10px; border-radius: 5px; background: transparent; color: #ffffff; width: 100%; padding-right: 40px; margin-bottom: 12px; margin-top: -1px;">
+                                <i class="fa-solid fa-eye" id="toggleConfirmarSenha"
+                                    style="position: absolute; right: 11px; top: 16px; transform: translateY(-50%); cursor: pointer; color: #ffffff; font-size: 16px;"></i>
+                            </div>
+
+                            <input type="hidden" th:field="*{id_usuario}" />
+                            <input type="hidden" th:field="*{nome_usuario}" />
+                            <input type="hidden" th:field="*{email}" />
+                            <input type="hidden" th:field="*{tipo}" />
+                            <input type="hidden" th:field="*{funcao}" />
+
+                            <button type="submit" id="botaoAlterar"
+                                style="margin-top: 10px; background-color: #cf8311; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">
+                                Alterar
+                            </button>
+
+                            <p id="mensagemErro" style="color: red; font-size: 12px; display: none; margin-top: 5px;">As
+                                senhas não conferem.</p>
+
+                        </form>
+
+                    </div>
+                </div>
+                
+                <!-- Modal de sucesso -->
+				<div id="modalSucesso" class="modal" style="display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5);">
+				    <div class="modal-content" style="background: rgba(255, 255, 255, 0.95); margin: 1.75rem auto; padding: 20px; border-radius: 10px; width: 30%; text-align: center; animation: slideDown 0.5s ease;">
+				        
+				        <p>Senha alterada com sucesso!</p>
+				        <button onclick="fecharModal()" 
+					        style="background-color: #28a745; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer; width: 55px; text-align: center; display: block; margin: 10px auto;" 
+					        onmouseover="this.style.backgroundColor='#218838'" onmouseout="this.style.backgroundColor='#28a745'" 
+					        data-bs-dismiss="modal">
+						    OK
+						</button>
+
+				    </div>
+				</div>
+   
+
+                <a class="dropdown-item" href="/sair">
+                    <i class="fa-solid fa-right-from-bracket" style="color: #ff0000;"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo principal com centralização -->
+    <div class="container d-flex justify-content-center align-items-center">
+        <div class="form-container text-center" style="width: 1200px; max-width: 1200px;">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <!-- Botão de voltar -->
+                <a href="/ajudaUser" class="custom-link">
+                    <i class="fa-solid fa-circle-left"></i>
+                </a>
+
+                <!-- Título centralizado com ajuste para a esquerda -->
+                <h1 class="m-0 text-center flex-grow-1 titulo-ajuda">
+                    Manual - Usuário
+                </h1>
+
+                <!-- Espaço vazio para manter o layout balanceado -->
+                <div style="width: 100px;"></div>
+            </div>
+
+            <h2>Manual da Lista de Movimentações</h2>
+
+            <h5>
+                Esta é a página da lista de movimentações do sistema. Nela, você pode clicar em qualquer movimentação
+                para abrir uma página de edição do mesmo.
+                Além disso, há dois botões: um para
+                <a href="/uploads/PDF/Impressao_LISTA_MOVIMENTACOES.pdf" target="_blank">imprimir a lista de
+                    movimentações</a>
+                e outro para cadastrar novas movimentações.
+            </h5>
+
+            <h5>
+                Na parte superior da lista, há a opção "Exibir 10 resultados por página", que define a quantidade de
+                movimentações exibidos por vez.
+                É possível selecionar entre as opções 10, 25, 50 e 100 resultados por página. No canto direito, temos o
+                botão "Buscar registros",
+                que permite pesquisar movimentações utilizando qualquer registro, como nome, botijão, caneca, etc.
+                Recomendamos realizar a busca pelo nome.
+            </h5>
+
+            <h5>
+                No índice da tabela, estão as colunas "Nome do garanhão", "Botijão", "Caneca", "Quantidade", Data da
+                movimentação", "Destino", "Endereço", "Profissional", "Nome", "Identificador"
+                e "Responsável".Clicando em qualquer um desses índices, a tabela será ordenada de forma alfabética. Ex:
+                de A-Z, de Z-A ou por ordem de cadastro.
+                Caso o índice seja numérico, a tabela será ordenada primeiro em ordem crescente, depois em ordem
+                decrescente e, por fim, retornará à ordem de cadastro.
+            </h5>
+
+            <!-- Imagem centralizada dentro do form-container -->
+            <img src="/uploads/IMG/LISTA_MOVIMENTACOES.png" alt="Imagem do Garanhão" Style="			
+			width: 857px;
+		    max-width: 857px;
+		    height: 455px;
+		    object-fit: cover;
+		    border: 1px solid #ccc;
+		    border-radius: 8px;
+		    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);">
+
+            <h5>
+                Para vizualizar uma movimentação cadastrada, basta passar o mouse sobre o nome do garanhão na lista e
+                clicar no nome desejado.
+                Você será redirecionado automaticamente para a página de vizualização.
+            </h5>
+
+            <div>
+                <a href="/ajudaCadastroMovimentacaoUser" class="link-ajuda">Acessar manual de Cadastro de
+                    Movimentações</a>
+
+                <a href="/ajudaEditarMovimentacaoUser" class="link-ajuda-ultimo">Acessar manual de Edição de
+                    Movimentações</a>
+                <div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Início do Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Input Center.</p>
+            <p>Todos os direitos reservados.</a></p>
+
+        </div>
+    </footer>
+    <!-- Fim do Footer -->
+
+    <!-- JS externo -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+    document.getElementById("movimentacaoForm").addEventListener("submit", function (event) {
+        const senha = document.getElementById("novaSenha").value;
+        const confirmarSenha = document.getElementById("confirmarSenha").value;
+        const mensagemErro = document.getElementById("mensagemErro");
+
+        if (senha !== confirmarSenha) {
+            event.preventDefault(); // Impede o envio do formulário
+            mensagemErro.style.display = "block"; // Exibe a mensagem de erro
+        } else {
+            mensagemErro.style.display = "none"; // Oculta a mensagem se estiver correta
+            event.preventDefault(); // Impede o envio real para simular o modal
+            abrirModal(); // Exibe o modal de sucesso
+        }
+    });
+
+    // Função para exibir o modal
+    function abrirModal() {
+        document.getElementById("modalSucesso").style.display = "block";
+    }
+
+    // Função para fechar o modal
+    function fecharModal() {
+        document.getElementById("modalSucesso").style.display = "none";
+        document.getElementById("movimentacaoForm").submit(); // Envia o formulário após fechar o modal
+    }
+
+    // Função para alternar a visibilidade da senha
+    function togglePassword(inputId, toggleId) {
+        const input = document.getElementById(inputId);
+        const toggle = document.getElementById(toggleId);
+
+        toggle.addEventListener("click", function () {
+            if (input.type === "password") {
+                input.type = "text"; // Torna a senha visível
+                toggle.classList.remove("fa-eye"); // Remove o ícone de olho fechado
+                toggle.classList.add("fa-eye-slash"); // Adiciona o ícone de olho aberto
+            } else {
+                input.type = "password"; // Torna a senha invisível
+                toggle.classList.remove("fa-eye-slash"); // Remove o ícone de olho aberto
+                toggle.classList.add("fa-eye"); // Adiciona o ícone de olho fechado
+            }
+        });
+    }
+
+    // Inicializando a função para os campos de senha
+    togglePassword("novaSenha", "toggleNovaSenha");
+    togglePassword("confirmarSenha", "toggleConfirmarSenha");
+
+    </script>
+
+</body>
+
+</html>
