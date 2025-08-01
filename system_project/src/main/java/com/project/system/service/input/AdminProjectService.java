@@ -127,7 +127,7 @@ public class AdminProjectService {
         }
     }
     
-    public List<Occupation> searchProjects(String filter) {
+    public List<Project> searchProjects(String filter) {
         return projectRepository.searchByFilter(filter);
     }
 }
