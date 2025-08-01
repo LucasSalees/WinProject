@@ -69,4 +69,9 @@ public class AdminFunctionService {
                     .body(StandardResponseDTO.error("Erro ao cadastrar função: " + e.getMessage()));
         }
     }
+    
+    public List<Function> searchFunctions(String filter) {
+        return functionRepository.searchByFilter(filter);
+    }
+    
 }

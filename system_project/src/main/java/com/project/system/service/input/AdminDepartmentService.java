@@ -70,4 +70,8 @@ public class AdminDepartmentService {
                     .body(StandardResponseDTO.error("Erro ao cadastrar Departamento: " + e.getMessage()));
         }
     }
+    
+    public List<Department> searchDepartments(String filter) {
+        return departmentRepository.searchByFilter(filter);
+    }
 }

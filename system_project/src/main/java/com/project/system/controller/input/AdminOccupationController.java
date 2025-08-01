@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.project.system.dto.StandardResponseDTO;
+import com.project.system.entity.Department;
 import com.project.system.entity.Occupation;
 import com.project.system.entity.User;
 import com.project.system.service.input.AdminOccupationService;
@@ -41,13 +43,61 @@ public class AdminOccupationController {
 
     @GetMapping("/input/admin/occupations/list")
     @PreAuthorize("hasAuthority('OCCUPATION_LIST')")
-    public ModelAndView occupationsList(Authentication authentication) {
+    public ModelAndView occupationsList(@RequestParam(value = "filter", required = false) String filter,
+                                        Authentication authentication) {
         User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-        List<Occupation> occupations = occupationService.getAllOccupations();
+        List<Occupation> occupations;
 
-        ModelAndView mv = new ModelAndView("/input/admin/occupations/list");
+        if (filter != null && !filter.trim().isEmpty()) {
+            occupations = occupationService.searchOccupations(filter);
+        } else {
+            occupations = occupationService.getAllOccupations();
+        }
+
+        ModelAndView mv = new ModelAndView("input/admin/occupations/list");
         mv.addObject("LoggedUser", loggedUser);
         mv.addObject("occupationsList", occupations);
+        mv.addObject("filter", filter); // devolve o filtro para manter no input
+        return mv;
+    }
+
+    
+    @GetMapping("/input/admin/occupations/print")
+    @PreAuthorize("hasAuthority('OCCUPATION_LIST')")
+    public ModelAndView printOccupations(
+            @RequestParam(required = false) String filter,
+            Authentication authentication) {
+
+        User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
+        List<Occupation> occupations;
+
+        if (filter != null && !filter.isEmpty()) {
+        	occupations = occupationService.searchOccupations(filter);
+        } else {
+        	occupations = occupationService.getAllOccupations();
+        }
+
+        ModelAndView mv = new ModelAndView("input/admin/occupations/print");
+        mv.addObject("LoggedUser", loggedUser);
+        mv.addObject("occupationsList", occupations);
+        mv.addObject("dataAtual", new java.util.Date());
+        return mv;
+    }
+    
+    @GetMapping("/input/admin/departments/print/{occupationId}")
+    @PreAuthorize("hasAuthority('OCCUPATION_LIST')")
+    public ModelAndView printOccupation(
+            @PathVariable Long occupationId,
+            Authentication authentication) {
+
+        User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
+        Occupation occupation = occupationService.getOccupationById(occupationId)
+                                                 .orElseThrow(() -> new RuntimeException("Profissão não encontrada"));
+
+        ModelAndView mv = new ModelAndView("input/admin/occupations/printOne");
+        mv.addObject("LoggedUser", loggedUser);
+        mv.addObject("department", occupation);
+        mv.addObject("dataAtual", new java.util.Date());
         return mv;
     }
 
