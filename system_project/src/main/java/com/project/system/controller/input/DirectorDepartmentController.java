@@ -81,6 +81,23 @@ public class DirectorDepartmentController {
         mv.addObject("dataAtual", new java.util.Date());
         return mv;
     }
+    
+    @GetMapping("/input/director/departments/print/{departmentId}")
+    @PreAuthorize("hasAuthority('DEPARTMENT_LIST')")
+    public ModelAndView printDepartment(
+            @PathVariable Long departmentId,
+            Authentication authentication) {
+
+        User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
+        Department department = departmentService.getDepartmentById(departmentId)
+                                                 .orElseThrow(() -> new RuntimeException("Departamento não encontrado"));
+
+        ModelAndView mv = new ModelAndView("input/director/departments/printOne");
+        mv.addObject("LoggedUser", loggedUser);
+        mv.addObject("department", department);
+        mv.addObject("dataAtual", new java.util.Date());
+        return mv;
+    }
 
     @GetMapping("/input/director/departments/edit/{departmentId}")
     @PreAuthorize("hasAuthority('DEPARTMENT_EDIT')")
