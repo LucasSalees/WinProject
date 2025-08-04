@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.project.system.dto.StandardResponseDTO;
+import com.project.system.entity.Project;
 import com.project.system.entity.User;
 import com.project.system.enums.input.UserPermission;
 import com.project.system.service.CommomUserService;
@@ -74,18 +75,58 @@ public class AdminController {
 
     @GetMapping("/input/admin/users/list")
     @PreAuthorize("hasAnyAuthority('USER_LIST', 'USER_EDIT')")
-    public ModelAndView usersList(Authentication authentication) {
-        User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-        List<User> users = adminService.getAllUsers();
-        ModelAndView mv = new ModelAndView("input/admin/users/list");
-        
-        // Adicione esta linha para enviar todas as permissões disponíveis
-        mv.addObject("allPermissions", UserPermission.values());
+    public ModelAndView projectsList(@RequestParam(value = "filter", required = false) String filter,
+			Authentication authentication) {
+		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
+		List<User> users;
 
-        mv.addObject("LoggedUser", loggedUser);
-        mv.addObject("usersList", users);
-        return mv;
-    }
+		if (filter != null && !filter.trim().isEmpty()) {
+			users = adminService.searchUsers(filter);
+		} else {
+			users = adminService.getAllUsers();
+		}
+
+		ModelAndView mv = new ModelAndView("input/admin/users/list");
+		mv.addObject("LoggedUser", loggedUser);
+		mv.addObject("usersList", users);
+		mv.addObject("filter", filter); // devolve o filtro para manter no input
+		return mv;
+	}
+    
+    @GetMapping("/input/admin/users/print")
+	@PreAuthorize("hasAuthority('USER_LIST')")
+	public ModelAndView printProjects(@RequestParam(required = false) String filter, Authentication authentication) {
+
+		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
+		List<User> users;
+
+		if (filter != null && !filter.isEmpty()) {
+			users = adminService.searchUsers(filter);
+		} else {
+			users = adminService.getAllUsers();
+		}
+
+		ModelAndView mv = new ModelAndView("input/admin/users/print");
+		mv.addObject("LoggedUser", loggedUser);
+		mv.addObject("usersList", users);
+		mv.addObject("dataAtual", new java.util.Date());
+		return mv;
+	}
+
+	@GetMapping("/input/admin/users/print/{projectId}")
+	@PreAuthorize("hasAuthority('USER_LIST')")
+	public ModelAndView printProject(@PathVariable Long projectId, Authentication authentication) {
+
+		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
+		User user = adminService.getUserById(projectId)
+				.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+		ModelAndView mv = new ModelAndView("input/admin/users/printOne");
+		mv.addObject("LoggedUser", loggedUser);
+		mv.addObject("users", user);
+		mv.addObject("dataAtual", new java.util.Date());
+		return mv;
+	}
 
     @GetMapping("/input/admin/users/edit/{id}")
     @PreAuthorize("hasAuthority('USER_EDIT')")

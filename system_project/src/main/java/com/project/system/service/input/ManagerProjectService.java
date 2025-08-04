@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
 import com.project.system.dto.StandardResponseDTO;
+import com.project.system.entity.Department;
 import com.project.system.entity.Project;
 import com.project.system.repositories.DepartmentRepository;
 import com.project.system.repositories.ProjectRepository;
@@ -124,5 +125,13 @@ public class ManagerProjectService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(StandardResponseDTO.error("Erro ao salvar o projeto. Por favor, tente novamente. " + e.getMessage()));
         }
+    }
+    
+    public List<Project> searchProjects(String filter) {
+        return projectRepository.searchByFilter(filter);
+    }
+    
+    public List<Department> searchDepartmens(String filter) {
+        return departmentRepository.searchByFilter(filter);
     }
 }

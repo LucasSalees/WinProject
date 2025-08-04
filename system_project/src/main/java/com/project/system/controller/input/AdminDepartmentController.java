@@ -53,7 +53,7 @@ public class AdminDepartmentController {
 			departments = departmentService.getAllDepartments();
 		}
 
-		ModelAndView mv = new ModelAndView("input/director/departments/list");
+		ModelAndView mv = new ModelAndView("input/admin/departments/list");
 		mv.addObject("LoggedUser", loggedUser);
 		mv.addObject("departmentsList", departments);
 		mv.addObject("filter", filter); // devolve o filtro para manter no input

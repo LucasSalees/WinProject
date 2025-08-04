@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.project.system.dto.StandardResponseDTO;
+import com.project.system.entity.Department;
 import com.project.system.entity.Function;
 import com.project.system.entity.User;
 import com.project.system.service.input.ManagerFunctionService;
@@ -41,15 +43,60 @@ public class ManagerFunctionController {
 
     @GetMapping("/input/manager/functions/list")
     @PreAuthorize("hasAuthority('FUNCTION_LIST')")
-    public ModelAndView functionsList(Authentication authentication) {
+    public ModelAndView functionsList(@RequestParam(value = "filter", required = false) String filter,
+                                        Authentication authentication) {
         User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-        List<Function> functions = functionService.getAllFunctions();
+        List<Function> functions;
+
+        if (filter != null && !filter.trim().isEmpty()) {
+            functions = functionService.searchFunctions(filter);
+        } else {
+        	functions = functionService.getAllFunctions();
+        }
 
         ModelAndView mv = new ModelAndView("input/manager/functions/list");
         mv.addObject("LoggedUser", loggedUser);
         mv.addObject("functionsList", functions);
+        mv.addObject("filter", filter); // devolve o filtro para manter no input
         return mv;
     }
+    
+    @GetMapping("/input/manager/functions/print")
+    @PreAuthorize("hasAuthority('FUNCTIONS_LIST')")
+    public ModelAndView printFunctions(
+            @RequestParam(required = false) String filter,
+            Authentication authentication) {
+
+        User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
+        List<Function> functions;
+
+        if (filter != null && !filter.trim().isEmpty()) {
+            functions = functionService.searchFunctions(filter);
+        } else {
+        	functions = functionService.getAllFunctions();
+        }
+
+        ModelAndView mv = new ModelAndView("input/manager/functions/print");
+        mv.addObject("LoggedUser", loggedUser);
+        mv.addObject("functionsList", functions);
+        mv.addObject("dataAtual", new java.util.Date());
+        return mv;
+    }
+    
+    @GetMapping("/input/manager/function/print/{functionId}")
+	@PreAuthorize("hasAuthority('FUNCTIONS_LIST')")
+	public ModelAndView printDepartment(@PathVariable Long functionId, Authentication authentication) {
+
+		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
+		Function function = functionService.getFunctionById(functionId)
+				.orElseThrow(() -> new RuntimeException("Função não encontrada"));
+
+		ModelAndView mv = new ModelAndView("input/manager/function/printOne");
+		mv.addObject("LoggedUser", loggedUser);
+		mv.addObject("function", function);
+		mv.addObject("dataAtual", new java.util.Date());
+		return mv;
+	}
 
     @GetMapping("/input/manager/functions/edit/{functionId}")
     @PreAuthorize("hasAuthority('FUNCTION_EDIT')")

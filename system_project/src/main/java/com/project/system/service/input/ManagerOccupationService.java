@@ -69,4 +69,8 @@ public class ManagerOccupationService {
                     .body(StandardResponseDTO.error("Erro ao cadastrar profissão: " + e.getMessage()));
         }
     }
+    
+    public List<Occupation> searchOccupations(String filter) {
+        return occupationRepository.searchByFilter(filter);
+    }
 }

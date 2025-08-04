@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.system.dto.StandardResponseDTO;
+import com.project.system.entity.Department;
 import com.project.system.entity.User;
 import com.project.system.repositories.DepartmentRepository;
 import com.project.system.repositories.FunctionRepository;
@@ -178,6 +179,10 @@ public class AdminService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(StandardResponseDTO.error("Erro ao cadastrar usuário: " + e.getMessage()));
         }
+    }
+    
+    public List<User> searchUsers(String filter) {
+        return userRepository.searchByFilter(filter);
     }
 
 }

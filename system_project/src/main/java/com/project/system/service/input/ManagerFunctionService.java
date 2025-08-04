@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.project.system.dto.StandardResponseDTO;
+import com.project.system.entity.Department;
 import com.project.system.entity.Function;
 import com.project.system.repositories.FunctionRepository;
 
@@ -68,5 +69,9 @@ public class ManagerFunctionService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(StandardResponseDTO.error("Erro ao cadastrar função: " + e.getMessage()));
         }
+    }
+    
+    public List<Function> searchFunctions(String filter) {
+        return functionRepository.searchByFilter(filter);
     }
 }

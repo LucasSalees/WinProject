@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.project.system.dto.StandardResponseDTO;
+import com.project.system.entity.Department;
 import com.project.system.entity.Project;
 import com.project.system.entity.User;
 import com.project.system.service.input.AdminProjectService;
@@ -54,16 +56,59 @@ public class AdminProjectController {
     }
 
     @GetMapping("/input/admin/projects/list")
-    @PreAuthorize("hasAuthority('PROJECT_LIST')")
-    public ModelAndView projectsList(Authentication authentication) {
-        User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-        List<Project> projects = projectService.getAllProjects();
+	@PreAuthorize("hasAuthority('PROJECTS_LIST')")
+	public ModelAndView projectsList(@RequestParam(value = "filter", required = false) String filter,
+			Authentication authentication) {
+		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
+		List<Project> projects;
 
-        ModelAndView mv = new ModelAndView("input/admin/projects/list");
-        mv.addObject("LoggedUser", loggedUser);
-        mv.addObject("projectsList", projects);
-        return mv;
-    }
+		if (filter != null && !filter.trim().isEmpty()) {
+			projects = projectService.searchProjects(filter);
+		} else {
+			projects = projectService.getAllProjects();
+		}
+
+		ModelAndView mv = new ModelAndView("input/admin/projects/list");
+		mv.addObject("LoggedUser", loggedUser);
+		mv.addObject("projectsList", projects);
+		mv.addObject("filter", filter); // devolve o filtro para manter no input
+		return mv;
+	}
+
+	@GetMapping("/input/admin/projects/print")
+	@PreAuthorize("hasAuthority('PROJECTS_LIST')")
+	public ModelAndView printProjects(@RequestParam(required = false) String filter, Authentication authentication) {
+
+		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
+		List<Project> projects;
+
+		if (filter != null && !filter.isEmpty()) {
+			projects = projectService.searchProjects(filter);
+		} else {
+			projects = projectService.getAllProjects();
+		}
+
+		ModelAndView mv = new ModelAndView("input/admin/projects/print");
+		mv.addObject("LoggedUser", loggedUser);
+		mv.addObject("projectsList", projects);
+		mv.addObject("dataAtual", new java.util.Date());
+		return mv;
+	}
+
+	@GetMapping("/input/admin/projects/print/{projectId}")
+	@PreAuthorize("hasAuthority('PROJECTS_LIST')")
+	public ModelAndView printProject(@PathVariable Long projectId, Authentication authentication) {
+
+		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
+		Project project = projectService.getProjectById(projectId)
+				.orElseThrow(() -> new RuntimeException("Projeto não encontrado"));
+
+		ModelAndView mv = new ModelAndView("input/admin/projects/printOne");
+		mv.addObject("LoggedUser", loggedUser);
+		mv.addObject("projects", project);
+		mv.addObject("dataAtual", new java.util.Date());
+		return mv;
+	}
 
     @GetMapping("/input/admin/projects/edit/{projectId}")
     @PreAuthorize("hasAuthority('PROJECT_EDIT')")
