@@ -74,18 +74,58 @@ public class DirectorController {
 
     @GetMapping("/input/director/users/list")
     @PreAuthorize("hasAnyAuthority('USER_LIST', 'USER_EDIT')")
-    public ModelAndView usersList(Authentication authentication) {
-        User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-        List<User> users = directorService.getAllUsers();
-        ModelAndView mv = new ModelAndView("/input/director/users/list");
-        
-        // Adicione esta linha para enviar todas as permissões disponíveis
-        mv.addObject("allPermissions", UserPermission.values());
+    public ModelAndView userList(@RequestParam(value = "filter", required = false) String filter,
+			Authentication authentication) {
+		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
+		List<User> users;
 
-        mv.addObject("LoggedUser", loggedUser);
-        mv.addObject("usersList", users);
-        return mv;
-    }
+		if (filter != null && !filter.trim().isEmpty()) {
+			users = directorService.searchUsers(filter);
+		} else {
+			users = directorService.getAllUsers();
+		}
+
+		ModelAndView mv = new ModelAndView("input/director/users/list");
+		mv.addObject("LoggedUser", loggedUser);
+		mv.addObject("usersList", users);
+		mv.addObject("filter", filter); // devolve o filtro para manter no input
+		return mv;
+	}
+    
+    @GetMapping("/input/director/users/print")
+	@PreAuthorize("hasAuthority('USER_LIST')")
+	public ModelAndView printUsers(@RequestParam(required = false) String filter, Authentication authentication) {
+
+		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
+		List<User> users;
+
+		if (filter != null && !filter.isEmpty()) {
+			users = directorService.searchUsers(filter);
+		} else {
+			users = directorService.getAllUsers();
+		}
+
+		ModelAndView mv = new ModelAndView("input/director/users/print");
+		mv.addObject("LoggedUser", loggedUser);
+		mv.addObject("usersList", users);
+		mv.addObject("dataAtual", new java.util.Date());
+		return mv;
+	}
+
+	@GetMapping("/input/director/users/print/{userId}")
+	@PreAuthorize("hasAuthority('USER_LIST')")
+	public ModelAndView printUser(@PathVariable Long userId, Authentication authentication) {
+
+		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
+		User user = directorService.getUserById(userId)
+				.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+		ModelAndView mv = new ModelAndView("input/director/users/printOne");
+		mv.addObject("LoggedUser", loggedUser);
+		mv.addObject("users", user);
+		mv.addObject("dataAtual", new java.util.Date());
+		return mv;
+	}
 
     @GetMapping("/input/director/users/edit/{id}")
     @PreAuthorize("hasAuthority('USER_EDIT')")

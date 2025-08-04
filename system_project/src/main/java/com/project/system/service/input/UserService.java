@@ -201,4 +201,8 @@ public class UserService {
                     .body(StandardResponseDTO.error("Erro ao cadastrar usuário: " + e.getMessage()));
         }
     }
+    
+    public List<User> searchUsers(String filter) {
+        return userRepository.searchByFilter(filter);
+    }
 }

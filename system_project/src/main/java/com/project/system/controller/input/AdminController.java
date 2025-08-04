@@ -75,7 +75,7 @@ public class AdminController {
 
     @GetMapping("/input/admin/users/list")
     @PreAuthorize("hasAnyAuthority('USER_LIST', 'USER_EDIT')")
-    public ModelAndView projectsList(@RequestParam(value = "filter", required = false) String filter,
+    public ModelAndView userList(@RequestParam(value = "filter", required = false) String filter,
 			Authentication authentication) {
 		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
 		List<User> users;
@@ -95,7 +95,7 @@ public class AdminController {
     
     @GetMapping("/input/admin/users/print")
 	@PreAuthorize("hasAuthority('USER_LIST')")
-	public ModelAndView printProjects(@RequestParam(required = false) String filter, Authentication authentication) {
+	public ModelAndView printUsers(@RequestParam(required = false) String filter, Authentication authentication) {
 
 		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
 		List<User> users;
@@ -113,12 +113,12 @@ public class AdminController {
 		return mv;
 	}
 
-	@GetMapping("/input/admin/users/print/{projectId}")
+	@GetMapping("/input/admin/users/print/{userId}")
 	@PreAuthorize("hasAuthority('USER_LIST')")
-	public ModelAndView printProject(@PathVariable Long projectId, Authentication authentication) {
+	public ModelAndView printUser(@PathVariable Long userId, Authentication authentication) {
 
 		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		User user = adminService.getUserById(projectId)
+		User user = adminService.getUserById(userId)
 				.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
 		ModelAndView mv = new ModelAndView("input/admin/users/printOne");

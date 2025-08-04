@@ -59,16 +59,59 @@ public class UserController {
     }
 
     @GetMapping("/input/user/users/list")
-    @PreAuthorize("hasAuthority('USER_LIST')")
-    public ModelAndView usersList(Authentication authentication) {
-        User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-        List<User> users = userService.getAllUsers();
+    @PreAuthorize("hasAnyAuthority('USER_LIST', 'USER_EDIT')")
+    public ModelAndView userList(@RequestParam(value = "filter", required = false) String filter,
+			Authentication authentication) {
+		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
+		List<User> users;
 
-        ModelAndView mv = new ModelAndView("input/user/users/list");
-        mv.addObject("LoggedUser", loggedUser);
-        mv.addObject("usersList", users);
-        return mv;
-    }
+		if (filter != null && !filter.trim().isEmpty()) {
+			users = userService.searchUsers(filter);
+		} else {
+			users = userService.getAllUsers();
+		}
+
+		ModelAndView mv = new ModelAndView("input/user/users/list");
+		mv.addObject("LoggedUser", loggedUser);
+		mv.addObject("usersList", users);
+		mv.addObject("filter", filter); // devolve o filtro para manter no input
+		return mv;
+	}
+    
+    @GetMapping("/input/user/users/print")
+	@PreAuthorize("hasAuthority('USER_LIST')")
+	public ModelAndView printUsers(@RequestParam(required = false) String filter, Authentication authentication) {
+
+		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
+		List<User> users;
+
+		if (filter != null && !filter.isEmpty()) {
+			users = userService.searchUsers(filter);
+		} else {
+			users = userService.getAllUsers();
+		}
+
+		ModelAndView mv = new ModelAndView("input/user/users/print");
+		mv.addObject("LoggedUser", loggedUser);
+		mv.addObject("usersList", users);
+		mv.addObject("dataAtual", new java.util.Date());
+		return mv;
+	}
+
+	@GetMapping("/input/user/users/print/{userId}")
+	@PreAuthorize("hasAuthority('USER_LIST')")
+	public ModelAndView printUser(@PathVariable Long userId, Authentication authentication) {
+
+		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
+		User user = userService.getUserById(userId)
+				.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+		ModelAndView mv = new ModelAndView("input/user/users/printOne");
+		mv.addObject("LoggedUser", loggedUser);
+		mv.addObject("users", user);
+		mv.addObject("dataAtual", new java.util.Date());
+		return mv;
+	}
 
     @GetMapping("/input/user/users/edit/{userId}")
     @PreAuthorize("hasAuthority('USER_EDIT')")
