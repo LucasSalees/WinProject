@@ -20,7 +20,12 @@ import org.springframework.web.servlet.ModelAndView;
 import com.project.system.dto.StandardResponseDTO;
 import com.project.system.entity.Project;
 import com.project.system.entity.User;
+import com.project.system.enums.input.BrazilianStateUF;
+import com.project.system.enums.input.ProjectBusinessVertical;
+import com.project.system.enums.input.ProjectPriority;
+import com.project.system.enums.input.ProjectStatus;
 import com.project.system.service.input.DirectorProjectService;
+import com.project.system.service.input.DirectorService;
 import com.project.system.repositories.DepartmentRepository;
 import com.project.system.utils.AuthenticationUtils;
 
@@ -31,6 +36,9 @@ public class DirectorProjectController {
     private DirectorProjectService projectService;
     
     @Autowired
+    private DirectorService directorService;
+    
+    @Autowired
     private DepartmentRepository departmentRepository;
 
     @GetMapping("/input/director/projects/register")
@@ -38,7 +46,6 @@ public class DirectorProjectController {
     public ModelAndView register(Project project, Authentication authentication) {
         User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
         
-        // Define datas padrão para projeto novo
         if (project.getProjectRegisterDate() == null) {
             project.setProjectRegisterDate(LocalDate.now());
         }
@@ -50,6 +57,12 @@ public class DirectorProjectController {
         mv.addObject("LoggedUser", loggedUser);
         mv.addObject("project", project);
         mv.addObject("departments", departmentRepository.findAll());
+
+        mv.addObject("brazilianStates", BrazilianStateUF.values());
+        mv.addObject("projectPriorities", ProjectPriority.values());
+        mv.addObject("projectBusinessVerticals", ProjectBusinessVertical.values());
+        mv.addObject("projectStatuses", ProjectStatus.values());
+
         return mv;
     }
 
@@ -81,7 +94,14 @@ public class DirectorProjectController {
         ModelAndView mv = new ModelAndView("input/director/projects/edit");
         mv.addObject("LoggedUser", loggedUser);
         mv.addObject("project", project);
-        mv.addObject("departments", departmentRepository.findAll());
+        mv.addObject("departments", directorService.getAllDepartments());
+
+        // Adiciona os enums antes do return
+        mv.addObject("brazilianStates", BrazilianStateUF.values());
+        mv.addObject("projectPriorities", ProjectPriority.values());
+        mv.addObject("projectBusinessVerticals", ProjectBusinessVertical.values());
+        mv.addObject("projectStatuses", ProjectStatus.values());
+
         return mv;
     }
 

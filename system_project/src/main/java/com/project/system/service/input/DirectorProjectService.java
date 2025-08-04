@@ -21,6 +21,7 @@ import com.project.system.repositories.ProjectRepository;
 public class DirectorProjectService {
 
     private final ProjectRepository projectRepository;
+    
     private final DepartmentRepository departmentRepository;
 
     public DirectorProjectService(ProjectRepository projectRepository, DepartmentRepository departmentRepository) {
@@ -132,7 +133,4 @@ public class DirectorProjectService {
         return projectRepository.searchByFilter(filter);
     }
     
-    public List<Department> searchDepartmens(String filter) {
-        return departmentRepository.searchByFilter(filter);
-    }
 }

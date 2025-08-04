@@ -242,19 +242,23 @@ document.addEventListener("DOMContentLoaded", function () {
     atualizarProgresso(percentualInicial, statusAuto || statusInicial);
 });
 
-$(document).ready(function() {
-    $('#gerente-select').change(function() {
-        // Obtém o option selecionado
-        var selectedOption = $(this).find('option:selected');
-        
-        // Obtém os valores dos atributos data
-        var email = selectedOption.data('email');
-        var phone = selectedOption.data('phone');
-        
-        // Preenche os campos
-        $('#email-gerente').val(email || '');
-        $('#telefone-gerente').val(phone || '');
-    });
+$(document).ready(function () {
+    const departamentoId = $('#userDepartment').val();
+
+    if (departamentoId) {
+        // Procura o departamento na lista já renderizada (ex: em um dropdown oculto)
+        const option = $('#gerente-select').find('option[value="' + departamentoId + '"]');
+
+        if (option.length) {
+            const nome = option.text();
+            const email = option.data('email');
+            const phone = option.data('phone');
+
+            $('#textoDepartamentoSelecionada').text(nome);
+            $('#email-gerente').val(email || '');
+            $('#telefone-gerente').val(phone || '');
+        }
+    }
 });
 
 document.addEventListener("DOMContentLoaded", function () {

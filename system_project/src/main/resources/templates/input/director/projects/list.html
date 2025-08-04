@@ -103,7 +103,7 @@
 	                            </td>
 	                            <td class="text-left">
 	                                <a th:href="@{/input/director/projects/edit/{projectId}(projectId=${project.projectId})}" 
-	                                   th:text="${#temporals.format(project.projectPlanningStartDate, 'dd/MM/yyyy')}" 
+	                                   th:text="${#temporals.format(project.projectPlanningEndDate, 'dd/MM/yyyy')}" 
 	                                   class="row-link"></a>
 	                            </td>
 	                        </tr>

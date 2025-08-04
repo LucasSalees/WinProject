@@ -343,6 +343,11 @@
     justify-content: center;
 }
 
+.modal.aberto {
+    display: flex; /* mantém alinhamento central */
+}
+
+
 .modal.show {
     display: flex;
     animation: fadeIn 0.3s ease;

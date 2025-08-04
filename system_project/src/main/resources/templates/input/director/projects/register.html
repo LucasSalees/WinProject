@@ -23,7 +23,7 @@
     <main id="main-content" class="main-content">
         <div class="container">
             <div class="card">
-                <form action="/input/admin/projects/save" th:object="${project}" method="POST"
+                <form action="/input/director/projects/save" th:object="${project}" method="POST"
                     id="formulario">
                     <input type="hidden" th:field="*{projectId}" />
                     
@@ -59,31 +59,29 @@
                                 <input type="url" placeholder="https://exemplo.com" class="form-control shadow-cantos"
                                     maxlength="100" th:field="*{projectWebsite}" />
                             </div>
-
-                            <div class="col-md-3">
+                            
+                            <div class="col-md-4">
                                 <label class="form-label shadow-text">Vertical de negócio</label>
-                                <select class="form-control shadow-cantos" required
-                                    th:field="*{projectBusinessVertical}">
-                                    <option value="" disabled selected>Selecione a vertical de negócio</option>
-                                    <option value="Diversos">Diversos</option>
-                                    <option value="Educação">Educação</option>
-                                    <option value="Esporte">Esporte</option>
-                                    <option value="Igreja">Igreja</option>
-                                    <option value="Logística">Logística</option>
-                                    <option value="Saúde">Saúde</option>
-                                </select>
+                                <select th:field="*{projectBusinessVertical}" class="form-control shadow-cantos" id="vertical" required>
+								    <option value="" disabled selected>Selecione a vertical de negócio</option>
+								    <option th:each="reg : ${projectBusinessVerticals}"
+								            th:value="${reg.name()}"
+								            th:text="${reg.label}">
+								    </option>
+								</select>
                             </div>
-
-                            <div class="col-md-3">
-                                <label class="form-label shadow-text">Prioridade</label>
-                                <select class="form-control shadow-cantos" required th:field="*{projectPriority}">
-                                    <option value="" disabled selected>Selecione a prioridade</option>
-                                    <option value="Baixo">Baixo</option>
-                                    <option value="Médio">Médio</option>
-                                    <option value="Alto">Alto</option>
-                                </select>
-                            </div>
-                        </div>
+                             
+							<div class="col-md-4">
+							    <label class="form-label shadow-text">Prioridade</label>
+							    <select th:field="*{projectPriority}" class="form-control shadow-cantos" id="prioridade" required>
+							        <option value="" disabled selected>Selecione a prioridade</option>
+							        <option th:each="priority : ${projectPriorities}"
+							                th:value="${priority.name()}"
+							                th:text="${priority.label}">
+							        </option>
+							    </select>
+							</div>
+						</div>
                     </div>
 
                     <!-- Seção: Responsáveis -->
@@ -110,7 +108,7 @@
 
                                 <div class="col-md-3">
                                     <label class="form-label shadow-text">Telefone</label>
-                                    <input type="tel" placeholder="(00) 99999-9999" class="form-control shadow-cantos"
+                                    <input type="tel" placeholder="(00) 00000-0000" class="form-control shadow-cantos"
                                         th:field="*{projectClientManagerPhone}" id="telefone-gestor" />
                                 </div>
                                 <div class="col-md-2">
@@ -147,14 +145,14 @@
 
                                 <div class="col-md-4">
                                     <label class="form-label shadow-text">Estado</label>
-                                    <select th:field="*{projectClientState}" class="form-control shadow-cantos"
-                                        id="estado-projeto" required>
-                                        <option value="" disabled selected>Selecione uma estado</option>
-                                        <option th:each="reg : ${T(com.project.system.enums.input.BrazilianStateUF).values()}"
-                                            th:value="${reg}" th:text="${reg.name()}">
-                                        </option>
+									<select id="estado-projeto" class="form-control shadow-cantos" th:field="*{projectClientState}">
+									    <option value="" disabled selected>Selecione um estado</option>
+									    <option th:each="state : ${brazilianStates}"
+									            th:value="${state.name()}"
+									            th:text="${state.label}">
+									    </option>
+									</select>
 
-                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -226,7 +224,7 @@
 
                                 <div class="col-md-3">
                                     <label class="form-label shadow-text">Telefone</label>
-                                    <input type="tel" placeholder="(00) 99999-9999" class="form-control shadow-cantos"
+                                    <input type="tel" placeholder="(00) 00000-0000" class="form-control shadow-cantos"
                                         th:field="*{projectLocalManagerPhone}" id="telefone-gerente" readonly />
                                 </div>
 
@@ -235,40 +233,39 @@
                     </div>
 
                     <div class="section-card access-config-section">
-                        <h3 class="section-title">📊 Status e Progresso</h3>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label shadow-text">Status do Projeto</label>
-                                <select id="statusProjeto" class="form-control shadow-cantos" required
-                                    th:field="*{projectStatus}">
-                                    <option value="" disabled selected>Selecione o status</option>
-                                    <option value="Não iniciado">🔴 Não iniciado</option>
-                                    <option value="Em planejamento">🟡 Em planejamento</option>
-                                    <option value="Em execução">🔵 Em execução</option>
-                                    <option value="Atrasado">🟠 Atrasado</option>
-                                    <option value="Concluído">🟢 Concluído</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label shadow-text">Percentual de Execução %</label>
-                                <div class="input-group">
-                                    <input type="number" min="0" max="100" step="1" class="form-control shadow-cantos"
-                                        placeholder="0" th:field="*{projectExecutionPercentage}"
-                                        id="percentualExecucao" />
-                                    <span class="input-group-text">%</span>
-                                </div>
-
-                                <!-- Barra de progresso abaixo do input -->
-                                <div class="progress mt-2">
-                                    <div id="barraProgresso"
-                                        class="progress-bar progress-bar-striped progress-bar-animated"
-                                        role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
-                                        style="width: 0%">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+					    <h3 class="section-title">📊 Status e Progresso</h3>
+					    <div class="row g-3">
+					        <div class="col-md-6">
+					            <label class="form-label shadow-text">Status do Projeto</label>
+					            <select id="statusProjeto" class="form-control shadow-cantos" required
+					                th:field="*{projectStatus}">
+					                <option value="" disabled selected>Selecione o status</option>
+					                <option th:each="status : ${T(com.project.system.enums.input.ProjectStatus).values()}"
+					                        th:value="${status.label}"
+					                        th:text="${status.getDisplay()}">
+					                </option>
+					            </select>
+					        </div>
+					        <div class="col-md-6">
+					            <label class="form-label shadow-text">Percentual de Execução %</label>
+					            <div class="input-group">
+					                <input type="number" min="0" max="100" step="1" class="form-control shadow-cantos"
+					                    placeholder="0" th:field="*{projectExecutionPercentage}"
+					                    id="percentualExecucao" />
+					                <span class="input-group-text">%</span>
+					            </div>
+					
+					            <!-- Barra de progresso abaixo do input -->
+					            <div class="progress mt-2">
+					                <div id="barraProgresso"
+					                    class="progress-bar progress-bar-striped progress-bar-animated"
+					                    role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+					                    style="width: 0%">
+					                </div>
+					            </div>
+					        </div>
+					    </div>
+					</div>
 
                     <!-- Seção: Observações -->
                     <div class="section-card personal-info-section">
@@ -324,16 +321,21 @@
                     <!-- Filtro e seleção de campos -->
                     <div class="form-inline mb-3">
                         <div class="navegacaoLista custom-button-container">
-                        <!-- Botão à esquerda -->
-                        <div class="botoes-esquerda">
-                            
-                        </div>
+                        	<div class="botoes-esquerda">
+						    </div>
                             <div class="botoes-direita">
-                                <input type="text" id="filtro" class="form-control shadow-cantos" placeholder="Pesquisar...">
-	                        	<div class="dropdown botoes">
-		                           <button class="btn btn-primary" type="button" id="dropdownMenuButtonDepartamentos">
-								      Selecionar
-								  </button>
+                                <input type="text" id="filtroDepartamentos" class="form-control shadow-cantos" placeholder="Pesquisar...">
+                                <div class="dropdown botoes">
+                                    <button class="btn btn-primary" type="button"
+                                        id="dropdownMenuButtonDepartamentos">
+                                        <svg xmlns="http://www.w3.org/2000/svg" 
+									       width="16" height="16" fill="currentColor" 
+									       class="bi bi-search" viewBox="0 0 16 16">
+									    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 
+									      1 0 0 0 1.415-1.414l-3.85-3.85zm-5.242 1.398a5 5 0 1 1 0-10 
+									      5 5 0 0 1 0 10z"/>
+									  	</svg>
+                                    </button>
                                     <div class="dropdown-menu" id="dropdownCamposDepartamentos">
                                         <h1 class="dropdown-item-titulo text-center">Campos Visíveis</h1>
                                         <label class="dropdown-item-1"><input type="checkbox"
@@ -348,7 +350,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div> 
+                    </div>
 
                     <!-- Tabela de departamentos -->
                     <div class="table-container-modal">
