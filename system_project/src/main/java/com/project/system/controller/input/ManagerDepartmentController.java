@@ -80,7 +80,7 @@ public class ManagerDepartmentController {
 		return mv;
 	}
 
-	@GetMapping("/input/director/departments/print/{departmentId}")
+	@GetMapping("/input/manager/departments/print/{departmentId}")
 	@PreAuthorize("hasAuthority('DEPARTMENT_LIST')")
 	public ModelAndView printDepartment(@PathVariable Long departmentId, Authentication authentication) {
 
