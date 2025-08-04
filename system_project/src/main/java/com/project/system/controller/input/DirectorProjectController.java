@@ -68,7 +68,7 @@ public class DirectorProjectController {
     }
 
     @GetMapping("/input/director/projects/list")
-	@PreAuthorize("hasAuthority('PROJECTS_LIST')")
+	@PreAuthorize("hasAuthority('PROJECT_LIST')")
 	public ModelAndView projectsList(@RequestParam(value = "filter", required = false) String filter,
 			Authentication authentication) {
 		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
@@ -88,7 +88,7 @@ public class DirectorProjectController {
 	}
 
 	@GetMapping("/input/director/projects/print")
-	@PreAuthorize("hasAuthority('PROJECTS_LIST')")
+	@PreAuthorize("hasAuthority('PROJECT_LIST')")
 	public ModelAndView printProjects(@RequestParam(required = false) String filter, Authentication authentication) {
 
 		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
@@ -108,7 +108,7 @@ public class DirectorProjectController {
 	}
 
 	@GetMapping("/input/director/projects/print/{projectId}")
-	@PreAuthorize("hasAuthority('PROJECTS_LIST')")
+	@PreAuthorize("hasAuthority('PROJECT_LIST')")
 	public ModelAndView printProject(@PathVariable Long projectId, Authentication authentication) {
 
 		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);

@@ -32,6 +32,11 @@ public enum UserPermission {
 	PROJECT_SAVE_EDIT("Salvar edição"),
 	PROJECT_DELETE("Excluir"),
 	
+	CONTRACTUAL_ACRONYM_LIST("Lista"),
+	CONTRACTUAL_ACRONYM_REGISTER("Cadastrar"),
+	CONTRACTUAL_ACRONYM_EDIT("Editar"),
+	CONTRACTUAL_ACRONYM_SAVE_EDIT("Salvar edição"),
+	CONTRACTUAL_ACRONYM_DELETE("Excluir"),
     ;
 
     private final String label;
