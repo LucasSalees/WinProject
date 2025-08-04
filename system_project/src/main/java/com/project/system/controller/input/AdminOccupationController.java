@@ -85,9 +85,7 @@ public class AdminOccupationController {
     
     @GetMapping("/input/admin/occupations/print/{occupationId}")
     @PreAuthorize("hasAuthority('OCCUPATION_LIST')")
-    public ModelAndView printOccupation(
-            @PathVariable Long occupationId,
-            Authentication authentication) {
+    public ModelAndView printOccupation(@PathVariable Long occupationId, Authentication authentication) {
 
         User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
         Occupation occupation = occupationService.getOccupationById(occupationId)

@@ -21,7 +21,12 @@ import org.springframework.web.servlet.ModelAndView;
 import com.project.system.dto.StandardResponseDTO;
 import com.project.system.entity.Project;
 import com.project.system.entity.User;
+import com.project.system.enums.input.BrazilianStateUF;
+import com.project.system.enums.input.ProjectBusinessVertical;
+import com.project.system.enums.input.ProjectPriority;
+import com.project.system.enums.input.ProjectStatus;	
 import com.project.system.service.input.ManagerProjectService;
+import com.project.system.service.input.ManagerService;
 import com.project.system.repositories.DepartmentRepository;
 import com.project.system.utils.AuthenticationUtils;
 
@@ -30,6 +35,9 @@ public class ManagerProjectController {
 
     @Autowired
     private ManagerProjectService projectService;
+    
+    @Autowired
+    private ManagerService managerService;
     
     @Autowired
     private DepartmentRepository departmentRepository;
@@ -51,11 +59,17 @@ public class ManagerProjectController {
         mv.addObject("LoggedUser", loggedUser);
         mv.addObject("project", project);
         mv.addObject("departments", departmentRepository.findAll());
+        
+        mv.addObject("brazilianStates", BrazilianStateUF.values());
+        mv.addObject("projectPriorities", ProjectPriority.values());
+        mv.addObject("projectBusinessVerticals", ProjectBusinessVertical.values());
+        mv.addObject("projectStatuses", ProjectStatus.values());
+        
         return mv;
     }
 
     @GetMapping("/input/manager/projects/list")
-	@PreAuthorize("hasAuthority('PROJECTS_LIST')")
+	@PreAuthorize("hasAuthority('PROJECT_LIST')")
 	public ModelAndView projectsList(@RequestParam(value = "filter", required = false) String filter,
 			Authentication authentication) {
 		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
@@ -75,7 +89,7 @@ public class ManagerProjectController {
 	}
 
 	@GetMapping("/input/manager/projects/print")
-	@PreAuthorize("hasAuthority('PROJECTS_LIST')")
+	@PreAuthorize("hasAuthority('PROJECT_LIST')")
 	public ModelAndView printProjects(@RequestParam(required = false) String filter, Authentication authentication) {
 
 		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
@@ -95,7 +109,7 @@ public class ManagerProjectController {
 	}
 
 	@GetMapping("/input/manager/projects/print/{projectId}")
-	@PreAuthorize("hasAuthority('PROJECTS_LIST')")
+	@PreAuthorize("hasAuthority('PROJECT_LIST')")
 	public ModelAndView printProject(@PathVariable Long projectId, Authentication authentication) {
 
 		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
@@ -125,7 +139,14 @@ public class ManagerProjectController {
         ModelAndView mv = new ModelAndView("input/manager/projects/edit");
         mv.addObject("LoggedUser", loggedUser);
         mv.addObject("project", project);
-        mv.addObject("departments", departmentRepository.findAll());
+        mv.addObject("departments", managerService.getAllDepartments());
+        
+        // Adiciona os enums antes do return
+        mv.addObject("brazilianStates", BrazilianStateUF.values());
+        mv.addObject("projectPriorities", ProjectPriority.values());
+        mv.addObject("projectBusinessVerticals", ProjectBusinessVertical.values());
+        mv.addObject("projectStatuses", ProjectStatus.values());
+        
         return mv;
     }
 

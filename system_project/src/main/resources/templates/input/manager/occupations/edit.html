@@ -44,11 +44,6 @@
 				                <input type="text" name="occupationName" placeholder="Digite o nome da profissão"
 				                    class="form-control shadow-cantos" required maxlength="40" th:field="*{occupationName}"/>
 				            </div>
-				            <div class="col-md-6">
-				                <label class="form-label shadow-text">Nome do gerente</label>
-				                <input type="text" name="occupationManager" placeholder="Digite nome do gerente"
-				                    class="form-control shadow-cantos" required maxlength="40" th:field="*{occupationManager}"/>
-				            </div>
 				            
 				            <div class="col-md-6">
 								<label class="form-label shadow-text">Email</label>
@@ -71,8 +66,9 @@
 						   onclick="openExclusaoModal(this); return false;">
 						    <i class="fa-solid fa-trash" style="color: #ffffff;"></i> Excluir
 						</a>
-                        <a href="#" id="btnImprimir" onclick="imprimirFormulario()" class="btn btn-warning">
-						    <i class="fa-solid fa-print"></i> Imprimir
+                        <a th:href="@{/input/manager/occupations/print/{occupationId}(occupationId=${occupation.occupationId})}"
+						   class="btn btn-warning" target="_blank">
+						   <i class="fa-solid fa-print"></i> Imprimir
 						</a>
                         <div>
 						    <button 

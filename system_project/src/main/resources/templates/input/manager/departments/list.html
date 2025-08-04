@@ -25,24 +25,45 @@
 					<div class="navegacaoLista custom-button-container">
 					    <!-- Botão à esquerda -->
 					    <div class="botoes-esquerda">
-					        <button id="btnRemoverFiltros" class="btn btn-warning">Remover Filtros</button>
-					    </div>
+						    <a href="/input/manager/departments/register">
+		                        <button type="button"
+		                        	class="btn btn-primary">
+		                            <i class="fa-solid fa-plus"></i> Cadastrar
+		                        </button>
+		                    </a>
+						</div>
+
 					    <!-- Campo de pesquisa + botão de dropdown à direita -->
-					    <div class="botoes-direita">
-					        <input type="text" id="filtro" class="form-control shadow-cantos" placeholder="Pesquisar...">
-							<div class="dropdown botoes">
-							  <button class="btn btn-primary" type="button" id="dropdownMenuButton">
-							      Selecionar
-							  </button>
-							  <div class="dropdown-menu" id="dropdownCampos">
-							      <h1 class="dropdown-item-titulo text-center">Campos Visíveis</h1>
-							      <label class="dropdown-item-1"><input type="checkbox" id="selecionarTodos"> <span>Selecionar Todos</span></label>
-							      <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoCodigo" checked> <span>Codigo</span></label>
-							      <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoNome" checked> <span>Nome</span></label>
-							      <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoGerente" checked> <span>Gerente</span></label>
-							  </div>
-							</div>
-					    </div>
+						<div class="botoes-direita">
+						
+							<a th:href="@{/input/manager/departments/print(filter=${filter})}"
+							   class="btn btn-primary" 
+							   target="_blank" 
+							   aria-label="Imprimir">
+							    <i class="fa-solid fa-print"></i>
+							</a>
+
+							<a href="/input/manager/departments/list" class="btn btn-warning" aria-label="Remover Filtros">
+						        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+						            <path d="M6 10.5V16l4-2.5v-3l5.5-7V2H.5v1.5L6 10.5z"/>
+						            <path d="M11.146 4.854a.5.5 0 0 1 .708-.708L14 6.293l2.146-2.147a.5.5 0 0 1 .708.708L14.707 7l2.147 2.146a.5.5 0 0 1-.708.708L14 7.707l-2.146 2.147a.5.5 0 0 1-.708-.708L13.293 7 11.146 4.854z"/>
+						        </svg>
+						    </a>
+						    
+						    <form method="get" th:action="@{/input/manager/departments/list}" class="form-inline">
+						        <input type="text" name="filter" id="filter" class="form-control shadow-cantos"
+						               placeholder="Pesquisar..." th:value="${filter}">
+						        <button type="submit" class="btn btn-primary" aria-label="Buscar">
+								  <svg xmlns="http://www.w3.org/2000/svg" 
+								       width="16" height="16" fill="currentColor" 
+								       class="bi bi-search" viewBox="0 0 16 16">
+								    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 
+								      1 0 0 0 1.415-1.414l-3.85-3.85zm-5.242 1.398a5 5 0 1 1 0-10 
+								      5 5 0 0 1 0 10z"/>
+								  </svg>
+								</button>
+						    </form>
+						</div>
 					</div>
                 </div>
                 <div class="table-container">
@@ -51,40 +72,40 @@
 	                        <tr>
 	                            <th class="text-left" style="cursor: pointer;"> Cod </th>
 	                            <th class="text-left" style="cursor: pointer"> Nome</th>
-	                            <th class="text-left" style="cursor: pointer;"> Gerente</th>
+	                            <th class="text-left" style="cursor: pointer"> Email</th>
+	                            <th class="text-left" style="cursor: pointer"> Gerente</th>
+	                            <th class="text-left" style="cursor: pointer;"> Telefone</th>
 	                        </tr>
 	                    </thead>
 	                    <tbody>
-	                        <tr th:each="department : ${departmentsList}">
-	                            <td class="text-left">
-	                                <a th:href="@{/input/manager/departments/edit/{departmentId}(departmentId=${department.departmentId})}"
-	                                    th:text="${department.departmentId}" class="row-link"></a>
-	                            </td>
-	                            <td class="text-left">
-	                                <a th:href="@{/input/manager/departments/edit/{departmentId}(departmentId=${department.departmentId})}"
-	                                    th:text="${department.departmentName}" class="row-link"></a>
-	                            </td>
-	                            <td class="text-left">
-	                                <a th:href="@{/input/manager/departments/edit/{departmentId}(departmentId=${department.departmentId})}"
-	                                    th:text="${department.departmentManager}" class="row-link"></a>
-	                            </td>
-	                        </tr>
-	                    </tbody>
+							  <tr th:if="${#lists.isEmpty(departmentsList)}">
+							    <td colspan="5" class="text-center">Nenhum registro encontrado.</td>
+							  </tr>
+							  <tr th:each="department : ${departmentsList}" th:unless="${#lists.isEmpty(departmentsList)}">
+							    <td class="text-left">
+							      <a th:href="@{/input/manager/departments/edit/{departmentId}(departmentId=${department.departmentId})}"
+							         th:text="${department.departmentId}" class="row-link"></a>
+							    </td>
+							    <td class="text-left">
+							      <a th:href="@{/input/manager/departments/edit/{departmentId}(departmentId=${department.departmentId})}"
+							         th:text="${department.departmentName}" class="row-link"></a>
+							    </td>
+							    <td class="text-left">
+							      <a th:href="@{/input/manager/departments/edit/{departmentId}(departmentId=${department.departmentId})}"
+							         th:text="${department.departmentEmail}" class="row-link"></a>
+							    </td>
+							     <td class="text-left">
+							      <a th:href="@{/input/manager/departments/edit/{departmentId}(departmentId=${department.departmentId})}"
+							         th:text="${department.departmentManager}" class="row-link"></a>
+							    </td>
+							    <td class="text-left">
+							      <a th:href="@{/input/manager/departments/edit/{departmentId}(departmentId=${department.departmentId})}"
+							         th:text="${department.departmentTel}" class="row-link"></a>
+							    </td>
+							  </tr>
+						</tbody>
 	                </table>
             	</div>
-	        	<div class="navegacaoLista custom-button-container">
-	                <a href="#" id="btnImprimir" class="btn btn-warning">
-	                    <i class="fa-solid fa-print"></i> Imprimir
-	                </a>
-	                <div>
-	                    <a href="/input/administrative/departments/register">
-	                        <button type="button"
-	                        	class="btn btn-primary">
-	                            <i class="fa-solid fa-plus"></i> Cadastrar
-	                        </button>
-	                    </a>
-	                </div>
-	            </div>
             </div>
         </div>
     </main>
@@ -94,8 +115,6 @@
     <div th:replace="~{fragments/footer :: footer}"></div>
     
     <script th:src="@{/js/manager/components.js}"></script>
-    
-	<script th:src="@{/js/manager/lists/departmentsList.js}"></script>
 	
 </body>
 </html>

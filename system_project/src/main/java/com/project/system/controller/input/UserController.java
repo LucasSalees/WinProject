@@ -1,7 +1,12 @@
 package com.project.system.controller.input;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -21,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.project.system.dto.StandardResponseDTO;
 import com.project.system.entity.User;
+import com.project.system.enums.input.UserPermission;
 import com.project.system.service.CommomUserService;
 import com.project.system.service.input.UserService;
 import com.project.system.utils.AuthenticationUtils;
@@ -30,7 +36,7 @@ import com.project.system.utils.AuthenticationUtils;
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private UserService service;
     
     @Autowired
     private CommomUserService commomUserService;
@@ -39,7 +45,7 @@ public class UserController {
     @PreAuthorize("hasRole('USER')")
     public ModelAndView adminHome(Authentication authentication) {
         User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-        ModelAndView mv = new ModelAndView("user/home");
+        ModelAndView mv = new ModelAndView("/input/admin/home");
 
         mv.addObject("LoggedUser", loggedUser);
         return mv;
@@ -49,12 +55,20 @@ public class UserController {
     @PreAuthorize("hasAuthority('USER_REGISTER')")
     public ModelAndView register(User user, Authentication authentication) {
         User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-        ModelAndView mv = new ModelAndView("inputuser/users/register");
+        ModelAndView mv = new ModelAndView("input/user/users/register");
+
+        // Envia todas as permissões (se quiser exibir todas)
+        mv.addObject("allPermissions", UserPermission.values());
+
+        // Como user.getRole() pode estar null nesse ponto, envie todas ou deixe que o Thymeleaf filtre
+        mv.addObject("availablePermissions", UserPermission.values());
+
         mv.addObject("LoggedUser", loggedUser);
         mv.addObject("user", user);
-        mv.addObject("departments", userService.getAllDepartments());
-        mv.addObject("occupations", userService.getAllOccupations());
-        mv.addObject("functions", userService.getAllFunctions());
+        mv.addObject("departments", service.getAllDepartments());
+        mv.addObject("occupations", service.getAllOccupations());
+        mv.addObject("functions", service.getAllFunctions());
+
         return mv;
     }
 
@@ -66,9 +80,9 @@ public class UserController {
 		List<User> users;
 
 		if (filter != null && !filter.trim().isEmpty()) {
-			users = userService.searchUsers(filter);
+			users = service.searchUsers(filter);
 		} else {
-			users = userService.getAllUsers();
+			users = service.getAllUsers();
 		}
 
 		ModelAndView mv = new ModelAndView("input/user/users/list");
@@ -86,9 +100,9 @@ public class UserController {
 		List<User> users;
 
 		if (filter != null && !filter.isEmpty()) {
-			users = userService.searchUsers(filter);
+			users = service.searchUsers(filter);
 		} else {
-			users = userService.getAllUsers();
+			users = service.getAllUsers();
 		}
 
 		ModelAndView mv = new ModelAndView("input/user/users/print");
@@ -103,7 +117,7 @@ public class UserController {
 	public ModelAndView printUser(@PathVariable Long userId, Authentication authentication) {
 
 		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		User user = userService.getUserById(userId)
+		User user = service.getUserById(userId)
 				.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
 		ModelAndView mv = new ModelAndView("input/user/users/printOne");
@@ -113,56 +127,94 @@ public class UserController {
 		return mv;
 	}
 
-    @GetMapping("/input/user/users/edit/{userId}")
+    @GetMapping("/input/user/users/edit/{id}")
     @PreAuthorize("hasAuthority('USER_EDIT')")
-    public ModelAndView editUser(@PathVariable("userId") Long userId, Authentication authentication) {
+    public ModelAndView editUserForm(@PathVariable Long id, Authentication authentication) {
         User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-        Optional<User> userOpt = userService.getUserById(userId);
-
-        if (userOpt.isEmpty()) {
-            return new ModelAndView("redirect:/input/user/users/list");
-        }
-        User user = userOpt.get();
-
         ModelAndView mv = new ModelAndView("input/user/users/edit");
-        mv.addObject("user", user);
+
+        Optional<User> userOpt = service.getUserById(id);
+        if (userOpt.isEmpty()) {
+            // redirecionar ou tratar o erro adequadamente
+            return new ModelAndView("redirect:/error");
+        }
+        
+        User userToEdit = userOpt.get();
+
+        // Cria mapa de permissões
+        Map<UserPermission, Boolean> permissionsMap = Arrays.stream(UserPermission.values())
+            .collect(Collectors.toMap(
+                permission -> permission,
+                permission -> userToEdit.getPermissions().contains(permission)
+            ));
+
+        mv.addObject("user", userToEdit);
+        mv.addObject("userPermissions", userToEdit.getPermissions());
+
+        mv.addObject("permissionsMap", permissionsMap);
+        mv.addObject("allPermissions", UserPermission.values());
         mv.addObject("LoggedUser", loggedUser);
-        mv.addObject("allowedDays", user.getAllowedDays());
-        mv.addObject("departments", userService.getAllDepartments());
-        mv.addObject("occupations", userService.getAllOccupations());
-        mv.addObject("functions", userService.getAllFunctions());
+        mv.addObject("departments", service.getAllDepartments());
+        mv.addObject("occupations", service.getAllOccupations());
+        mv.addObject("functions", service.getAllFunctions());
 
         return mv;
     }
-    
+
     @GetMapping("/input/user/removeUser/{userId}")
     @PreAuthorize("hasAuthority('USER_DELETE')")
     @ResponseBody
     public ResponseEntity<StandardResponseDTO> remove(@PathVariable("userId") Long userId, Authentication authentication) {
         User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-        return userService.removeUser(userId, loggedUser);
+        return service.removeUser(userId, loggedUser);
     }
 
     @PostMapping(value = "/input/user/users/edit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAuthority('USER_SAVE_EDIT')")
     @ResponseBody
-    public ResponseEntity<StandardResponseDTO> saveEditions(@ModelAttribute("user") User user,
+    public ResponseEntity<StandardResponseDTO> saveEditions(
+            @ModelAttribute("user") User user,
+            @RequestParam(value = "permissions", required = false) Set<String> permissionsStr,
             @RequestParam(value = "profileImage", required = false) MultipartFile profileImage,
             @RequestParam(value = "removePhoto", required = false) Boolean removePhoto,
-            @RequestParam(name = "novaSenha", required = false) String newUserPassword, BindingResult result,
+            @RequestParam(name = "novaSenha", required = false) String newUserPassword,
+            BindingResult result,
             Authentication authentication) {
 
-        return userService.saveEditions(user, profileImage, removePhoto, newUserPassword);
+        Set<UserPermission> permissions = Collections.emptySet();
+        if (permissionsStr != null) {
+            permissions = permissionsStr.stream()
+                .map(UserPermission::valueOf)
+                .collect(Collectors.toSet());
+        }
+        user.setPermissions(permissions);
+
+        return service.saveEditions(user, profileImage, removePhoto, newUserPassword);
     }
 
-    @PostMapping(value = "/input/user/users/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping("/input/user/users/save")
     @PreAuthorize("hasAuthority('USER_REGISTER')")
-    @ResponseBody
-    public ResponseEntity<StandardResponseDTO> save(@ModelAttribute("user") User user,
-            @RequestParam(value = "profileImage", required = false) MultipartFile profileImage,
-            @RequestParam(value = "removePhoto", required = false) Boolean removePhoto, BindingResult result,
-            Authentication authentication) {
-        return userService.saveNewUser(user, profileImage, removePhoto);
+    public ResponseEntity<?> saveUser(
+        @ModelAttribute User user,
+        @RequestParam(value = "permissions", required = false) Set<String> permissionsStr,
+        @RequestParam(value = "profileImage", required = false) MultipartFile profileImage,
+        @RequestParam(value = "removePhoto", required = false) Boolean removePhoto) {
+
+        Set<UserPermission> permissions = Collections.emptySet();
+        if (permissionsStr != null) {
+            permissions = permissionsStr.stream()
+                .map(UserPermission::valueOf)
+                .collect(Collectors.toSet());
+        }
+        user.setPermissions(permissions);
+
+        if (user.getUserId() == null) {
+            // Novo usuário
+            return service.saveNewUser(user, profileImage, removePhoto);
+        } else {
+            // Edição
+            return service.saveEditions(user, profileImage, removePhoto, null);
+        }
     }
     
     @GetMapping("/input/user/users/profile")

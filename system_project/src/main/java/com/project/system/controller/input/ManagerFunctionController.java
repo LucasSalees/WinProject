@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.project.system.dto.StandardResponseDTO;
-import com.project.system.entity.Department;
 import com.project.system.entity.Function;
 import com.project.system.entity.User;
 import com.project.system.service.input.ManagerFunctionService;
@@ -62,7 +61,7 @@ public class ManagerFunctionController {
     }
     
     @GetMapping("/input/manager/functions/print")
-    @PreAuthorize("hasAuthority('FUNCTIONS_LIST')")
+    @PreAuthorize("hasAuthority('FUNCTION_LIST')")
     public ModelAndView printFunctions(
             @RequestParam(required = false) String filter,
             Authentication authentication) {
@@ -83,15 +82,15 @@ public class ManagerFunctionController {
         return mv;
     }
     
-    @GetMapping("/input/manager/function/print/{functionId}")
-	@PreAuthorize("hasAuthority('FUNCTIONS_LIST')")
+    @GetMapping("/input/manager/functions/print/{functionId}")
+	@PreAuthorize("hasAuthority('FUNCTION_LIST')")
 	public ModelAndView printDepartment(@PathVariable Long functionId, Authentication authentication) {
 
 		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
 		Function function = functionService.getFunctionById(functionId)
 				.orElseThrow(() -> new RuntimeException("Função não encontrada"));
 
-		ModelAndView mv = new ModelAndView("input/manager/function/printOne");
+		ModelAndView mv = new ModelAndView("input/manager/functions/printOne");
 		mv.addObject("LoggedUser", loggedUser);
 		mv.addObject("function", function);
 		mv.addObject("dataAtual", new java.util.Date());

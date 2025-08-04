@@ -150,14 +150,13 @@
                                 <div class="col-md-4">
                                     <label class="form-label shadow-text">Estado</label>
                                     <select th:field="*{projectClientState}" class="form-control shadow-cantos"
-								        id="estado-projeto" required>
-								    <option value="" disabled selected>Selecione um estado</option>
-								    <option th:each="reg : ${T(com.project.system.enums.input.BrazilianStateUF).values()}"
-								            th:value="${reg}"
-								            th:text="${reg.label}">
-								    </option>
-								</select>
-
+									        id="estado-projeto" required>
+									    <option value="" disabled selected>Selecione um estado</option>
+									    <option th:each="reg : ${T(com.project.system.enums.input.BrazilianStateUF).values()}"
+									            th:value="${reg}"
+									            th:text="${reg.label}">
+									    </option>
+									</select>
                                 </div>
                             </div>
                         </div>
@@ -347,7 +346,6 @@
 	    </div>
 	</div>
 	
-	<!-- Modal para seleção do departamento -->
     <!-- Modal para seleção do departamento -->
     <div id="modalListaDepartamentos" class="modal">
         <div class="modal-container" style="max-width: 90vw; width: 1000px;">

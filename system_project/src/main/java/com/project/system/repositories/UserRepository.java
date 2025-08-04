@@ -26,10 +26,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUserEmail(String userEmail);
     
     @Query("SELECT u FROM User u " +
-            "WHERE LOWER(u.userName) LIKE LOWER(CONCAT('%', :filter, '%')) " +
-            "OR LOWER(u.userEmail) LIKE CONCAT(CONCAT('%', :filter, '%')) " +
-            "OR LOWER(u.userRole) LIKE LOWER(CONCAT('%', :filter, '%')) " +
-            "OR LOWER(u.userFunction) LIKE LOWER(CONCAT('%', :filter, '%')) " +
-            "OR CAST(u.userId AS string) LIKE CONCAT('%', :filter, '%')")
-     List<User> searchByFilter(@Param("filter") String filter);
+	       "WHERE LOWER(u.userName) LIKE LOWER(CONCAT('%', :filter, '%')) " +
+	       "OR LOWER(u.userEmail) LIKE LOWER(CONCAT('%', :filter, '%')) " +
+	       "OR LOWER(u.userRole) LIKE LOWER(CONCAT('%', :filter, '%')) " +
+	       "OR LOWER(u.userFunction.functionName) LIKE LOWER(CONCAT('%', :filter, '%')) " +
+	       "OR STR(u.userId) LIKE CONCAT('%', :filter, '%')")
+	List<User> searchByFilter(@Param("filter") String filter);
+
 }

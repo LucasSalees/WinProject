@@ -1,0 +1,276 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Relatório de Departamentos</title>
+    <style>
+        :root {
+            /* --------- CORES CLARAS --------- */
+            --color-light-white: #ffffff;
+            --color-light-gray: #f5f5f5;
+            --color-light-green: #28a745;
+            --color-light-blue-1: #4F8EF7;
+            --color-light-blue-2: #3D6FD1;
+            --color-light-red: #ff7f7f;
+            --color-light-yellow: #fffacd;
+            --color-light-purple: #d8baf7;
+            --color-light-black: #666666;
+
+            /* --------- CORES INTERMEDIÁRIAS --------- */
+            --color-medium-gray: #cccccc;
+            --color-medium-blue: #003DA6;
+            --color-medium-red: #d9534f;
+            --color-medium-yellow: #f0ad4e;
+            --color-medium-purple: #7e57c2;
+            --color-medium-black: #333333;
+            --color-medium-green: #218838;
+
+            /* --------- CORES ESCURAS --------- */
+            --color-dark-gray: #222222;
+            --color-dark-gray1: #444444;
+            --color-dark-blue-1: #0a0a2a;
+            --color-dark-blue-2: #002366;
+            --color-dark-red: #8b0000;
+            --color-dark-yellow: #b8860b;
+            --color-dark-purple: #4b0082;
+            --color-dark-black: #000000;
+            --color-dark-green-1: #1b4d1b;
+            --color-dark-green-2: #145214;
+
+            /* --------- TIPOGRAFIA E ELEMENTOS --------- */
+            --shadow-dark-blue-2: 0 0 0 0.2rem rgba(0, 35, 102, 0.25);
+            --font-family-main: 'Inter', sans-serif;
+            --input-height: 46px;
+            --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            --border-radius: 8px;
+        }
+
+        body {
+            font-family: var(--font-family-main);
+            margin: 0;
+            padding: 0;
+            background: var(--color-light-white);
+            color: var(--color-medium-black);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 95%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 0;
+            border-bottom: 2px solid var(--color-medium-blue);
+            margin-bottom: 25px;
+        }
+
+        .logo-container {
+            width: 120px;
+        }
+
+        .logo-container img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .header-content {
+            flex-grow: 1;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .report-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--color-dark-blue-2);
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .report-subtitle {
+            font-size: 14px;
+            color: var(--color-medium-black);
+            margin-top: 5px;
+        }
+
+        .report-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background-color: var(--color-light-gray);
+            border-radius: var(--border-radius);
+            font-size: 13px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .info-item i {
+            margin-right: 8px;
+            color: var(--color-medium-blue);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: var(--box-shadow);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        th {
+            background: linear-gradient(to bottom, var(--color-medium-blue), var(--color-dark-blue-2));
+            color: var(--color-light-white);
+            font-weight: 600;
+            text-transform: uppercase;
+            text-align: left;
+            padding: 12px 15px;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--color-medium-gray);
+            vertical-align: middle;
+        }
+
+        tr:nth-child(even) {
+            background-color: var(--color-light-gray);
+        }
+
+        tr:hover {
+            background-color: rgba(61, 111, 209, 0.1);
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: var(--color-medium-black);
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid var(--color-medium-gray);
+        }
+
+        .page-number:after {
+            content: "Página " counter(page);
+        }
+
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 15mm 10mm;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+                font-size: 12px;
+                color: var(--color-dark-black);
+            }
+
+            .header {
+                padding: 15px 0;
+            }
+
+            .report-title {
+                font-size: 18px;
+            }
+
+            table {
+                page-break-inside: auto;
+            }
+
+            tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+            }
+
+            th, td {
+                padding: 8px 12px;
+                font-size: 11px;
+            }
+
+            .footer {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                padding: 8px 0;
+                font-size: 10px;
+                color: var(--color-medium-black);
+            }
+
+            .page-number:after {
+                content: "Página " counter(page);
+                float: right;
+                margin-right: 20px;
+            }
+        }
+    </style>
+</head>
+<body onload="window.print()">
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <img src="/images/input.ico" width="40" alt="Logo">
+            </div>
+            <div class="header-content">
+                <h1 class="report-title">Relatório de Departamentos</h1>
+                <p class="report-subtitle">Sistema WinProject - Gestão Empresarial</p>
+            </div>
+            <div class="logo-container"></div>
+        </div>
+
+        <div class="report-info">
+            <div class="info-item">
+                <i>📅</i>
+                <span>Emitido em: <span th:text="${#dates.format(dataAtual, 'dd/MM/yyyy HH:mm')}"></span></span>
+            </div>
+            <div class="info-item">
+                <i>👤</i>
+                <span>Usuário: <span class="user-name" th:text="${LoggedUser.userName}"></span></span>
+            </div>
+            <div class="info-item">
+                <i>📋</i>
+                <span>Total de registros: <span th:text="${departmentsList.size()}"></span></span>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Nome do Departamento</th>
+                    <th>Email</th>
+                    <th>Gerente</th>
+                    <th>Telefone</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="department : ${departmentsList}">
+                    <td th:text="${department.departmentId}"></td>
+                    <td th:text="${department.departmentName}"></td>
+                    <td th:text="${department.departmentEmail}"></td>
+                    <td th:text="${department.departmentManager}"></td>
+                    <td th:text="${department.departmentTel}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="footer">
+            <div class="page-number"></div>
+            WinProject &copy; <span th:text="${#dates.format(dataAtual, 'yyyy')}"></span> - Sistema de Gestão Empresarial
+        </div>
+    </div>
+</body>
+</html>
