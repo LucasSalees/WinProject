@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.project.system.dto.StandardResponseDTO;
-import com.project.system.entity.Department;
 import com.project.system.entity.Occupation;
 import com.project.system.entity.User;
 import com.project.system.service.input.AdminOccupationService;
@@ -84,7 +83,7 @@ public class AdminOccupationController {
         return mv;
     }
     
-    @GetMapping("/input/admin/departments/print/{occupationId}")
+    @GetMapping("/input/admin/occupations/print/{occupationId}")
     @PreAuthorize("hasAuthority('OCCUPATION_LIST')")
     public ModelAndView printOccupation(
             @PathVariable Long occupationId,
@@ -96,7 +95,7 @@ public class AdminOccupationController {
 
         ModelAndView mv = new ModelAndView("input/admin/occupations/printOne");
         mv.addObject("LoggedUser", loggedUser);
-        mv.addObject("department", occupation);
+        mv.addObject("occupation", occupation);
         mv.addObject("dataAtual", new java.util.Date());
         return mv;
     }

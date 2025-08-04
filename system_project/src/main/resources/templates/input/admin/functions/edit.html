@@ -44,12 +44,7 @@
 				                <input type="text" name="departmentName" placeholder="Digite o nome do departamento"
 				                    class="form-control shadow-cantos" id="functionName" required maxlength="40" th:field="*{functionName}"/>
 				            </div>
-				            <div class="col-md-6">
-				                <label class="form-label shadow-text">Nome do gerente</label>
-				                <input type="text" name="departmentManager" placeholder="Digite nome do gerente"
-				                    class="form-control shadow-cantos" id="functionManager"required maxlength="40" th:field="*{functionManager}"/>
-				            </div>
-				            
+				          	
 				            <div class="col-md-6">
 								<label class="form-label shadow-text">Email</label>
 							    <div class="d-flex gap-2">
@@ -60,7 +55,7 @@
 							</div>
 			            	<div class="col-md-6">
 	                            <label class="form-label shadow-text">Telefone</label>
-	                            <input type="tel" placeholder="(00) 99999-9999" class="form-control shadow-cantos" 
+	                            <input type="tel" placeholder="(00) 00000-0000" class="form-control shadow-cantos" 
 	                                   th:field="*{functionTel}" id="functionTel"/>
 	                        </div>
 				        </div>
@@ -71,8 +66,10 @@
 						   onclick="openExclusaoModal(this); return false;">
 						    <i class="fa-solid fa-trash" style="color: #ffffff;"></i> Excluir
 						</a>
-                        <a href="#" id="btnImprimir" onclick="imprimirFormulario()" class="btn btn-warning">
-						    <i class="fa-solid fa-print"></i> Imprimir
+						
+                        <a th:href="@{/input/admin/functions/print/{functionId}(functionId=${function.functionId})}"
+						   class="btn btn-warning" target="_blank">
+						   <i class="fa-solid fa-print"></i> Imprimir
 						</a>
                         <div>
 						    <button 
