@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -145,7 +146,8 @@ public class AdminService {
         }
     }
 
-    public ResponseEntity<StandardResponseDTO> saveNewUser(User user, MultipartFile profileImage, Boolean removePhoto) {
+    public ResponseEntity<StandardResponseDTO> saveNewUser(
+            User user, MultipartFile profileImage, Boolean removePhoto, Authentication authentication) {
         try {
             Optional<User> emailOwner = userRepository.findByEmail(user.getUserEmail());
             if (emailOwner.isPresent()) {
@@ -153,7 +155,6 @@ public class AdminService {
                         .body(StandardResponseDTO.error("Este e-mail já está cadastrado."));
             }
 
-            // Aqui você deve garantir que o user tenha as permissões configuradas
             if (user.getPermissions() == null) {
                 user.setPermissions(Collections.emptySet());
             }
@@ -180,7 +181,7 @@ public class AdminService {
                     .body(StandardResponseDTO.error("Erro ao cadastrar usuário: " + e.getMessage()));
         }
     }
-    
+
     public List<User> searchUsers(String filter) {
         return userRepository.searchByFilter(filter);
     }

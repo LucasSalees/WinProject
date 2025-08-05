@@ -263,7 +263,7 @@
     margin-left: 5px;
 }
 
-/* BotÃµes */
+/* BotÃƒÂµes */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -274,7 +274,7 @@
     cursor: pointer;
     transition: all 0.2s;
     border: none;
-    height: 40px; /* altura padrÃ£o */
+    height: 40px; /* altura padrÃƒÂ£o */
 }
 
 .btn-danger {
@@ -328,7 +328,7 @@
     color: var(--color-light-white);
 }
 
-/* Modal de AlteraÃ§Ã£o de Senha */
+/* Modal de AlteraÃƒÂ§ÃƒÂ£o de Senha */
 .modal {
     display: none;
     position: fixed;
@@ -344,7 +344,7 @@
 }
 
 .modal.aberto {
-    display: flex; /* mantém alinhamento central */
+    display: flex; /* mantÃ©m alinhamento central */
 }
 
 
@@ -440,7 +440,7 @@
   display: none !important;
 }
 
-/* FormulÃ¡rio no Modal */
+/* FormulÃƒÂ¡rio no Modal */
 .form-group {
     margin-bottom: 1.25rem;
 }
@@ -533,7 +533,7 @@
     box-shadow: var(--shadow-dark-blue-2);
 }
 
-/* AnimaÃ§Ãµes para o modal */
+/* AnimaÃƒÂ§ÃƒÂµes para o modal */
 @keyframes slideFadeIn {
     0% {
         opacity: 0;
@@ -545,7 +545,7 @@
     }
 }
 
-/* AnimaÃ§Ã£o de entrada existente */
+/* AnimaÃƒÂ§ÃƒÂ£o de entrada existente */
 @keyframes slideFadeIn {
     0% {
         opacity: 0;
@@ -557,7 +557,7 @@
     }
 }
 
-/* Nova animaÃ§Ã£o de saÃ­da para combinar */
+/* Nova animaÃƒÂ§ÃƒÂ£o de saÃƒÂ­da para combinar */
 @keyframes slideFadeOut {
     0% {
         opacity: 1;
@@ -620,6 +620,7 @@
     .form-control {
         padding: 0.5rem 0.75rem;
         font-size: 0.95rem;
+        /* width: 115px; */
     }
     
     p {
@@ -633,7 +634,7 @@
     }
 }
 
-/* AnimaÃ§Ãµes */
+/* AnimaÃƒÂ§ÃƒÂµes */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }

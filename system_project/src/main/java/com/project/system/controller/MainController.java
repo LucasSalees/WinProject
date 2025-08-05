@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.project.system.service.AuditService;
 import com.project.system.service.MainService;
 
 @Controller
@@ -19,6 +20,9 @@ public class MainController {
 
     @Autowired
     private MainService mainService;
+    
+    @Autowired
+    private AuditService auditService;
 
     @GetMapping("/")
     public String redirectToLogin() {
@@ -31,11 +35,20 @@ public class MainController {
             @RequestParam(value = "logout", required = false) String logout,
             @RequestParam(value = "expired", required = false) String expired,
             HttpServletRequest request,
+            Authentication authentication,
             Model model) {
 
+        // Somente loga se realmente tiver usuário autenticado e não for erro/logout
+        if (authentication != null && authentication.isAuthenticated()
+                && erro == null && logout == null && expired == null) {
+            auditService.logLogin(authentication);
+        }
+
+        // Configura mensagens no model para o thymeleaf
         mainService.configurarMensagemLogin(request, model, erro, logout, expired);
+
         return "login";
-    } 
+    }
 
     @GetMapping("/home")
     public String home(Authentication authentication) {

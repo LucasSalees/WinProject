@@ -29,6 +29,12 @@ public class SecurityConfig {
     @Autowired
     private UserDetailsServiceImpl usuarioUserDetailsService;
 
+    @Autowired
+    private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+    
+    @Autowired
+    private CustomLogoutSuccessHandler customLogoutSuccessHandler;
+    
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -43,19 +49,21 @@ public class SecurityConfig {
     	)
 
         .formLogin(form -> form
-            .loginPage("/login")
-            .loginProcessingUrl("/login")
-            .defaultSuccessUrl("/home", true)
-            .failureHandler(failureHandler)
-            .permitAll()
-        )
+    	    .loginPage("/login")
+    	    .loginProcessingUrl("/login")
+    	    .successHandler(customAuthenticationSuccessHandler)  // aqui, substitui o defaultSuccessUrl
+    	    .failureHandler(failureHandler)
+    	    .permitAll()
+    	)
+
         .logout(logout -> logout
-            .logoutUrl("/logout")
-            .logoutSuccessUrl("/login?logout=true")
-            .invalidateHttpSession(true)
-            .deleteCookies("JSESSIONID")
-            .permitAll()
-        )
+    	    .logoutUrl("/logout")
+    	    .logoutSuccessHandler(customLogoutSuccessHandler)
+    	    .invalidateHttpSession(true)
+    	    .deleteCookies("JSESSIONID")
+    	    .permitAll()
+    	)
+        
         .sessionManagement(session -> session
             .invalidSessionUrl("/login?expired=true")
         )

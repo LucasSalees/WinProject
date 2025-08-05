@@ -199,24 +199,16 @@ public class AdminController {
         @ModelAttribute User user,
         @RequestParam(value = "permissions", required = false) Set<String> permissionsStr,
         @RequestParam(value = "profileImage", required = false) MultipartFile profileImage,
-        @RequestParam(value = "removePhoto", required = false) Boolean removePhoto) {
-
-        Set<UserPermission> permissions = Collections.emptySet();
-        if (permissionsStr != null) {
-            permissions = permissionsStr.stream()
-                .map(UserPermission::valueOf)
-                .collect(Collectors.toSet());
-        }
-        user.setPermissions(permissions);
+        @RequestParam(value = "removePhoto", required = false) Boolean removePhoto,
+        Authentication authentication) {
 
         if (user.getUserId() == null) {
-            // Novo usuário
-            return adminService.saveNewUser(user, profileImage, removePhoto);
+            return adminService.saveNewUser(user, profileImage, removePhoto, null);
         } else {
-            // Edição
             return adminService.saveEditions(user, profileImage, removePhoto, null);
         }
     }
+
     
     @GetMapping("/input/admin/users/profile")
     public ModelAndView profileUser(Authentication authentication) {

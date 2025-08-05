@@ -29,13 +29,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         		    .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
         		// Debug: imprima as permissões carregadas
-        		System.out.println("Usuário: " + user.getUserEmail());
-        		System.out.println("Permissões do usuário:");
-        		if(user.getPermissions() != null) {
-        		    user.getPermissions().forEach(p -> System.out.println(" - " + p.name()));
-        		} else {
-        		    System.out.println("Nenhuma permissão carregada.");
-        		}
+        	// System.out.println("Usuário: " + user.getUserEmail());
+        	// System.out.println("Permissões do usuário:");
+        	// if(user.getPermissions() != null) {
+        	//   user.getPermissions().forEach(p -> System.out.println(" - " + p.name()));
+        	// } else {
+    		//   System.out.println("Nenhuma permissão carregada.");
+        	// }
 
             // ✅ ATENÇÃO:
             // A senha será verificada automaticamente pelo Spring Security depois desse método retornar.

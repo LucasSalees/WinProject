@@ -27,7 +27,6 @@ public class UserDetailsImpl implements UserDetails {
 
         if (user.getPermissions() != null) {
             user.getPermissions().forEach(permission -> {
-                System.out.println("Permissão carregada: " + permission.name()); // << DEBUG AQUI
                 authorities.add(new SimpleGrantedAuthority(permission.name()));
             });
         }

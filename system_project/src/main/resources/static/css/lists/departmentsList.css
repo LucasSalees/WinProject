@@ -19,10 +19,10 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    min-height: 600px; /* Altura mÃƒÆ’Ã‚Â­nima para garantir espaÃƒÆ’Ã‚Â§o suficiente */
+    min-height: 600px; /* Altura mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­nima para garantir espaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§o suficiente */
 }
 
-/* Barra de navegaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o superior com filtros */
+/* Barra de navegaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o superior com filtros */
 .navegacaoLista {
     /* width: 100%; */
     /* background: var(--color-light-white); */
@@ -42,15 +42,15 @@
     width: 100%;
 }
 
-/* Estilos para o formulÃƒÆ’Ã‚Â¡rio inline e filtros */
+/* Estilos para o formulÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rio inline e filtros */
 .form-inline {
     display: flex;
     align-items: center;
     gap: 10px;
-    flex-wrap: nowrap; /* MantÃƒÆ’Ã‚Â©m os elementos em linha no desktop */
+    flex-wrap: nowrap; /* MantÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©m os elementos em linha no desktop */
 }
 
-/* Dropdown de seleÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o de campos */
+/* Dropdown de seleÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o de campos */
 .dropdown {
     position: relative;
     display: inline-block;
@@ -108,16 +108,17 @@
 /* Container da tabela com altura fixa e scroll */
 .table-container {
     width: 100%;
+    max-height: 550px;
     overflow: auto;
     flex: 1;
     position: relative;
     border-radius: 4px;
     box-shadow: var(--box-shadow);
-    min-height: 100px; /* Altura mÃƒÆ’Ã‚Â­nima de seguranÃƒÆ’Ã‚Â§a */
+    min-height: 100px; /* Altura mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­nima de seguranÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a */
     margin-top: 15px;
 }
 
-/* EstilizaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o da barra de rolagem */
+/* EstilizaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o da barra de rolagem */
 .table-container::-webkit-scrollbar {
     width: 8px;
     height: 8px; /* Altura da barra de rolagem horizontal */
@@ -146,11 +147,11 @@
     margin: 15px 0;
     border-radius: 4px;
  	box-shadow: var(--box-shadow);
-    min-height: 350px; /* Altura mÃƒÆ’Ã‚Â­nima de seguranÃƒÆ’Ã‚Â§a */
-    max-height: 350px; /* Altura mÃƒÆ’Ã‚Â­nima de seguranÃƒÆ’Ã‚Â§a */
+    min-height: 350px; /* Altura mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­nima de seguranÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a */
+    max-height: 350px; /* Altura mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­nima de seguranÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§a */
 }
 
-/* EstilizaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o da barra de rolagem */
+/* EstilizaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£o da barra de rolagem */
 .table-container-modal::-webkit-scrollbar {
     width: 8px;
     height: 8px; /* Altura da barra de rolagem horizontal */
@@ -176,7 +177,7 @@
     border-collapse: collapse;
     font-size: 14px;
     background-color: var(--color-light-white);
-    min-width: 800px; /* Garante que a tabela tenha uma largura mÃƒÆ’Ã‚Â­nima para scroll horizontal */
+    min-width: 800px; /* Garante que a tabela tenha uma largura mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­nima para scroll horizontal */
 }
 
 .table thead {
@@ -219,7 +220,7 @@
 }
 
 
-/* Links nas cÃƒÆ’Ã‚Â©lulas da tabela */
+/* Links nas cÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©lulas da tabela */
 .row-link {
     display: block;
     color: inherit; 
@@ -229,7 +230,7 @@
     height: 100%;
 }
 
-/* Ajustes para os botÃƒÆ’Ã‚Âµes fixos em mobile */
+/* Ajustes para os botÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âµes fixos em mobile */
 .navegacaoLista.custom-button-container {
     gap: 10px;
     bottom: 0;
@@ -269,7 +270,7 @@
     margin-left: 1rem;
 }
 
-/* Estilos para botÃƒÆ’Ã‚Âµes desabilitados */
+/* Estilos para botÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âµes desabilitados */
 button[disabled], 
 button[style*="not-allowed"] {
     opacity: 0.7;
@@ -409,7 +410,7 @@ button[style*="not-allowed"] {
     
     .table {
         font-size: 13px;
-        min-width: 600px; /* Reduz a largura mÃƒÆ’Ã‚Â­nima para mobile */
+        min-width: 600px; /* Reduz a largura mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­nima para mobile */
     }
     
     .table thead th,
@@ -418,13 +419,13 @@ button[style*="not-allowed"] {
         white-space: nowrap;
     }
     
-    /* Ajustes para os botÃƒÆ’Ã‚Âµes fixos em mobile */
+    /* Ajustes para os botÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âµes fixos em mobile */
     .navegacaoLista.custom-button-container {
-        flex-direction: column;
+        flex-direction: row;
         gap: 10px;
-        /* Remover esta linha ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“ */
-		/* position: fixed; */
-		/* Remover esta linha ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Ëœ */
+        /* Remover */
+        /* position: fixed; */
+		/* Remover */
         bottom: 0;
     }
     
@@ -442,7 +443,7 @@ button[style*="not-allowed"] {
     
     .navegacaoLista.custom-button-container button {
         width: 100%;
-        min-height: 44px; /* Tamanho mÃƒÆ’Ã‚Â­nimo para touch */
+        min-height: 44px; /* Tamanho mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­nimo para touch */
     }
     
     .btn {
@@ -472,7 +473,7 @@ button[style*="not-allowed"] {
     }
     
     .table-container {
-        max-height: 250px;
+        max-height: 500px;
         border-radius: 4px;
     }
     
@@ -527,7 +528,7 @@ button[style*="not-allowed"] {
     }
 }
 
-/* AnimaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Âµes */
+/* AnimaÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âµes */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -538,7 +539,7 @@ button[style*="not-allowed"] {
     margin-right: 0px;
 }
 
-/* UtilitÃƒÆ’Ã‚Â¡rios adicionais */
+/* UtilitÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡rios adicionais */
 .d-flex {
     display: flex;
 }
@@ -569,7 +570,7 @@ button[style*="not-allowed"] {
     margin-right: 8px;
 }
 
-/* Estilo do ÃƒÆ’Ã‚Â­cone de check */
+/* Estilo do ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­cone de check */
 .dropdown-item-1 input[type="checkbox"]::after {
     content: "";
     position: absolute;
