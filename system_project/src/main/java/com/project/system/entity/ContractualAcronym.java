@@ -10,25 +10,17 @@ public class ContractualAcronym {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long contractualAcronymId;
+	private Long acronymId;
 	private String contractualAcronymName;
 	private String acronym;
 	
 	public ContractualAcronym() {
 	}
 	
-	public ContractualAcronym(String acronym, String acronymName, Long contractualAcronymId) {
+	public ContractualAcronym(String acronym, String acronymName, Long acronymId) {
 		this.acronym = acronym;
-		this.contractualAcronymId = contractualAcronymId;
+		this.acronymId = acronymId;
 		this.contractualAcronymName = acronymName;
-	}
-
-	public Long getContractualAcronymId() {
-		return contractualAcronymId;
-	}
-
-	public void setContractualAcronymId(Long contractualAcronymId) {
-		this.contractualAcronymId = contractualAcronymId;
 	}
 
 	public String getContractualAcronymName() {
@@ -41,6 +33,14 @@ public class ContractualAcronym {
 
 	public String getAcronym() {
 		return acronym;
+	}
+
+	public Long getAcronymId() {
+		return acronymId;
+	}
+
+	public void setAcronymId(Long acronymId) {
+		this.acronymId = acronymId;
 	}
 
 	public void setAcronym(String acronym) {

@@ -13,8 +13,9 @@ import com.project.system.entity.ContractualAcronym;
 import com.project.system.repositories.ContractualAcronymRepository;
 
 @Service
-public class AdminContractualAcronymService {
+public class ManagerContractualAcronymService {
 
+	
 	@Autowired
 	private ContractualAcronymRepository contractualAcronymRepository;
 

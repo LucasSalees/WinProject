@@ -1,7 +1,6 @@
 package com.project.system.service.input;
 
 import java.time.LocalDateTime;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.project.system.dto.StandardResponseDTO;
 import com.project.system.entity.User;
+import com.project.system.repositories.ContractualAcronymRepository;
 import com.project.system.repositories.DepartmentRepository;
 import com.project.system.repositories.FunctionRepository;
 import com.project.system.repositories.OccupationRepository;
@@ -42,6 +42,9 @@ public class UserService {
 
     @Autowired
     private FileStorageService fileStorageService;
+    
+    @Autowired
+    private ContractualAcronymRepository contractualAcronymRepository; 
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -61,6 +64,10 @@ public class UserService {
 
     public List<?> getAllFunctions() {
         return functionRepository.findAll();
+    }
+    
+    public List<?> getAllAcronyms() {
+        return contractualAcronymRepository.findAll();
     }
 
     public ResponseEntity<StandardResponseDTO> removeUser(Long userId, User loggedUser) {

@@ -130,7 +130,7 @@ public class AdminDepartmentController {
 	}
 
 	@PostMapping("/input/admin/departments/save")
-	@PreAuthorize("hasAuthority('USER_REGISTER')")
+	@PreAuthorize("hasAuthority('DEPARTMENT_REGISTER')")
 	@ResponseBody
 	public ResponseEntity<StandardResponseDTO> saveDepartment(@ModelAttribute Department department,
 			BindingResult result, Authentication authentication) {

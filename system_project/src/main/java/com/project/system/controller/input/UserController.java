@@ -68,6 +68,7 @@ public class UserController {
         mv.addObject("departments", service.getAllDepartments());
         mv.addObject("occupations", service.getAllOccupations());
         mv.addObject("functions", service.getAllFunctions());
+        mv.addObject("acronyms", service.getAllAcronyms());
 
         return mv;
     }
@@ -157,6 +158,7 @@ public class UserController {
         mv.addObject("departments", service.getAllDepartments());
         mv.addObject("occupations", service.getAllOccupations());
         mv.addObject("functions", service.getAllFunctions());
+        mv.addObject("acronyms", service.getAllAcronyms());
 
         return mv;
     }

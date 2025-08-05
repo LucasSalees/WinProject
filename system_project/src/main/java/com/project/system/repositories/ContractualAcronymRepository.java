@@ -8,15 +8,15 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.project.system.entity.ContractualAcronym;
-import com.project.system.entity.Department;
 
 @Repository
 public interface ContractualAcronymRepository  extends JpaRepository<ContractualAcronym, Long> {
 
-	@Query("SELECT c FROM ContractualAcronym c " +
-	           "WHERE LOWER(c.contractualAcronymName) LIKE LOWER(CONCAT('%', :filter, '%')) " +
-	           "OR LOWER(c.acronym) LIKE CONCAT(CONCAT('%', :filter, '%')) " +
-	           "OR CAST(c.contractualAcronymId AS string) LIKE CONCAT('%', :filter, '%')")
-	 List<ContractualAcronym> searchByFilter(@Param("filter") String filter);
+	@Query(value = "SELECT * FROM contractual_acronym c " +
+            "WHERE LOWER(c.contractual_acronym_name) LIKE LOWER(CONCAT('%', :filter, '%')) " +
+            "OR LOWER(c.acronym) LIKE LOWER(CONCAT('%', :filter, '%')) " +
+            "OR CAST(c.contractual_acronym_id AS TEXT) LIKE CONCAT('%', :filter, '%')",
+    nativeQuery = true)
+List<ContractualAcronym> searchByFilter(@Param("filter") String filter);
 	
 }

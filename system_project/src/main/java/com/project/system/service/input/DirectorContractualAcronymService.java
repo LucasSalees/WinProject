@@ -13,7 +13,7 @@ import com.project.system.entity.ContractualAcronym;
 import com.project.system.repositories.ContractualAcronymRepository;
 
 @Service
-public class AdminContractualAcronymService {
+public class DirectorContractualAcronymService {
 
 	@Autowired
 	private ContractualAcronymRepository contractualAcronymRepository;
@@ -42,7 +42,7 @@ public class AdminContractualAcronymService {
 			Optional<ContractualAcronym> contractualAcronymExistsOpt = contractualAcronymRepository.findById(contractualAcronym.getAcronymId());
 			if (contractualAcronymExistsOpt.isEmpty()) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND)
-						.body(StandardResponseDTO.error("Sigla contratual não encontrado."));
+						.body(StandardResponseDTO.error("Sigla contratual não encontrada."));
 			}
 
 			ContractualAcronym contractualAcronymExists = contractualAcronymExistsOpt.get();

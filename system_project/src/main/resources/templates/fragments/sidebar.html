@@ -67,7 +67,7 @@
                     <!-- ----------------------------------- -->
                     <!-- Menu Auxiliares (apenas para ADMIN) -->
                     <li th:if="${#authorization.expression('hasRole(''ADMIN'')') and 
-					             (#authorization.expression('hasAuthority(''USER_LIST'') or hasAuthority(''DEPARTMENT_LIST'') or hasAuthority(''OCCUPATION_LIST'') or hasAuthority(''FUNCTION_LIST'')'))}">
+					             (#authorization.expression('hasAuthority(''USER_LIST'') or hasAuthority(''DEPARTMENT_LIST'') or hasAuthority(''OCCUPATION_LIST'') or hasAuthority(''FUNCTION_LIST'') or hasAuthority(''CONTRACTUAL_ACRONYM_LIST'')'))}">
                         <a href="javascript:void(0);" class="sidebar-item" onclick="toggleMenu('cadastroSubmenu')">
                             <!-- Ícone geral do menu "Auxiliares" -->
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
@@ -152,6 +152,21 @@
 								</svg>
 
                                 Projetos
+                            </a>
+                            
+                            <!-- Siglas contratuais -->
+                            <a th:href="@{${urlPrefix} + '/acronyms/list'}" class="submenu-item"
+                                th:if="${#authorization.expression('hasAuthority(''CONTRACTUAL_ACRONYM_LIST'')')}">
+							    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 18"
+								    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+								    stroke-linejoin="round" style="margin-right: 8px;">
+								    <!-- Pasta base -->
+								    <path d="M3 5h5l2 2h11v8H3V5z" />
+								    <!-- Aba da pasta -->
+								    <path d="M3 5V3h6l2 2" />
+								</svg>
+
+                                Siglas Contratuais
                             </a>
                         </div>
                     </li>

@@ -21,26 +21,27 @@ import com.project.system.dto.StandardResponseDTO;
 import com.project.system.entity.ContractualAcronym;
 import com.project.system.entity.User;
 import com.project.system.service.input.AdminContractualAcronymService;
+import com.project.system.service.input.DirectorContractualAcronymService;
 import com.project.system.utils.AuthenticationUtils;
 
 @Controller
-public class AdminContractualAcronymController {
-	
-	@Autowired
-	private AdminContractualAcronymService contractualAcronymService;
+public class DirectorContractualAcronymController {
 
-	@GetMapping("/input/admin/acronyms/register")
+	@Autowired
+	private DirectorContractualAcronymService contractualAcronymService;
+
+	@GetMapping("/input/director/acronyms/register")
 	@PreAuthorize("hasAuthority('CONTRACTUAL_ACRONYM_REGISTER')")
 	public ModelAndView register(ContractualAcronym acronym, Authentication authentication) {
 		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
 
-		ModelAndView mv = new ModelAndView("/input/admin/acronyms/register");
+		ModelAndView mv = new ModelAndView("/input/director/acronyms/register");
 		mv.addObject("LoggedUser", loggedUser);
 		mv.addObject("acronym", acronym);
 		return mv;
 	}
 
-	@GetMapping("/input/admin/acronyms/list")
+	@GetMapping("/input/director/acronyms/list")
 	@PreAuthorize("hasAuthority('CONTRACTUAL_ACRONYM_LIST')")
 	public ModelAndView contractualAcronymList(@RequestParam(value = "filter", required = false) String filter,
 			Authentication authentication) {
@@ -53,14 +54,14 @@ public class AdminContractualAcronymController {
 			acronyms = contractualAcronymService.getAllContractualAcronym();
 		}
 
-		ModelAndView mv = new ModelAndView("input/admin/acronyms/list");
+		ModelAndView mv = new ModelAndView("input/director/acronyms/list");
 		mv.addObject("LoggedUser", loggedUser);
 		mv.addObject("acronymsList", acronyms);
 		mv.addObject("filter", filter); // devolve o filtro para manter no input
 		return mv;
 	}
 
-	@GetMapping("/input/admin/acronyms/print")
+	@GetMapping("/input/director/acronyms/print")
 	@PreAuthorize("hasAuthority('CONTRACTUAL_ACRONYM_LIST')")
 	public ModelAndView printContractualAcronym(@RequestParam(required = false) String filter, Authentication authentication) {
 
@@ -73,14 +74,14 @@ public class AdminContractualAcronymController {
 			acronyms = contractualAcronymService.getAllContractualAcronym();
 		}
 
-		ModelAndView mv = new ModelAndView("input/admin/acronyms/print");
+		ModelAndView mv = new ModelAndView("input/director/acronyms/print");
 		mv.addObject("LoggedUser", loggedUser);
 		mv.addObject("acronymsList", acronyms);
 		mv.addObject("dataAtual", new java.util.Date());
 		return mv;
 	}
 
-	@GetMapping("/input/admin/acronyms/print/{acronymId}")
+	@GetMapping("/input/director/acronyms/print/{acronymId}")
 	@PreAuthorize("hasAuthority('CONTRACTUAL_ACRONYM_LIST')")
 	public ModelAndView printContractualAcronym(@PathVariable Long acronymId, Authentication authentication) {
 
@@ -88,32 +89,32 @@ public class AdminContractualAcronymController {
 		ContractualAcronym acronym = contractualAcronymService.getContractualAcronymById(acronymId)
 				.orElseThrow(() -> new RuntimeException("Sigla contratual não encontrada"));
 
-		ModelAndView mv = new ModelAndView("input/admin/acronyms/printOne");
+		ModelAndView mv = new ModelAndView("input/director/acronyms/printOne");
 		mv.addObject("LoggedUser", loggedUser);
 		mv.addObject("acronym", acronym);
 		mv.addObject("dataAtual", new java.util.Date());
 		return mv;
 	}
 
-	@GetMapping("/input/admin/acronyms/edit/{acronymId}")
+	@GetMapping("/input/director/acronyms/edit/{acronymId}")
 	@PreAuthorize("hasAuthority('CONTRACTUAL_ACRONYM_EDIT')")
 	public ModelAndView editContractualAcronym(@PathVariable("acronymId") Long acronymId, Authentication authentication) {
 		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
 
 		Optional<ContractualAcronym> acronymOpt = contractualAcronymService.getContractualAcronymById(acronymId);
 		if (acronymOpt.isEmpty()) {
-			return new ModelAndView("redirect:/input/admin/acronyms/list");
+			return new ModelAndView("redirect:/input/director/acronyms/list");
 		}
 
 		ContractualAcronym acronym = acronymOpt.get();
 
-		ModelAndView mv = new ModelAndView("input/admin/acronyms/edit");
+		ModelAndView mv = new ModelAndView("input/director/acronyms/edit");
 		mv.addObject("LoggedUser", loggedUser);
 		mv.addObject("acronym", acronym);
 		return mv;
 	}
 
-	@GetMapping("/input/admin/removeContractualAcronym/{acronymId}")
+	@GetMapping("/input/director/removeContractualAcronym/{acronymId}")
 	@PreAuthorize("hasAuthority('CONTRACTUAL_ACRONYM_DELETE')")
 	@ResponseBody
 	public ResponseEntity<StandardResponseDTO> removeContractualAcronym(@PathVariable("acronymId") Long acronymId,
@@ -121,15 +122,15 @@ public class AdminContractualAcronymController {
 		return contractualAcronymService.removeContractualAcronym(acronymId);
 	}
 
-	@PostMapping("/input/admin/acronyms/edit")
+	@PostMapping("/input/director/acronyms/edit")
 	@PreAuthorize("hasAuthority('CONTRACTUAL_ACRONYM_SAVE_EDIT')")
 	@ResponseBody
-	public ResponseEntity<StandardResponseDTO> saveEditions(@ModelAttribute("contractualAcronym") ContractualAcronym acronym,
+	public ResponseEntity<StandardResponseDTO> saveEditions(@ModelAttribute("acronym") ContractualAcronym acronym,
 			BindingResult result, Authentication authentication) {
 		return contractualAcronymService.saveEditions(acronym);
 	}
 
-	@PostMapping("/input/admin/acronyms/save")
+	@PostMapping("/input/director/acronyms/save")
 	@PreAuthorize("hasAuthority('CONTRACTUAL_ACRONYM_REGISTER')")
 	@ResponseBody
 	public ResponseEntity<StandardResponseDTO> saveContractualAcronym(@ModelAttribute ContractualAcronym acronym,
