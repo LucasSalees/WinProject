@@ -18,6 +18,7 @@ import com.project.system.repositories.ContractualAcronymRepository;
 import com.project.system.repositories.DepartmentRepository;
 import com.project.system.repositories.FunctionRepository;
 import com.project.system.repositories.OccupationRepository;
+import com.project.system.repositories.ProjectRepository;
 import com.project.system.repositories.UserRepository;
 import com.project.system.service.CommomUserService;
 import com.project.system.service.FileStorageService;
@@ -43,6 +44,9 @@ public class AdminService {
 
     @Autowired
     private FunctionRepository functionRepository;
+    
+    @Autowired
+    private ProjectRepository projectRepository;
 
     @Autowired
     private FileStorageService fileStorageService;
@@ -69,6 +73,10 @@ public class AdminService {
 
     public List<?> getAllFunctions() {
         return functionRepository.findAll();
+    }
+    
+    public List<?> getAllProjects() {
+        return projectRepository.findAll();
     }
 
     public ResponseEntity<StandardResponseDTO> removeUser(Long userId, User loggedUser) {

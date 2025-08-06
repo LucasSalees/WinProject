@@ -40,11 +40,22 @@ form.addEventListener('submit', async function(event) {
             });
         }
     })
-    .catch(error => {
-        error.json().then(err => {
-            showMessageModal(err.mensagem || "Erro ao cadastrar usuário.", false);
-        });
-    });
+	.catch(async (error) => {
+	    let mensagemErro = "Erro ao cadastrar usuário.";
+
+	    try {
+	        // Tenta converter a resposta em JSON
+	        const err = await error.json();
+	        mensagemErro = err.mensagem || mensagemErro;
+	    } catch (e) {
+	        // Pode cair aqui se error.json() não for válido (HTML, vazio, etc)
+	        if (error.status) {
+	            mensagemErro += ` Código: ${error.status}`;
+	        }
+	    }
+
+	    showMessageModal(mensagemErro, false);
+	});
 });
 
 //adiciona as mascaras

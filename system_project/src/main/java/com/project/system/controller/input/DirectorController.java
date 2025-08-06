@@ -68,6 +68,8 @@ public class DirectorController {
         mv.addObject("departments", directorService.getAllDepartments());
         mv.addObject("occupations", directorService.getAllOccupations());
         mv.addObject("functions", directorService.getAllFunctions());
+        mv.addObject("projects", directorService.getAllProjects());
+        mv.addObject("acronyms", directorService.getAllAcronyms());
 
         return mv;
     }
@@ -157,6 +159,8 @@ public class DirectorController {
         mv.addObject("departments", directorService.getAllDepartments());
         mv.addObject("occupations", directorService.getAllOccupations());
         mv.addObject("functions", directorService.getAllFunctions());
+        mv.addObject("projects", directorService.getAllProjects());
+        mv.addObject("acronyms", directorService.getAllAcronyms());
 
         return mv;
     }

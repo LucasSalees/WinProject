@@ -15,9 +15,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.project.system.dto.StandardResponseDTO;
 import com.project.system.entity.User;
+import com.project.system.repositories.ContractualAcronymRepository;
 import com.project.system.repositories.DepartmentRepository;
 import com.project.system.repositories.FunctionRepository;
 import com.project.system.repositories.OccupationRepository;
+import com.project.system.repositories.ProjectRepository;
 import com.project.system.repositories.UserRepository;
 import com.project.system.service.CommomUserService;
 import com.project.system.service.FileStorageService;
@@ -34,12 +36,18 @@ public class DirectorService {
 
     @Autowired
     private DepartmentRepository departmentRepository;
+    
+    @Autowired
+    private ContractualAcronymRepository contractualAcronymRepository;
 
     @Autowired
     private OccupationRepository occupationRepository;
 
     @Autowired
     private FunctionRepository functionRepository;
+    
+    @Autowired
+    private ProjectRepository projectRepository;
 
     @Autowired
     private FileStorageService fileStorageService;
@@ -55,6 +63,10 @@ public class DirectorService {
     public List<?> getAllDepartments() {
         return departmentRepository.findAll();
     }
+    
+    public List<?> getAllAcronyms() {
+        return contractualAcronymRepository.findAll();
+    }
 
     public List<?> getAllOccupations() {
         return occupationRepository.findAll();
@@ -62,6 +74,10 @@ public class DirectorService {
 
     public List<?> getAllFunctions() {
         return functionRepository.findAll();
+    }
+    
+    public List<?> getAllProjects() {
+        return projectRepository.findAll();
     }
 
     public ResponseEntity<StandardResponseDTO> removeUser(Long userId, User loggedUser) {
@@ -186,4 +202,5 @@ public class DirectorService {
     public List<User> searchUsers(String filter) {
         return userRepository.searchByFilter(filter);
     }
+
 }

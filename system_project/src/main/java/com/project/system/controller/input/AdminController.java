@@ -68,6 +68,8 @@ public class AdminController {
         mv.addObject("departments", adminService.getAllDepartments());
         mv.addObject("occupations", adminService.getAllOccupations());
         mv.addObject("functions", adminService.getAllFunctions());
+        mv.addObject("projects", adminService.getAllProjects());
+        mv.addObject("acronyms", adminService.getAllAcronyms());
 
         return mv;
     }
@@ -157,6 +159,8 @@ public class AdminController {
         mv.addObject("departments", adminService.getAllDepartments());
         mv.addObject("occupations", adminService.getAllOccupations());
         mv.addObject("functions", adminService.getAllFunctions());
+        mv.addObject("projects", adminService.getAllProjects());
+        mv.addObject("acronyms", adminService.getAllAcronyms());
 
         return mv;
     }

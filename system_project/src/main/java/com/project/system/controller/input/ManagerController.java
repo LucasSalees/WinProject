@@ -68,6 +68,8 @@ public class ManagerController {
         mv.addObject("departments", managerService.getAllDepartments());
         mv.addObject("occupations", managerService.getAllOccupations());
         mv.addObject("functions", managerService.getAllFunctions());
+        mv.addObject("projects", managerService.getAllProjects());
+        mv.addObject("acronyms", managerService.getAllAcronyms());
 
         return mv;
     }
@@ -157,6 +159,8 @@ public class ManagerController {
         mv.addObject("departments", managerService.getAllDepartments());
         mv.addObject("occupations", managerService.getAllOccupations());
         mv.addObject("functions", managerService.getAllFunctions());
+        mv.addObject("projects", managerService.getAllProjects());
+        mv.addObject("acronyms", managerService.getAllAcronyms());
 
         return mv;
     }
