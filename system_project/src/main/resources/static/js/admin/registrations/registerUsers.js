@@ -229,10 +229,7 @@ function resetarFormulario() {
     }
 }
 
-emailInput.addEventListener('input', function() {
-    atualizarPreviewEmail();
-    validarEmail(this);  // se quiser validar ao digitar
-});
+
 
 
 // Inicializar preview do email ao carregar a página
