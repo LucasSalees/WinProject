@@ -12,11 +12,10 @@ import com.project.system.entity.ContractualAcronym;
 @Repository
 public interface ContractualAcronymRepository  extends JpaRepository<ContractualAcronym, Long> {
 
-	@Query(value = "SELECT * FROM contractual_acronym c " +
-            "WHERE LOWER(c.contractual_acronym_name) LIKE LOWER(CONCAT('%', :filter, '%')) " +
+	@Query(value = "SELECT c FROM ContractualAcronym c " +
+            "WHERE LOWER(c.contractualAcronymName) LIKE LOWER(CONCAT('%', :filter, '%')) " +
             "OR LOWER(c.acronym) LIKE LOWER(CONCAT('%', :filter, '%')) " +
-            "OR CAST(c.contractual_acronym_id AS TEXT) LIKE CONCAT('%', :filter, '%')",
-    nativeQuery = true)
+			"OR CAST(c.acronymId AS string) LIKE CONCAT('%', :filter, '%')")
 List<ContractualAcronym> searchByFilter(@Param("filter") String filter);
 	
 }

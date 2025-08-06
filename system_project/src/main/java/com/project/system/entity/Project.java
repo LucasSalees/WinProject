@@ -23,7 +23,6 @@ public class Project implements Serializable {
     private Long projectId;
 
     private String projectName;
-    private String projectContractualAcronym;
     
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate projectCurrentDate;
@@ -66,6 +65,10 @@ public class Project implements Serializable {
     @ManyToOne
     @JoinColumn(name = "department_id", referencedColumnName = "departmentId")
     private Department userDepartment;
+    
+    @ManyToOne
+    @JoinColumn(name = "contractual_acronym_id", referencedColumnName = "acronymId")
+    private ContractualAcronym projectContractualAcronym;
 
     public Long getProjectId() {
         return projectId;	
@@ -83,15 +86,15 @@ public class Project implements Serializable {
         this.projectName = projectName;
     }
 
-    public String getProjectContractualAcronym() {
-        return projectContractualAcronym;
-    }
+    public ContractualAcronym getProjectContractualAcronym() {
+		return projectContractualAcronym;
+	}
 
-    public void setProjectContractualAcronym(String projectContractualAcronym) {
-        this.projectContractualAcronym = projectContractualAcronym;
-    }
+	public void setProjectContractualAcronym(ContractualAcronym projectContractualAcronym) {
+		this.projectContractualAcronym = projectContractualAcronym;
+	}
 
-    public LocalDate getProjectPlanningStartDate() {
+	public LocalDate getProjectPlanningStartDate() {
         return projectPlanningStartDate;
     }
 
