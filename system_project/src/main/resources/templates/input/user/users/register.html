@@ -461,13 +461,9 @@
 	                    <a href="#" id="btnImprimir">
 	                    </a>
 	                    <div>
-	                        <button 
-	                            type="submit" 
-	                            class="btn btn-primary"
-	                            onclick="salvar(event, this.form)">
-	                            <i class="fa-solid fa-floppy-disk"></i> 
-	                            Salvar
-	                        </button>
+	                        <button type="submit" class="btn btn-primary">
+								<i class="fa-solid fa-floppy-disk"></i> Salvar
+							</button>
 	                    </div>
 	                </div>
 	            </form>
@@ -695,7 +691,7 @@
 	 
 	<div th:replace="~{fragments/footer :: footer}"></div>
 	
-	<script>
+		<script>
 		document.addEventListener('DOMContentLoaded', function () {
 		    const select = document.getElementById('userRoleSelect');
 		
@@ -706,7 +702,9 @@
 		        const departmentGroup = document.querySelector('.department-group');
 		        const occupationGroup = document.querySelector('.occupation-group');
 		        const functionGroup = document.querySelector('.function-group');
-		
+		        const projectGroup = document.querySelector('.project-group'); 
+		        const acronymGroup = document.querySelector('.acronym-group');
+		        
 		        // Sempre mostra as permissões de usuário
 		        userGroup.style.display = 'block';
 		
@@ -714,12 +712,14 @@
 		            departmentGroup.style.display = 'block';
 		            occupationGroup.style.display = 'block';
 		            functionGroup.style.display = 'block';
-		            churchGroup.style.display = 'block';
-		            churchesUserGroup.style.display = 'block';
+		            projectGroup.style.display = 'block';
+		            acronymGroup.style.display = 'block';
 		        } else {
 		            departmentGroup.style.display = 'none';
 		            occupationGroup.style.display = 'none';
 		            functionGroup.style.display = 'none';
+		            projectGroup.style.display = 'none';
+		            acronymGroup.style.display = 'block';
 		        }
 		    }
 		
@@ -748,6 +748,8 @@
 		    addCheckAllHandler('department-group', 'checkAllDepartment');
 		    addCheckAllHandler('occupation-group', 'checkAllOccupation');
 		    addCheckAllHandler('function-group', 'checkAllFunction');
+		    addCheckAllHandler('project-group', 'checkAllProject');
+		    addCheckAllHandler('acronym-group', 'checkAllAcronym');
 		});
 		
 		document.addEventListener('DOMContentLoaded', function () {

@@ -541,8 +541,7 @@
 					<div class="navegacaoLista custom-button-container">
 						<a href="#" id="btnImprimir"> </a>
 						<div>
-							<button type="submit" class="btn btn-primary"
-								onclick="salvar(event, this.form)">
+							<button type="submit" class="btn btn-primary">
 								<i class="fa-solid fa-floppy-disk"></i> Salvar
 							</button>
 						</div>
@@ -793,7 +792,7 @@
 
 	<div th:replace="~{fragments/footer :: footer}"></div>
 
-	<script>
+		<script>
 		document.addEventListener('DOMContentLoaded', function () {
 		    const select = document.getElementById('userRoleSelect');
 		
@@ -804,9 +803,9 @@
 		        const departmentGroup = document.querySelector('.department-group');
 		        const occupationGroup = document.querySelector('.occupation-group');
 		        const functionGroup = document.querySelector('.function-group');
-		        const projectGroup = document.querySelector('.project-group');
+		        const projectGroup = document.querySelector('.project-group'); 
 		        const acronymGroup = document.querySelector('.acronym-group');
-		
+		        
 		        // Sempre mostra as permissões de usuário
 		        userGroup.style.display = 'block';
 		
@@ -821,7 +820,7 @@
 		            occupationGroup.style.display = 'none';
 		            functionGroup.style.display = 'none';
 		            projectGroup.style.display = 'none';
-		            acronymGroup.style.display = 'none';
+		            acronymGroup.style.display = 'block';
 		        }
 		    }
 		
@@ -876,7 +875,6 @@
 		    updateDescription();
 		});
 	</script>
-
 
 	<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 

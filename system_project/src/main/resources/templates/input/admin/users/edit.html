@@ -992,7 +992,7 @@
 	 
 	<div th:replace="~{fragments/footer :: footer}"></div>
 	
-	<script>
+		<script>
 		document.addEventListener('DOMContentLoaded', function () {
 		    const select = document.getElementById('userRoleSelect');
 		
@@ -1003,9 +1003,9 @@
 		        const departmentGroup = document.querySelector('.department-group');
 		        const occupationGroup = document.querySelector('.occupation-group');
 		        const functionGroup = document.querySelector('.function-group');
-		        const projectGroup = document.querySelector('.project-group');
+		        const projectGroup = document.querySelector('.project-group'); 
 		        const acronymGroup = document.querySelector('.acronym-group');
-		
+		        
 		        // Sempre mostra as permissões de usuário
 		        userGroup.style.display = 'block';
 		
@@ -1020,7 +1020,7 @@
 		            occupationGroup.style.display = 'none';
 		            functionGroup.style.display = 'none';
 		            projectGroup.style.display = 'none';
-		            acronymGroup.style.display = 'none';
+		            acronymGroup.style.display = 'block';
 		        }
 		    }
 		
@@ -1050,7 +1050,7 @@
 		    addCheckAllHandler('occupation-group', 'checkAllOccupation');
 		    addCheckAllHandler('function-group', 'checkAllFunction');
 		    addCheckAllHandler('project-group', 'checkAllProject');
-		    addCheckAllHandler('acronym-group', 'checkAllAcronym');
+		    addCheckAllHandler('acronym-group', 'checkAllProject');
 		});
 		
 		document.addEventListener('DOMContentLoaded', function () {
