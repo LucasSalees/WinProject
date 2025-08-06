@@ -754,8 +754,9 @@
 						   onclick="openExclusaoModal(this); return false;">
 						    <i class="fa-solid fa-trash" style="color: #ffffff;"></i> Excluir
 						</a>
-                        <a href="#" id="btnImprimir" onclick="imprimirFormulario()" class="btn btn-warning">
-						    <i class="fa-solid fa-print"></i> Imprimir
+                        <a th:href="@{/input/director/users/print/{userId}(userId=${user.userId})}"
+						   class="btn btn-warning" target="_blank">
+						   <i class="fa-solid fa-print"></i> Imprimir
 						</a>
                         <div>
 						    <button 
@@ -1022,6 +1023,7 @@
 		        const occupationGroup = document.querySelector('.occupation-group');
 		        const functionGroup = document.querySelector('.function-group');
 		        const projectGroup = document.querySelector('.project-group');
+		        const acronymGroup = document.querySelector('.acronym-group');
 		
 		        // Sempre mostra as permissões de usuário
 		        userGroup.style.display = 'block';
@@ -1031,11 +1033,13 @@
 		            occupationGroup.style.display = 'block';
 		            functionGroup.style.display = 'block';
 		            projectGroup.style.display = 'block';
+		            acronymGroup.style.display = 'block';
 		        } else {
 		            departmentGroup.style.display = 'none';
 		            occupationGroup.style.display = 'none';
 		            functionGroup.style.display = 'none';
 		            projectGroup.style.display = 'none';
+		            acronymGroup.style.display = 'none';
 		        }
 		    }
 		
@@ -1065,6 +1069,8 @@
 		    addCheckAllHandler('occupation-group', 'checkAllOccupation');
 		    addCheckAllHandler('function-group', 'checkAllFunction');
 		    addCheckAllHandler('project-group', 'checkAllProject');
+		    addCheckAllHandler('acronym-group', 'checkAllAcronym');
+		    
 		});
 		
 		document.addEventListener('DOMContentLoaded', function () {
