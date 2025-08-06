@@ -1,13 +1,20 @@
 package com.project.system.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 
+import com.project.system.entity.User;
+import com.project.system.enums.input.AuditAction;
+import com.project.system.enums.input.AuditClassName;
+import com.project.system.enums.input.UserRole;
 import com.project.system.exceptions.DayAccessRestrictedException;
 import com.project.system.exceptions.TimeAccessRestrictedException;
 import com.project.system.exceptions.UserBlockedException;
+import com.project.system.repositories.UserRepository;
+import com.project.system.service.AuditService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,6 +24,12 @@ import java.io.IOException;
 
 @Component
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
+
+    @Autowired
+    private AuditService auditService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request,
@@ -53,6 +66,33 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
         } else if (exception instanceof TimeAccessRestrictedException) {
             errorKey = "horario_restrito";
             errorMessage = "Acesso não permitido neste horário.";
+        }
+
+        if (exception instanceof BadCredentialsException) {
+            String email = request.getParameter("username");
+            Long userId = null;
+            String userEmail = null;
+
+            if (email != null) {
+                var userOpt = userRepository.findByEmail(email.toLowerCase().trim());
+                if (userOpt.isPresent()) {
+                    User user = userOpt.get();
+                    userId = user.getUserId();
+                    userEmail = user.getUserEmail();
+                }
+            }
+
+            auditService.logAudit(
+                AuditAction.LOGIN_FAILED,
+                AuditClassName.AUTHENTICATION.name(),
+                userId != null ? String.valueOf(userId) : null,
+                "email ou senha incorreto",
+                null,
+                null,
+                UserRole.USER.name(),
+                userId != null ? String.valueOf(userId) : null,
+                userEmail
+            );
         }
 
         request.getSession().setAttribute("SPRING_SECURITY_LAST_EXCEPTION", errorMessage);

@@ -18,7 +18,7 @@ public class AuditLog implements Serializable {
     private String action;
     private String className;
     private String module;
-    private String acftedId;
+    private String affectedId;
     private String description;
 
     @Column(columnDefinition = "TEXT")
@@ -34,13 +34,13 @@ public class AuditLog implements Serializable {
 
     public AuditLog() {}
 
-    public AuditLog(String action, String className, String acftedId, String description,
+    public AuditLog(String action, String className, String affectedId, String description,
                     String oldValue, String newValue,  String module,
                     String userId, String userName) {
         this.action = action;
         this.className = className;
         this.module = module;
-        this.acftedId = acftedId;
+        this.affectedId = affectedId;
         this.description = description;
         this.oldValue = oldValue;
         this.newValue = newValue;
@@ -82,15 +82,15 @@ public class AuditLog implements Serializable {
         this.className = className;
     }
 
-    public String getAcftedId() {
-        return acftedId;
-    }
+    public String getAffectedId() {
+		return affectedId;
+	}
 
-    public void setAcftedId(String acftedId) {
-        this.acftedId = acftedId;
-    }
+	public void setAffectedId(String affectedId) {
+		this.affectedId = affectedId;
+	}
 
-    public String getDescription() {
+	public String getDescription() {
         return description;
     }
 
