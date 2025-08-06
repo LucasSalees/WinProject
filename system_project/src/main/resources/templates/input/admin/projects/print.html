@@ -264,7 +264,7 @@
                 <tr th:each="project : ${projectsList}">
                     <td th:text="${project.projectId}"></td>
                     <td th:text="${project.projectName}"></td>
-                    <td th:text="${project.projectContractualAcronym}"></td>
+                    <td th:text="${project.projectContractualAcronym.acronym}"></td>
                     <td th:text="${project.projectBusinessVertical}"></td>
                     <td th:text="${project.projectPriority}"></td>
                     <td th:text="${project.projectStatus}"></td>
