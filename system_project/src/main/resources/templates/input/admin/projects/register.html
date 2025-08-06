@@ -36,11 +36,16 @@
                                 <input type="text" placeholder="Nome do projeto" class="form-control shadow-cantos"
                                     required maxlength="40" th:field="*{projectName}" />
                             </div>
+                            
                             <div class="col-md-3">
-                                <label class="form-label shadow-text">Sigla contratual</label>
-                                <input type="text" placeholder="SMS, SES, etc..." class="form-control shadow-cantos"
-                                    required maxlength="4" th:field="*{projectContractualAcronym}">
-                            </div>
+						    	<label class="form-label shadow-text">Sigla contratual</label>
+							    <div class="time-range-container">
+							        <div class="form-control shadow-cantos" id="campoProjectContractualAcronym" style="cursor: pointer;">
+							            <span id="textoAcronymSelecionada">Selecione uma sigla</span>
+							        </div>
+							        <input type="hidden" name="projectContractualAcronym" id="projectContractualAcronym">
+							    </div>
+							</div>
 
                             <div class="col-md-3">
                                 <label class="form-label shadow-text"> Data de cadastro</label>
@@ -326,7 +331,7 @@
                             
                         </div>
                             <div class="botoes-direita">
-                                <input type="text" id="filtro" class="form-control shadow-cantos" placeholder="Pesquisar...">
+                                <input type="text" id="filtroDepatamento" class="form-control shadow-cantos" placeholder="Pesquisar...">
 	                        	<div class="dropdown botoes">
 		                           <button class="btn btn-primary" type="button" id="dropdownMenuButtonDepartamentos">
 								      Selecionar
@@ -370,6 +375,78 @@
                                 </tr>
 
                             </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para seleção da Sigla Contratual -->
+    <div id="modalListaAcronym" class="modal">
+        <div class="modal-container" style="max-width: 90vw; width: 1000px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Selecionar sigla</h2>
+                    <button type="button" class="modal-close" id="fecharModalListaAcronym">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <!-- Filtro e seleção de campos -->
+                    <div class="form-inline mb-3">
+                        <div class="navegacaoLista custom-button-container">
+                        <!-- Botão à esquerda -->
+                        <div class="botoes-esquerda">
+                            
+                        </div>
+                            <div class="botoes-direita">
+                                <input type="text" id="filtroAcronym" class="form-control shadow-cantos" placeholder="Pesquisar...">
+	                        	<div class="dropdown botoes">
+		                           <button class="btn btn-primary" type="button" id="dropdownMenuButtonAcronym">
+								      Selecionar
+								  </button>
+                                    <div class="dropdown-menu" id="dropdownCamposAcronym">
+                                        <h1 class="dropdown-item-titulo text-center">Campos Visíveis</h1>
+                                        <label class="dropdown-item-1"><input type="checkbox"
+                                                id="selecionarTodosAcronym"> <span>Selecionar Todos</span></label>
+                                        <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox"
+                                                id="campoCodigoAcronym" checked> <span>Código</span></label>
+                                        <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox"
+                                                id="campoNomeAcronym" checked> <span>Nome</span></label>
+                                        <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox"
+                                                id="campoAcronym" checked> <span>Sigla</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+
+                    <!-- Tabela de departamentos -->
+                    <div class="table-container-modal">
+                        <table class="table table-striped" id="tabelaAcronyms">
+                            <thead>
+                                <tr>
+                                    <th class="text-left">Cod</th>
+                                    <th class="text-left">Nome</th>
+                                    <th class="text-left">Sigla</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+							    <tr th:each="acronym : ${acronyms}" class="linha-acronym"
+							        th:data-id="${acronym.acronymId}"
+							        th:data-nome-completo="${acronym.contractualAcronymName}"
+							        th:data-sigla="${acronym.acronym}">
+							        <td th:text="${acronym.acronymId}"></td>
+							        <td th:text="${acronym.contractualAcronymName}"></td>
+							        <td th:text="${acronym.acronym}"></td>
+							    </tr>
+							</tbody>
                         </table>
                     </div>
                 </div>

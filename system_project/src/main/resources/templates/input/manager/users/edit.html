@@ -671,20 +671,44 @@
 					        </div>	
 					        
 					        <!-- Botões de Seleção Rápida (mantidos como estão) -->
-					        <div class="mt-3 d-flex gap-2 flex-wrap">
-					            <button type="button" class="btn btn-success" onclick="selectAll()">
-					                <i class="fas fa-check-double"></i> Selecionar Todos
-					            </button>
-					            <button type="button" class="btn btn-secondary" onclick="weekdaySelect()">
-					                <i class="fas fa-briefcase"></i> Apenas Dias Úteis
-					            </button>
-					            <button type="button" class="btn btn-warning" onclick="weekendSelect()">
-					                <i class="fas fa-calendar"></i> Apenas Fim de Semana
-					            </button>
-					            <button type="button" class="btn btn-danger" onclick="disableAll()">
-					                <i class="fas fa-times"></i> Desmarcar Todos
-					            </button>
-					        </div>
+					        <div class="container mt-3">
+							  <div class="row justify-content-center g-3">
+							    <div class="col-auto">
+									<button type="button" 
+									   class="btn btn-success btn-sm d-flex align-items-center justify-content-center gap-1" 
+									   style="width: 210px;" 
+									   onclick="selectAll()">
+									<i class="fas fa-check-double"></i>
+									Selecionar Todos
+									</button>
+							    </div>
+							    <div class="col-auto">
+							      <button type="button" 
+							      	   class="btn btn-secondary btn-sm d-flex align-items-center justify-content-center gap-1" 
+									   style="width: 210px;" 
+									   onclick="weekdaySelect()">
+							        <i class="fas fa-briefcase"></i> Apenas Dias Úteis
+							      </button>
+							    </div>
+							    <div class="col-auto">
+							      <button type="button" 
+							      	   class="btn btn-warning btn-sm d-flex align-items-center justify-content-center gap-1" 
+									   style="width: 210px;"
+									   onclick="weekendSelect()">
+							        <i class="fas fa-calendar"></i> Apenas Fim de Semana
+							      </button>
+							    </div>
+							    <div class="col-auto">
+							      <button type="button" 
+							          class="btn btn-danger btn-sm d-flex align-items-center justify-content-center gap-1" 
+									   style="width: 210px;"
+									   onclick="disableAll()">
+							        <i class="fas fa-times"></i> Desmarcar Todos
+							      </button>
+							    </div>
+							  </div>
+							</div>
+							
 					    </div>
 					</div>
 

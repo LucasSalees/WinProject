@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.project.system.dto.StandardResponseDTO;
 import com.project.system.entity.Department;
 import com.project.system.entity.User;
+import com.project.system.repositories.ContractualAcronymRepository;
 import com.project.system.repositories.DepartmentRepository;
 import com.project.system.repositories.FunctionRepository;
 import com.project.system.repositories.OccupationRepository;
@@ -33,6 +34,9 @@ public class AdminService {
 
     @Autowired
     private DepartmentRepository departmentRepository;
+    
+    @Autowired
+    private ContractualAcronymRepository contractualAcronymRepository;
 
     @Autowired
     private OccupationRepository occupationRepository;
@@ -53,6 +57,10 @@ public class AdminService {
 
     public List<?> getAllDepartments() {
         return departmentRepository.findAll();
+    }
+    
+    public List<?> getAllAcronyms() {
+        return contractualAcronymRepository.findAll();
     }
 
     public List<?> getAllOccupations() {

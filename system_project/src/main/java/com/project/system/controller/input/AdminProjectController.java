@@ -26,7 +26,9 @@ import com.project.system.enums.input.ProjectBusinessVertical;
 import com.project.system.enums.input.ProjectPriority;
 import com.project.system.enums.input.ProjectStatus;
 import com.project.system.service.input.AdminProjectService;
+import com.project.system.service.input.AdminService;
 import com.project.system.service.input.DirectorService;
+import com.project.system.repositories.ContractualAcronymRepository;
 import com.project.system.repositories.DepartmentRepository;
 import com.project.system.utils.AuthenticationUtils;
 
@@ -37,10 +39,13 @@ public class AdminProjectController {
     private AdminProjectService projectService;
     
     @Autowired
-    private DirectorService directorService;
+    private AdminService adminService;
     
     @Autowired
     private DepartmentRepository departmentRepository;
+    
+    @Autowired
+    private ContractualAcronymRepository contratualAcronymRepository;
 
     @GetMapping("/input/admin/projects/register")
     @PreAuthorize("hasAuthority('PROJECT_REGISTER')")
@@ -59,6 +64,7 @@ public class AdminProjectController {
         mv.addObject("LoggedUser", loggedUser);
         mv.addObject("project", project);
         mv.addObject("departments", departmentRepository.findAll());
+        mv.addObject("acronyms", contratualAcronymRepository.findAll());
         
         mv.addObject("brazilianStates", BrazilianStateUF.values());
         mv.addObject("projectPriorities", ProjectPriority.values());
@@ -139,7 +145,8 @@ public class AdminProjectController {
         ModelAndView mv = new ModelAndView("input/admin/projects/edit");
         mv.addObject("LoggedUser", loggedUser);
         mv.addObject("project", project);
-        mv.addObject("departments", directorService.getAllDepartments());
+        mv.addObject("departments", adminService.getAllDepartments());
+        mv.addObject("acronyms", adminService.getAllAcronyms());
         
         // Adiciona os enums antes do return
         mv.addObject("brazilianStates", BrazilianStateUF.values());

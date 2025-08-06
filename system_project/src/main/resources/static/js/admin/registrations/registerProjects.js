@@ -318,3 +318,84 @@ const input = document.getElementById('percentualExecucao');
 	    dropdown.classList.remove("show");
 	  });
 	});
+	
+	
+	
+	
+	document.addEventListener('DOMContentLoaded', () => {
+	  // Clique no campo → abrir modal
+	  document.getElementById('campoProjectContractualAcronym').addEventListener('click', () => {
+	    document.getElementById('modalListaAcronym').style.display = 'flex';
+	  });
+
+	  // Botão de fechar modal
+	  document.getElementById('fecharModalListaAcronym').addEventListener('click', () => {
+	    document.getElementById('modalListaAcronym').style.display = 'none';
+	  });
+
+	  // Clique em uma linha da tabela → preencher e fechar modal
+	  document.querySelectorAll('.linha-acronym').forEach(row => {
+	    row.addEventListener('click', () => {
+	      const id = row.getAttribute('data-id');
+	      const nome = row.getAttribute('data-nome-completo');
+	      const sigla = row.getAttribute('data-sigla');
+
+	      document.getElementById('projectContractualAcronym').value = id;
+	      document.getElementById('textoAcronymSelecionada').innerText = `${id} - ${nome} - ${sigla}`;
+	      document.getElementById('modalListaAcronym').style.display = 'none';
+	    });
+	  });
+
+	  // Filtro da tabela
+	  document.getElementById('filtroAcronym').addEventListener('input', filtrarTabelaAcronym);
+
+	  function filtrarTabelaAcronym() {
+	    const filtroAcronym = document.getElementById('filtroAcronym').value.toLowerCase().trim();
+	    const linhas = document.querySelectorAll('#tabelaAcronyms tbody tr');
+
+	    linhas.forEach(linha => {
+	      const codigo = linha.querySelector('td:nth-child(1)').textContent.toLowerCase();
+	      const nome = linha.querySelector('td:nth-child(2)').textContent.toLowerCase();
+	      const sigla = linha.querySelector('td:nth-child(3)').textContent.toLowerCase();
+
+	      const mostrar =
+	        (document.getElementById('campoCodigoAcronym').checked && codigo.includes(filtroAcronym)) ||
+	        (document.getElementById('campoNomeAcronym').checked && nome.includes(filtroAcronym)) ||
+	        (document.getElementById('campoAcronym').checked && sigla.includes(filtroAcronym)) ||
+	        filtroAcronym === '';
+
+	      linha.style.display = mostrar ? '' : 'none';
+	    });
+	  }
+
+	  // Checkboxes para mostrar/ocultar colunas
+	  const selecionarTodos = document.getElementById('selecionarTodosAcronym');
+	  const checkboxes = document.querySelectorAll('.campoCheckbox');
+
+	  selecionarTodos.addEventListener('change', function () {
+	    checkboxes.forEach(cb => cb.checked = this.checked);
+	    filtrarTabelaAcronym();
+	  });
+
+	  checkboxes.forEach(cb => {
+	    cb.addEventListener('change', function () {
+	      selecionarTodos.checked = [...checkboxes].every(c => c.checked);
+	      filtrarTabelaAcronym();
+	    });
+	  });
+
+	  // Dropdown toggle para seleção de campos
+	  document.getElementById('dropdownMenuButtonAcronym').addEventListener('click', function (event) {
+	    event.stopPropagation();
+	    document.getElementById('dropdownCamposAcronym').classList.toggle('show');
+	  });
+
+	  document.getElementById('dropdownCamposAcronym').addEventListener('click', function (event) {
+	    event.stopPropagation();
+	  });
+
+	  document.addEventListener('click', function () {
+	    document.getElementById('dropdownCamposAcronym').classList.remove('show');
+	  });
+	});
+
