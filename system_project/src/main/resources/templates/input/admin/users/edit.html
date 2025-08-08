@@ -25,7 +25,7 @@
                 <form action="/input/admin/users/edit" th:object="${user}" method="POST" id="formulario"
                 	style="display: none;">
                     
-                                       <!-- Seção: Foto de Perfil -->
+                    <!-- Seção: Foto de Perfil -->
 					<div class="section-card access-config-section">
 					    <h3 class="section-title">
 					        <i class="fas fa-user"></i>
@@ -79,7 +79,7 @@
 							 <div class="col-md-1">
 	                            <label class="form-label shadow-text">Cód</label>
 	                        	<input type="text" id="id-usuario" placeholder="Digite o nome completo"
-    							class="form-control shadow-cantos" disabled maxlength="40" th:value="${user.userId}" />
+    							class="form-control shadow-cantos" disabled th:value="${user.userId}" />
 	                        </div>
 	                        
 							<!-- Oculto, mas enviado -->
@@ -88,12 +88,12 @@
 	                        <div class="col-md-5">
 	                            <label class="form-label shadow-text">Nome completo</label>
 	                            <input type="text" name="userName" placeholder="Digite o nome completo"
-	                                class="form-control shadow-cantos" required maxlength="40" th:field="*{userName}"/>
+	                                class="form-control shadow-cantos" required maxlength="60" th:field="*{userName}"/>
 	                        </div>
 	                        
 	                        <div class="col-md-6">
 	                            <label class="form-label shadow-text">Telefone</label>
-	                            <input type="text" name="userTel" placeholder="(00) 99999-9999" id="userTel"
+	                            <input type="text" name="userTel" placeholder="(00) 00000-0000" id="userTel"
 	                                class="form-control shadow-cantos" required th:field="*{userTel}"/>
 	                        </div>
 	                        
@@ -511,130 +511,128 @@
 
 					<!-- Seção: Status do Usuário -->
 					<div class="row g-3">
-				    <!-- Bloco 1 -->
-				    <div class="col-md-3">
-				        <div class="section-card block-section">
-				            <h3 class="section-title">
-				                <i class="fas fa-user-lock"></i>
-				                Bloquear Usuário
-				            </h3>
-				            <div class="row g-3">
-				                <div class="col-12">
-				                    <div class="form-section-headerblock-user-section">
-				                        <div class="d-flex align-items-center gap-3">
-				                            <div class="form-check form-switch m-0">
-				                                <input type="checkbox" th:field="*{userLocked}" id="bloqueio1" value="true"
-				                                    class="form-check-input block-checkbox" />
-				                            </div>
-				                            <div class="text-block">
-				                                <label for="bloqueio1" class="form-label shadow-text mb-1" style="cursor: pointer;">
-				                                    <i class="fas fa-ban me-2"></i>
-				                                    Bloquear Usuário
-				                                </label>
-				                                <div class="text-muted small">
-				                                    Ao marcar esta opção, o acesso do usuário ao sistema será bloqueado.
-				                                </div>
-				                            </div>
-				                        </div>
-				                    </div>
-				                </div>
-				            </div>
-				        </div>
-				    </div>
+
+					    <div class="col-md-3">
+					        <div class="section-card block-section">
+					            <h3 class="section-title">
+					                <i class="fas fa-user-lock"></i>
+					                Bloquear Usuário
+					            </h3>
+					            <div class="row g-3">
+					                <div class="col-12">
+					                    <div class="form-section-headerblock-user-section">
+					                        <div class="d-flex align-items-center gap-3">
+					                            <div class="form-check form-switch m-0">
+					                                <input type="checkbox" th:field="*{userLocked}" id="bloqueio1" value="true"
+					                                    class="form-check-input block-checkbox" />
+					                            </div>
+					                            <div class="text-block">
+					                                <label for="bloqueio1" class="form-label shadow-text mb-1" style="cursor: pointer;">
+					                                    <i class="fas fa-ban me-2"></i>
+					                                    Bloquear Usuário
+					                                </label>
+					                                <div class="text-muted small">
+					                                    Ao marcar esta opção, o acesso do usuário ao sistema será bloqueado.
+					                                </div>
+					                            </div>
+					                        </div>
+					                    </div>
+					                </div>
+					            </div>
+					        </div>
+					    </div>
+
+					    <div class="col-md-3">
+					        <div class="section-card acctive-section">
+					            <h3 class="section-title">
+					                <i class="fa-solid fa-user-check"></i>
+					                Usuário Ativo
+					            </h3>
+					            <div class="row g-3">
+					                <div class="col-12">
+					                    <div class="form-section-headerblock-user-section">
+					                        <div class="d-flex align-items-center gap-3">
+					                            <div class="form-check form-switch m-0">
+					                                <input type="checkbox" th:field="*{userActive}" id="bloqueio2" value="true"
+					                                    class="form-check-input block-checkbox" />
+					                            </div>
+					                            <div class="text-block">
+					                                <label for="bloqueio2" class="form-label shadow-text mb-1" style="cursor: pointer;">
+					                                    <i class="fas fa-check me-2"></i>
+					                                    Usuário Ativo
+					                                </label>
+					                                <div class="text-muted small">
+					                                    Marque esta opção para permitir o acesso do usuário ao sistema.
+					                                </div>
+					                            </div>
+					                        </div>
+					                    </div>
+					                </div>
+					            </div>
+					        </div>
+					    </div>
 				
-				    <!-- Bloco 2 -->
-				    <div class="col-md-3">
-				        <div class="section-card acctive-section">
-				            <h3 class="section-title">
-				                <i class="fa-solid fa-user-check"></i>
-				                Usuário Ativo
-				            </h3>
-				            <div class="row g-3">
-				                <div class="col-12">
-				                    <div class="form-section-headerblock-user-section">
-				                        <div class="d-flex align-items-center gap-3">
-				                            <div class="form-check form-switch m-0">
-				                                <input type="checkbox" th:field="*{userActive}" id="bloqueio2" value="true"
-				                                    class="form-check-input block-checkbox" />
-				                            </div>
-				                            <div class="text-block">
-				                                <label for="bloqueio2" class="form-label shadow-text mb-1" style="cursor: pointer;">
-				                                    <i class="fas fa-check me-2"></i>
-				                                    Usuário Ativo
-				                                </label>
-				                                <div class="text-muted small">
-				                                    Marque esta opção para permitir o acesso do usuário ao sistema.
-				                                </div>
-				                            </div>
-				                        </div>
-				                    </div>
-				                </div>
-				            </div>
-				        </div>
-				    </div>
+					    <div class="col-md-3">
+					        <div class="section-card inactive-section">
+					            <h3 class="section-title">
+					                <i class="fas fa-user-slash me-2"></i>
+					                Usuário Inativo
+					            </h3>
+					            <div class="row g-3">
+					                <div class="col-12">
+					                    <div class="form-section-headerblock-user-section">
+					                        <div class="d-flex align-items-center gap-3">
+					                            <div class="form-check form-switch m-0">
+					                                <input type="checkbox" th:field="*{userInactive}" id="bloqueio3" value="true"
+					                                    class="form-check-input block-checkbox" />
+					                            </div>
+					                            <div class="text-block">
+					                                <label for="bloqueio3" class="form-label shadow-text mb-1" style="cursor: pointer;">
+					                                    <i class="fa-solid fa-link-slash"></i>
+					                                    Usuário Inativo
+					                                </label>
+					                                <div class="text-muted small">
+					                                    Marque esta opção para desativar o acesso do usuário ao sistema.
+					                                </div>
+					                            </div>
+					                        </div>
+					                    </div>
+					                </div>
+					            </div>
+					        </div>
+					        
+					   </div>
 				
-				    <!-- Bloco 3 -->
-				    <div class="col-md-3">
-				        <div class="section-card inactive-section">
-				            <h3 class="section-title">
-				                <i class="fas fa-user-slash me-2"></i>
-				                Usuário Inativo
-				            </h3>
-				            <div class="row g-3">
-				                <div class="col-12">
-				                    <div class="form-section-headerblock-user-section">
-				                        <div class="d-flex align-items-center gap-3">
-				                            <div class="form-check form-switch m-0">
-				                                <input type="checkbox" th:field="*{userInactive}" id="bloqueio3" value="true"
-				                                    class="form-check-input block-checkbox" />
-				                            </div>
-				                            <div class="text-block">
-				                                <label for="bloqueio3" class="form-label shadow-text mb-1" style="cursor: pointer;">
-				                                    <i class="fa-solid fa-link-slash"></i>
-				                                    Usuário Inativo
-				                                </label>
-				                                <div class="text-muted small">
-				                                    Marque esta opção para desativar o acesso do usuário ao sistema.
-				                                </div>
-				                            </div>
-				                        </div>
-				                    </div>
-				                </div>
-				            </div>
-				        </div>
-				    </div>
-				
-				    <!-- Bloco 4 -->
-				    <div class="col-md-3">
-				        <div class="section-card suspended-section">
-				            <h3 class="section-title">
-				                <i class="fa-solid fa-user-xmark"></i>
-				                Usuário Afastado
-				            </h3>
-				            <div class="row g-3">
-				                <div class="col-12">
-				                    <div class="form-section-headerblock-user-section">
-				                        <div class="d-flex align-items-center gap-3">
-				                            <div class="form-check form-switch m-0">
-				                                <input type="checkbox" th:field="*{userSuspended}" id="bloqueio4" value="true"
-				                                    class="form-check-input block-checkbox" />
-				                            </div>
-				                            <div class="text-block">
-				                                <label for="bloqueio4" class="form-label shadow-text mb-1" style="cursor: pointer;">
-				                                    <i class="fas fa-pause-circle me-2"></i>
-				                                    Usuário Afastado
-				                                </label>
-				                                <div class="text-muted small">
-				                                    Marque esta opção se o usuário estiver afastado.
-				                                </div>
-				                            </div>
-				                        </div>
-				                    </div>
-				                </div>
-				            </div>
-				        </div>
-				    </div>
-				</div>
+					    <div class="col-md-3">
+					        <div class="section-card suspended-section">
+					            <h3 class="section-title">
+					                <i class="fa-solid fa-user-xmark"></i>
+					                Usuário Afastado
+					            </h3>
+					            <div class="row g-3">
+					                <div class="col-12">
+					                    <div class="form-section-headerblock-user-section">
+					                        <div class="d-flex align-items-center gap-3">
+					                            <div class="form-check form-switch m-0">
+					                                <input type="checkbox" th:field="*{userSuspended}" id="bloqueio4" value="true"
+					                                    class="form-check-input block-checkbox" />
+					                            </div>
+					                            <div class="text-block">
+					                                <label for="bloqueio4" class="form-label shadow-text mb-1" style="cursor: pointer;">
+					                                    <i class="fas fa-pause-circle me-2"></i>
+					                                    Usuário Afastado
+					                                </label>
+					                                <div class="text-muted small">
+					                                    Marque esta opção se o usuário estiver afastado.
+					                                </div>
+					                            </div>
+					                        </div>
+					                    </div>
+					                </div>
+					            </div>
+					        </div>
+					    </div>
+					</div>
 
 		            <!-- Seção: Permissões de Horário e Dias -->
 					<div class="section-card permissions-section">

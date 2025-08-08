@@ -59,7 +59,6 @@ public class ManagerOccupationController {
         mv.addObject("filter", filter); // devolve o filtro para manter no input
         return mv;
     }
-
     
     @GetMapping("/input/manager/occupations/print")
     @PreAuthorize("hasAuthority('OCCUPATION_LIST')")

@@ -48,8 +48,6 @@ public class ManagerFunctionService {
             Function functionExists = functionExistsOpt.get();
 
             functionExists.setFunctionName(function.getFunctionName());
-            functionExists.setFunctionEmail(function.getFunctionEmail());
-            functionExists.setFunctionTel(function.getFunctionTel());
 
             functionRepository.save(functionExists);
 

@@ -116,8 +116,8 @@ document.addEventListener("DOMContentLoaded", function() {
 	const percentualParaStatus = (percentual) => {
 		if (percentual >= 0 && percentual <= 10) return "Não iniciado";
 		if (percentual > 10 && percentual <= 25) return "Em planejamento";
-		if (percentual > 25 && percentual <= 75) return "Em execução";
-		if (percentual > 75 && percentual < 100) return "Atrasado";
+		if (percentual > 25 && percentual <= 74) return "Em execução";
+		if (percentual >= 75 && percentual < 100) return "Atrasado";
 		if (percentual === 100) return "Concluído";
 		return ""; // fallback
 	};
@@ -318,9 +318,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		dropdown.classList.remove("show");
 	});
 });
-
-
-
 
 document.addEventListener('DOMContentLoaded', () => {
 	// Clique no campo → abrir modal

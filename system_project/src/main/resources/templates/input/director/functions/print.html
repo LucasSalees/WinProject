@@ -225,7 +225,7 @@
                 <img src="https://via.placeholder.com/120x60?text=WinProject" alt="Logo WinProject">
             </div>
             <div class="header-content">
-                <h1 class="report-title">Relatório de Funções</h1>
+                <h1 class="report-title">Relatório de funções</h1>
                 <p class="report-subtitle">Sistema WinProject - Gestão Empresarial</p>
             </div>
             <div class="logo-container"></div>
@@ -251,14 +251,12 @@
                 <tr>
                     <th>Código</th>
                     <th>Nome da função</th>
-                    <th>Telefone</th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="function : ${functionsList}">
                     <td th:text="${function.functionId}"></td>
                     <td th:text="${function.functionName}"></td>
-                    <td th:text="${function.functionTel}"></td>
                 </tr>
             </tbody>
         </table>

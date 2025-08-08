@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.system.dto.StandardResponseDTO;
 import com.project.system.entity.User;
 import com.project.system.enums.input.UserPermission;
@@ -32,7 +34,7 @@ import com.project.system.service.input.AdminService;
 import com.project.system.utils.AuthenticationUtils;
 
 @Controller
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasRole(\'ADMIN\')")
 public class AdminController {
 
     @Autowired
@@ -42,7 +44,7 @@ public class AdminController {
     private CommomUserService commomUserService;
     
     @GetMapping("/input/admin/home")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole(\'ADMIN\')")
     public ModelAndView adminHome(Authentication authentication) {
         User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
         ModelAndView mv = new ModelAndView("/input/admin/home");
@@ -52,7 +54,7 @@ public class AdminController {
     }
 
     @GetMapping("/input/admin/users/register")
-    @PreAuthorize("hasAuthority('USER_REGISTER')")
+    @PreAuthorize("hasAuthority(\'USER_REGISTER\')")
     public ModelAndView register(User user, Authentication authentication) {
         User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
         ModelAndView mv = new ModelAndView("input/admin/users/register");
@@ -75,7 +77,7 @@ public class AdminController {
     }
 
     @GetMapping("/input/admin/users/list")
-    @PreAuthorize("hasAnyAuthority('USER_LIST', 'USER_EDIT')")
+    @PreAuthorize("hasAnyAuthority(\'USER_LIST\', \'USER_EDIT\')")
     public ModelAndView userList(@RequestParam(value = "filter", required = false) String filter,
 			Authentication authentication) {
 		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
@@ -95,7 +97,7 @@ public class AdminController {
 	}
     
     @GetMapping("/input/admin/users/print")
-	@PreAuthorize("hasAuthority('USER_LIST')")
+	@PreAuthorize("hasAuthority(\'USER_LIST\')")
 	public ModelAndView printUsers(@RequestParam(required = false) String filter, Authentication authentication) {
 
 		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
@@ -115,7 +117,7 @@ public class AdminController {
 	}
 
 	@GetMapping("/input/admin/users/print/{userId}")
-	@PreAuthorize("hasAuthority('USER_LIST')")
+	@PreAuthorize("hasAuthority(\'USER_LIST\')")
 	public ModelAndView printUser(@PathVariable Long userId, Authentication authentication) {
 
 		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
@@ -130,7 +132,7 @@ public class AdminController {
 	}
 
     @GetMapping("/input/admin/users/edit/{id}")
-    @PreAuthorize("hasAuthority('USER_EDIT')")
+    @PreAuthorize("hasAuthority(\'USER_EDIT\')")
     public ModelAndView editUserForm(@PathVariable Long id, Authentication authentication) {
         User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
         ModelAndView mv = new ModelAndView("input/admin/users/edit");
@@ -166,7 +168,7 @@ public class AdminController {
     }
 
     @GetMapping("/input/admin/removeUser/{userId}")
-    @PreAuthorize("hasAuthority('USER_DELETE')")
+    @PreAuthorize("hasAuthority(\'USER_DELETE\')")
     @ResponseBody
     public ResponseEntity<StandardResponseDTO> remove(@PathVariable("userId") Long userId, Authentication authentication) {
         User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
@@ -174,11 +176,11 @@ public class AdminController {
     }
 
     @PostMapping(value = "/input/admin/users/edit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasAuthority('USER_SAVE_EDIT')")
+    @PreAuthorize("hasAuthority(\'USER_SAVE_EDIT\')")
     @ResponseBody
     public ResponseEntity<StandardResponseDTO> saveEditions(
             @ModelAttribute("user") User user,
-            @RequestParam(value = "permissions", required = false) Set<String> permissionsStr,
+            @RequestParam(value = "permissionsJson", required = false) String permissionsJson,
             @RequestParam(value = "profileImage", required = false) MultipartFile profileImage,
             @RequestParam(value = "removePhoto", required = false) Boolean removePhoto,
             @RequestParam(name = "novaSenha", required = false) String newUserPassword,
@@ -186,10 +188,19 @@ public class AdminController {
             Authentication authentication) {
 
         Set<UserPermission> permissions = Collections.emptySet();
-        if (permissionsStr != null) {
-            permissions = permissionsStr.stream()
-                .map(UserPermission::valueOf)
-                .collect(Collectors.toSet());
+        if (permissionsJson != null && !permissionsJson.isEmpty()) {
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                Set<String> permissionsStr = objectMapper.readValue(permissionsJson, new TypeReference<Set<String>>() {});
+                
+                if (permissionsStr != null) {
+                    permissions = permissionsStr.stream()
+                        .map(UserPermission::valueOf)
+                        .collect(Collectors.toSet());
+                }
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().body(new StandardResponseDTO("Erro ao processar permissões.", "error"));
+            }
         }
         user.setPermissions(permissions);
 
@@ -197,25 +208,39 @@ public class AdminController {
     }
 
     @PostMapping("/input/admin/users/save")
-    @PreAuthorize("hasAuthority('USER_REGISTER')")
+    @PreAuthorize("hasAuthority(\'USER_REGISTER\')")
     public ResponseEntity<?> saveUser(
         @ModelAttribute User user,
-        @RequestParam(value = "permissions", required = false) Set<String> permissionsStr,
+        @RequestParam(value = "permissionsJson", required = false) String permissionsJson,
         @RequestParam(value = "profileImage", required = false) MultipartFile profileImage,
         @RequestParam(value = "removePhoto", required = false) Boolean removePhoto,
         Authentication authentication) {
 
-        if (user.getUserId() == null) {
-            return adminService.saveNewUser(user, profileImage, removePhoto, null);
-        } else {
-            return adminService.saveEditions(user, profileImage, removePhoto, null);
-        }
-    }
+        Set<UserPermission> permissions = Collections.emptySet();
+        if (permissionsJson != null && !permissionsJson.isEmpty()) {
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                Set<String> permissionsStr = objectMapper.readValue(permissionsJson, new TypeReference<Set<String>>() {});
 
-    
+                if (permissionsStr != null) {
+                    permissions = permissionsStr.stream()
+                        .map(UserPermission::valueOf)
+                        .collect(Collectors.toSet());
+                }
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().body(new StandardResponseDTO("Erro ao processar permissões.", "error"));
+            }
+        }
+
+        // Chame o service passando as permissões
+        return adminService.saveNewUser(user, profileImage, removePhoto, permissions); // Alterado aqui
+    }
+ 
     @GetMapping("/input/admin/users/profile")
     public ModelAndView profileUser(Authentication authentication) {
         User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
         return commomUserService.getProfileView(loggedUser);
     }
 }
+
+

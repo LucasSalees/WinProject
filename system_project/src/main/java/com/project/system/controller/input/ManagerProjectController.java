@@ -27,6 +27,7 @@ import com.project.system.enums.input.ProjectPriority;
 import com.project.system.enums.input.ProjectStatus;	
 import com.project.system.service.input.ManagerProjectService;
 import com.project.system.service.input.ManagerService;
+import com.project.system.repositories.ContractualAcronymRepository;
 import com.project.system.repositories.DepartmentRepository;
 import com.project.system.utils.AuthenticationUtils;
 
@@ -41,6 +42,9 @@ public class ManagerProjectController {
     
     @Autowired
     private DepartmentRepository departmentRepository;
+    
+    @Autowired
+    private ContractualAcronymRepository contratualAcronymRepository;
 
     @GetMapping("/input/manager/projects/register")
     @PreAuthorize("hasAuthority('PROJECT_REGISTER')")
@@ -59,6 +63,7 @@ public class ManagerProjectController {
         mv.addObject("LoggedUser", loggedUser);
         mv.addObject("project", project);
         mv.addObject("departments", departmentRepository.findAll());
+        mv.addObject("acronyms", contratualAcronymRepository.findAll());
         
         mv.addObject("brazilianStates", BrazilianStateUF.values());
         mv.addObject("projectPriorities", ProjectPriority.values());
@@ -140,6 +145,7 @@ public class ManagerProjectController {
         mv.addObject("LoggedUser", loggedUser);
         mv.addObject("project", project);
         mv.addObject("departments", managerService.getAllDepartments());
+        mv.addObject("acronyms", managerService.getAllAcronyms());
         
         // Adiciona os enums antes do return
         mv.addObject("brazilianStates", BrazilianStateUF.values());

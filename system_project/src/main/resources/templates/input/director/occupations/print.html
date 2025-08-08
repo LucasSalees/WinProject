@@ -251,14 +251,12 @@
                 <tr>
                     <th>Código</th>
                     <th>Nome da função</th>
-                    <th>Telefone</th>
                 </tr>
             </thead>
             <tbody>
 				<tr th:each="occupation : ${occupationsList}">
 					<td th:text="${occupation.occupationId}"></td>
 				    <td th:text="${occupation.occupationName}"></td>
-				    <td th:text="${occupation.occupationTel}"></td>
 				</tr>
             </tbody>
         </table>

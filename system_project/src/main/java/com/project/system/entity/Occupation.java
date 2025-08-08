@@ -17,15 +17,11 @@ public class Occupation implements Serializable {
     private Long occupationId;
     
     private String occupationName;
-    private String occupationEmail;
-    private String occupationTel;
 
     public Occupation() { }
 
-    public Occupation(String occupationName, String occupationEmail, String occupationTel) {
+    public Occupation(String occupationName) {
         this.occupationName = occupationName;
-        this.occupationEmail = occupationEmail;
-        this.occupationTel = occupationTel;
     }
 
     public Long getOccupationId() {
@@ -44,29 +40,10 @@ public class Occupation implements Serializable {
         this.occupationName = occupationName;
     }
 
-    public String getOccupationEmail() {
-        return occupationEmail;
-    }
-
-    public void setOccupationEmail(String occupationEmail) {
-        this.occupationEmail = occupationEmail;
-    }
-
-    public String getOccupationTel() {
-        return occupationTel;
-    }
-
-    public void setOccupationTel(String occupationTel) {
-        this.occupationTel = occupationTel;
-    }
-
     @Override
     public String toString() {
         return "Occupation{" +
                 "occupationId=" + occupationId +
-                ", occupationName='" + occupationName + '\'' +
-                ", occupationEmail='" + occupationEmail + '\'' +
-                ", occupationTel='" + occupationTel + '\'' +
-                '}';
+                ", occupationName='" + occupationName + '}';
     }
 }

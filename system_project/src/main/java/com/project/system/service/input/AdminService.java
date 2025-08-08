@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.system.dto.StandardResponseDTO;
-import com.project.system.entity.Department;
 import com.project.system.entity.User;
+import com.project.system.enums.input.UserPermission;
 import com.project.system.repositories.ContractualAcronymRepository;
 import com.project.system.repositories.DepartmentRepository;
 import com.project.system.repositories.FunctionRepository;
@@ -163,7 +165,10 @@ public class AdminService {
     }
 
     public ResponseEntity<StandardResponseDTO> saveNewUser(
-            User user, MultipartFile profileImage, Boolean removePhoto, Authentication authentication) {
+            User user, 
+            MultipartFile profileImage, 
+            Boolean removePhoto, 
+            Set<UserPermission> permissions) {
         try {
             Optional<User> emailOwner = userRepository.findByEmail(user.getUserEmail());
             if (emailOwner.isPresent()) {
@@ -171,9 +176,8 @@ public class AdminService {
                         .body(StandardResponseDTO.error("Este e-mail já está cadastrado."));
             }
 
-            if (user.getPermissions() == null) {
-                user.setPermissions(Collections.emptySet());
-            }
+            // Define as permissões no objeto 'user' antes de salvar
+            user.setPermissions(permissions != null ? permissions : Collections.emptySet());
 
             String senha = "Senha123@";
             user.setUserPassword(PasswordUtils.hashPassword(senha));

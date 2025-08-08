@@ -33,7 +33,7 @@
 				        	<div class="col-md-1">
 				                <label class="form-label shadow-text">Cód</label>
 				                <input type="text" name="occupationId"
-				                    class="form-control shadow-cantos" disabled maxlength="40" th:field="*{occupationId}"/>
+				                    class="form-control shadow-cantos" disabled maxlength="60" th:field="*{occupationId}"/>
 				            </div>
 				            
 				            <!-- Oculto, mas enviado -->
@@ -42,22 +42,9 @@
 				            <div class="col-md-5">
 				                <label class="form-label shadow-text">Nome</label>
 				                <input type="text" name="occupationName" placeholder="Digite o nome da profissão"
-				                    class="form-control shadow-cantos" required maxlength="40" th:field="*{occupationName}"/>
+				                    class="form-control shadow-cantos" required maxlength="60" th:field="*{occupationName}"/>
 				            </div>
-				            
-				            <div class="col-md-6">
-								<label class="form-label shadow-text">Email</label>
-							    <div class="d-flex gap-2">
-							        <input type="text" placeholder="email@exemplo.com"
-							               class="form-control shadow-cantos"  id="occupationEmail"
-							               th:field="*{occupationEmail}" maxlength="25"/>
-							    </div>
-							</div>
-			            	<div class="col-md-6">
-	                            <label class="form-label shadow-text">Telefone</label>
-	                            <input type="tel" placeholder="(00) 00000-0000" class="form-control shadow-cantos" 
-	                                   th:field="*{occupationTel}" id="occupationTel"/>
-	                        </div>
+
 				        </div>
 				    </div>
                     <div class="navegacaoLista custom-button-container">

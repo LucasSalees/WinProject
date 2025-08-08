@@ -251,16 +251,12 @@
                 <tr>
                     <th>Código</th>
                     <th>Nome da função</th>
-                    <th>Email</th>
-                    <th>Telefone</th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="function : ${functionsList}">
                     <td th:text="${function.functionId}"></td>
                     <td th:text="${function.functionName}"></td>
-                    <td th:text="${function.functionEmail}"></td>
-                    <td th:text="${function.functionTel}"></td>
                 </tr>
             </tbody>
         </table>

@@ -25,7 +25,7 @@
             <div class="card">
                 <form action="/input/director/projects/save" th:object="${project}" method="POST"
                     id="formulario">
-                    <input type="hidden" th:field="*{projectId}" />
+                                        <input type="hidden" th:field="*{projectId}" />
                     
                     <!-- Seção: Informações Básicas do Projeto -->
                     <div class="section-card access-config-section">
@@ -34,7 +34,7 @@
                             <div class="col-md-3">
                                 <label class="form-label shadow-text">Nome</label>
                                 <input type="text" placeholder="Nome do projeto" class="form-control shadow-cantos"
-                                    required maxlength="40" th:field="*{projectName}" />
+                                    required maxlength="60" th:field="*{projectName}" />
                             </div>
                             
                             <div class="col-md-3">
@@ -64,7 +64,7 @@
                                 <input type="url" placeholder="https://exemplo.com" class="form-control shadow-cantos"
                                     maxlength="100" th:field="*{projectWebsite}" />
                             </div>
-                            
+
                             <div class="col-md-4">
                                 <label class="form-label shadow-text">Vertical de negócio</label>
                                 <select th:field="*{projectBusinessVertical}" class="form-control shadow-cantos" id="vertical" required>
@@ -100,14 +100,14 @@
                                 <div class="col-md-4">
                                     <label class="form-label shadow-text">Nome</label>
                                     <input type="text" placeholder="Nome do gestor" class="form-control shadow-cantos"
-                                        th:field="*{projectClientManager}" maxlength="40" />
+                                        th:field="*{projectClientManager}" maxlength="60" />
                                 </div>
                                 <div class="col-md-5">
                                     <label class="form-label shadow-text">Email</label>
                                     <div class="d-flex gap-2">
                                         <input type="text" placeholder="email@exemplo.com"
                                             class="form-control shadow-cantos" id="email-gestor"
-                                            th:field="*{projectClientManagerEmail}" maxlength="25" />
+                                            th:field="*{projectClientManagerEmail}" maxlength="40" />
                                     </div>
                                 </div>
 
@@ -150,14 +150,14 @@
 
                                 <div class="col-md-4">
                                     <label class="form-label shadow-text">Estado</label>
-									<select id="estado-projeto" class="form-control shadow-cantos" th:field="*{projectClientState}">
-									    <option value="" disabled selected>Selecione um estado</option>
-									    <option th:each="state : ${brazilianStates}"
-									            th:value="${state.name()}"
-									            th:text="${state.label}">
-									    </option>
-									</select>
+                                    <select th:field="*{projectClientState}" class="form-control shadow-cantos"
+                                        id="estado-projeto" required>
+                                        <option value="" disabled selected>Selecione uma estado</option>
+                                        <option th:each="reg : ${T(com.project.system.enums.input.BrazilianStateUF).values()}"
+                                            th:value="${reg}" th:text="${reg.name()}">
+                                        </option>
 
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -380,6 +380,78 @@
                                 </tr>
 
                             </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para seleção da Sigla Contratual -->
+    <div id="modalListaAcronym" class="modal">
+        <div class="modal-container" style="max-width: 90vw; width: 1000px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Selecionar sigla</h2>
+                    <button type="button" class="modal-close" id="fecharModalListaAcronym">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <!-- Filtro e seleção de campos -->
+                    <div class="form-inline mb-3">
+                        <div class="navegacaoLista custom-button-container">
+                        <!-- Botão à esquerda -->
+                        <div class="botoes-esquerda">
+                            
+                        </div>
+                            <div class="botoes-direita">
+                                <input type="text" id="filtroAcronym" class="form-control shadow-cantos" placeholder="Pesquisar...">
+	                        	<div class="dropdown botoes">
+		                           <button class="btn btn-primary" type="button" id="dropdownMenuButtonAcronym">
+								      Selecionar
+								  </button>
+                                    <div class="dropdown-menu" id="dropdownCamposAcronym">
+                                        <h1 class="dropdown-item-titulo text-center">Campos Visíveis</h1>
+                                        <label class="dropdown-item-1"><input type="checkbox"
+                                                id="selecionarTodosAcronym"> <span>Selecionar Todos</span></label>
+                                        <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox"
+                                                id="campoCodigoAcronym" checked> <span>Código</span></label>
+                                        <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox"
+                                                id="campoNomeAcronym" checked> <span>Nome</span></label>
+                                        <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox"
+                                                id="campoAcronym" checked> <span>Sigla</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+
+                    <!-- Tabela de departamentos -->
+                    <div class="table-container-modal">
+                        <table class="table table-striped" id="tabelaAcronyms">
+                            <thead>
+                                <tr>
+                                    <th class="text-left">Cod</th>
+                                    <th class="text-left">Nome</th>
+                                    <th class="text-left">Sigla</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+							    <tr th:each="acronym : ${acronyms}" class="linha-acronym"
+							        th:data-id="${acronym.acronymId}"
+							        th:data-nome-completo="${acronym.contractualAcronymName}"
+							        th:data-sigla="${acronym.acronym}">
+							        <td th:text="${acronym.acronymId}"></td>
+							        <td th:text="${acronym.contractualAcronymName}"></td>
+							        <td th:text="${acronym.acronym}"></td>
+							    </tr>
+							</tbody>
                         </table>
                     </div>
                 </div>

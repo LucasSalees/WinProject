@@ -81,6 +81,21 @@ public class DirectorFunctionController {
         mv.addObject("dataAtual", new java.util.Date());
         return mv;
     }
+    
+	@GetMapping("/input/director/functions/print/{functionId}")
+	@PreAuthorize("hasAuthority('FUNCTION_LIST')")
+	public ModelAndView printDepartment(@PathVariable Long functionId, Authentication authentication) {
+
+		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
+		Function function = functionService.getFunctionById(functionId)
+				.orElseThrow(() -> new RuntimeException("Função não encontrada"));
+
+		ModelAndView mv = new ModelAndView("input/director/functions/printOne");
+		mv.addObject("LoggedUser", loggedUser);
+		mv.addObject("function", function);
+		mv.addObject("dataAtual", new java.util.Date());
+		return mv;
+	}
 
     @GetMapping("/input/director/functions/edit/{functionId}")
     @PreAuthorize("hasAuthority('FUNCTION_EDIT')")

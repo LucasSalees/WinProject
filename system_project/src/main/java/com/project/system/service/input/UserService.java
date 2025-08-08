@@ -1,18 +1,21 @@
 package com.project.system.service.input;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.system.dto.StandardResponseDTO;
 import com.project.system.entity.User;
+import com.project.system.enums.input.UserPermission;
 import com.project.system.repositories.ContractualAcronymRepository;
 import com.project.system.repositories.DepartmentRepository;
 import com.project.system.repositories.FunctionRepository;
@@ -91,30 +94,6 @@ public class UserService {
         return ResponseEntity.ok(StandardResponseDTO.success("Usuário removido com sucesso!"));
     }
 
-    public ResponseEntity<StandardResponseDTO> removePhoto(String fileName, Long userId, User loggedUser) {
-        try {
-            User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-
-            if (!loggedUser.getUserRole().equals("ADMIN") && !loggedUser.getUserId().equals(userId)) {
-                throw new AccessDeniedException("Você não tem permissão para modificar este perfil");
-            }
-
-            if (fileName != null && !fileName.equals("DefaultAvatar.png")) {
-                fileStorageService.deleteFile(fileName);
-                user.setPhotoPath("DefaultAvatar.png");
-                userRepository.save(user);
-            }
-            return ResponseEntity.ok(StandardResponseDTO.success("Foto removida com sucesso."));
-        } catch (AccessDeniedException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(StandardResponseDTO.error(e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(StandardResponseDTO.error("Erro ao remover foto."));
-        }
-    }
-
     public ResponseEntity<StandardResponseDTO> saveEditions(User user, MultipartFile profileImage, Boolean removePhoto,
             String newUserPassword) {
 
@@ -172,6 +151,8 @@ public class UserService {
                 }
                 userExists.setUserPassword(PasswordUtils.hashPassword(newUserPassword));
             }
+            
+            userExists.setPermissions(user.getPermissions() != null ? user.getPermissions() : Collections.emptySet());
 
             userRepository.save(userExists);
 
@@ -183,8 +164,11 @@ public class UserService {
         }
     }
 
-    public ResponseEntity<StandardResponseDTO> saveNewUser(User user, MultipartFile profileImage, Boolean removePhoto) {
-
+    public ResponseEntity<StandardResponseDTO> saveNewUser(
+            User user, 
+            MultipartFile profileImage, 
+            Boolean removePhoto, 
+            Set<UserPermission> permissions) {
         try {
             Optional<User> emailOwner = userRepository.findByEmail(user.getUserEmail());
             if (emailOwner.isPresent()) {
@@ -192,11 +176,12 @@ public class UserService {
                         .body(StandardResponseDTO.error("Este e-mail já está cadastrado."));
             }
 
+            // Define as permissões no objeto 'user' antes de salvar
+            user.setPermissions(permissions != null ? permissions : Collections.emptySet());
+
             String senha = "Senha123@";
             user.setUserPassword(PasswordUtils.hashPassword(senha));
-
             user.setUserRegistrationDate(LocalDateTime.now());
-            user.setPermissions(user.getPermissions());
 
             if (Boolean.TRUE.equals(removePhoto)) {
                 user.setPhotoPath("DefaultAvatar.png");
@@ -216,8 +201,9 @@ public class UserService {
                     .body(StandardResponseDTO.error("Erro ao cadastrar usuário: " + e.getMessage()));
         }
     }
-    
+
     public List<User> searchUsers(String filter) {
         return userRepository.searchByFilter(filter);
     }
+
 }

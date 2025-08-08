@@ -2,7 +2,7 @@ const emailInput = document.getElementById('email-usuario');
 let score = 0;
 
 // Variável global para controlar se há senha digitada
-let senhaDigitada = "";
+let senhaDigitada = '';
 
 const form = document.getElementById('formulario');
 form.addEventListener('submit', async function(event) {
@@ -28,9 +28,26 @@ form.addEventListener('submit', async function(event) {
     const formData = new FormData(form);
     
     // Se não há senha digitada, remove o campo do FormData para não alterar a senha atual
-    if (senhaInput.value === "") {
+    if (senhaInput.value === '') {
         formData.delete('novaSenha');
     }
+
+    // --- INÍCIO DA MODIFICAÇÃO PARA AGRUPAR PERMISSÕES ---
+    // 1. Pega todos os checkboxes de permissão que estão marcados
+    const permissionsCheckboxes = form.querySelectorAll('input[name="permissions"]:checked');
+
+    // 2. Extrai os valores (os nomes das permissões)
+    const permissionsValues = Array.from(permissionsCheckboxes).map(cb => cb.value);
+
+    // 3. Converte o array de valores para uma string JSON
+    const permissionsJson = JSON.stringify(permissionsValues);
+
+    // 4. Remove os campos "permissions" individuais do FormData
+    formData.delete('permissions');
+
+    // 5. Adiciona a string JSON como um único campo chamado "permissionsJson"
+    formData.append('permissionsJson', permissionsJson);
+    // --- FIM DA MODIFICAÇÃO PARA AGRUPAR PERMISSÕES ---
 
 	fetch('/input/manager/users/edit', {
 	    method: 'POST',
@@ -64,7 +81,6 @@ form.addEventListener('submit', async function(event) {
         }
     });
 });
-
 
 document.addEventListener('DOMContentLoaded', function() {
     const senhaInput = document.getElementById('senha');
@@ -254,7 +270,6 @@ function openExclusaoModal(link, redirectUrl = null) {
         });
     };
 }
-
 
 document.getElementById('fecharExclusaoModal').onclick = () => {
     document.getElementById('exclusaoModal').classList.remove('show');
@@ -468,262 +483,6 @@ async function validarEmail(emailInput) {
     }
 }
 
-function imprimirFormulario() {
-    try {
-        const getValue = (id) => {
-            const el = document.getElementById(id);
-            return el ? el.value || 'Não informado' : 'Não informado';
-        };
-
-        const getCheckedValue = (name) => {
-            const el = document.querySelector(`input[name="${name}"]:checked`);
-            return el ? 'Sim' : 'Não';
-        };
-
-        // Obter a foto de perfil
-        const photoPreview = document.getElementById('photoPreview');
-        const photoSrc = photoPreview ? photoPreview.src : `${window.location.origin}/images/DefaultAvatar.png`;
-
-        const dados = {
-            userId: getValue('id-usuario'),
-            userName: getValue('userName'),
-            userEmail: getValue('email-usuario'),
-            userFunction: getValue('userFunction'),
-            userOccupation: getValue('userOccupation'),
-            userTel: getValue('userTel'),
-            userRole: document.querySelector('select[name="userRoles"] option:checked')?.textContent || 'Não informado',
-            startTime: getValue('startTime'),
-            endTime: getValue('endTime'),
-            userRegion: getValue('userRegion'),
-            department: document.querySelector('select[name="department"] option:checked')?.textContent || 'Não informado',
-            userLocked: document.querySelector('input[name="userLocked"]')?.checked ? 'Sim' : 'Não',
-            userActive: document.querySelector('input[name="userActive"]')?.checked ? 'Sim' : 'Não',
-            userInactive: document.querySelector('input[name="userInactive"]')?.checked ? 'Sim' : 'Não',
-            userSuspended: document.querySelector('input[name="userSuspended"]')?.checked ? 'Sim' : 'Não',
-            photoUrl: photoSrc,
-            novaSenha: document.querySelector('input[name="novaSenha"]')?.value ? '*****' : 'Não alterada'
-        };
-
-        const diasPermitidos = [];
-        document.querySelectorAll('input[name="allowedDays"]:checked').forEach((checkbox) => {
-            diasPermitidos.push(checkbox.value);
-        });
-
-        const janelaImpressao = window.open('', '_blank', 'width=800,height=600');
-        const baseUrl = window.location.origin;
-
-        janelaImpressao.document.write(`
-        <html>
-        <head>
-            <title>WinChurch - Relatório de Usuário</title>
-            <style>
-                body {
-                    font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-                    margin: 0;
-                    padding: 0;
-                    background: #fff;
-                    color: #000;
-                    line-height: 1.6;
-                }
-
-                .header {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    padding: 20px 40px;
-                    border-bottom: 1.5px solid #ccc;
-                    background-color: #f4f4f4;
-                }
-
-                .header-img img {
-                    width: 30px;
-                    height: auto;
-                    filter: grayscale(100%) contrast(110%);
-                }
-
-                .header-title {
-                    font-size: 20px;
-                    font-weight: bold;
-                    text-align: center;
-                    text-transform: uppercase;
-                    flex-grow: 1;
-                    color: #000;
-                    letter-spacing: 0.6px;
-                    position: relative;
-                }
-
-                .header-title::after {
-                    content: "";
-                    display: block;
-                    width: 50px;
-                    height: 2px;
-                    background: #000;
-                    margin: 6px auto 0;
-                }
-
-                .report-info {
-                    display: flex;
-                    justify-content: space-between;
-                    padding: 0 40px;
-                    margin-top: 10px;
-                    font-size: 12px;
-                    color: #444;
-                }
-
-                .user-data {
-                    padding: 30px 40px;
-                    font-size: 14px;
-                }
-
-                .user-data h4 {
-                    margin-top: 25px;
-                    font-size: 15px;
-                    border-bottom: 1px solid #ccc;
-                    padding-bottom: 5px;
-                }
-
-                .user-data p {
-                    margin: 6px 0;
-                }
-
-                .user-photo {
-                    text-align: center;
-                    margin: 15px 0;
-                }
-
-                .user-photo img {
-                    width: 120px;
-                    height: 120px;
-                    border-radius: 50%;
-                    object-fit: cover;
-                    border: 3px solid #f0f0f0;
-                }
-
-                .two-columns {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
-                    gap: 20px;
-                }
-
-                .footer {
-                    text-align: center;
-                    font-size: 11px;
-                    color: #777;
-                    margin-top: 40px;
-                    padding: 10px;
-                    border-top: 1px solid #ccc;
-                }
-
-                .footer-text {
-                    position: relative;
-                    background-color: #fff;
-                    display: inline-block;
-                    padding: 0 15px;
-                    top: -8px;
-                }
-
-                @media print {
-                    @page {
-                        size: A4 portrait;
-                        margin: 15mm 10mm;
-                    }
-
-                    .footer {
-                        position: fixed;
-                        bottom: 0;
-                        left: 0;
-                        right: 0;
-                        padding: 6px 0;
-                        font-size: 10px;
-                        color: #999;
-                    }
-
-                    .footer:after {
-                        content: "Página " counter(page);
-                        display: inline-block;
-                        margin-left: 10px;
-                        color: #bbb;
-                    }
-
-                    .report-info {
-                        font-size: 10px;
-                        padding: 0 30px;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-            <div class="header">
-                <div class="header-img">
-                    <img src="${baseUrl}/images/input.ico" alt="Logo">
-                </div>
-                <h2 class="header-title">Relatório de Usuário</h2>
-            </div>
-
-            <div class="report-info">
-                <div>Emitido em: ${new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
-                <div>WinChurch - Sistema de Gestão de Igrejas</div>
-            </div>
-
-            <div class="user-data">
-                <div class="user-photo">
-                    <img src="${dados.photoUrl}" alt="Foto do Usuário">
-                </div>
-
-                <div class="two-columns">
-                    <div>
-                        <h4>Informações Pessoais</h4>
-                        <p><strong>ID:</strong> ${dados.userId}</p>
-                        <p><strong>Nome:</strong> ${dados.userName}</p>
-                        <p><strong>E-mail:</strong> ${dados.userEmail}@input.com.vc</p>
-                        <p><strong>Função:</strong> ${dados.userFunction}</p>
-                        <p><strong>Profissão:</strong> ${dados.userOccupation}</p>
-                        <p><strong>Telefone:</strong> ${dados.userTel}</p>
-                        <p><strong>Região:</strong> ${dados.userRegion}</p>
-                        <p><strong>Departamento:</strong> ${dados.department}</p>
-                        
-                        <h4>Configurações de Segurança</h4>
-                        <p><strong>Tipo de Usuário:</strong> ${dados.userRole}</p>
-                        <p><strong>Senha Alterada:</strong> ${dados.novaSenha}</p>
-                    </div>
-                    
-                    <div>
-                        <h4>Status do Usuário</h4>
-                        <p><strong>Bloqueado:</strong> ${dados.userLocked}</p>
-                        <p><strong>Ativo:</strong> ${dados.userActive}</p>
-                        <p><strong>Inativo:</strong> ${dados.userInactive}</p>
-                        <p><strong>Afastado:</strong> ${dados.userSuspended}</p>
-
-                        <h4>Permissões de Acesso</h4>
-                        <p><strong>Horário Permitido:</strong> ${dados.startTime || '---'} até ${dados.endTime || '---'}</p>
-                        <p><strong>Dias Permitidos:</strong> ${diasPermitidos.length > 0 ? diasPermitidos.join(', ') : 'Não informado'}</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="footer">
-                <div class="footer-text">
-                    © ${new Date().getFullYear()} WinChurch - Todos os direitos reservados.
-                </div>
-            </div>
-        </body>
-        </html>
-        `);
-
-        janelaImpressao.document.close();
-        setTimeout(() => {
-            janelaImpressao.print();
-            janelaImpressao.close();
-        }, 500);
-
-    } catch (error) {
-        console.error('Erro ao imprimir:', error);
-        alert('Erro ao gerar a impressão.');
-    }
-}
-
-
-
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.linha-profissao').forEach(row => {
         row.addEventListener('click', () => {
@@ -823,10 +582,6 @@ document.addEventListener("DOMContentLoaded", function () {
    });
 });
 
-
-
-
-
 document.addEventListener('DOMContentLoaded', () => {
    document.querySelectorAll('.linha-funcao').forEach(row => {
        row.addEventListener('click', () => {
@@ -914,8 +669,6 @@ document.addEventListener("DOMContentLoaded", function () {
        dropdown.classList.remove("show");
    });
 });
-
-
 
 document.addEventListener('DOMContentLoaded', () => {
    document.querySelectorAll('.linha-departamento').forEach(row => {

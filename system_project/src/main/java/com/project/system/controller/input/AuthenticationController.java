@@ -27,7 +27,7 @@ public class AuthenticationController {
             	    user.getUserRole() == UserRole.ADMIN ? "/input/admin" :
             	    user.getUserRole() == UserRole.DIRECTOR ? "/input/director" :
             	    user.getUserRole() == UserRole.MANAGER ? "/input/manager" :
-            	    "input/user";
+            	    "/input/user";
 
             	model.addAttribute("urlPrefix", prefix);
         }

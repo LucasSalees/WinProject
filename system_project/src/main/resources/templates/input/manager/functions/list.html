@@ -70,8 +70,6 @@
 	                        <tr>
 	                            <th class="text-left" style="cursor: pointer;"> Cod </th>
 	                            <th class="text-left" style="cursor: pointer"> Nome</th>
-	                            <th class="text-left" style="cursor: pointer"> Email</th>
-	                            <th class="text-left" style="cursor: pointer;"> Gerente</th>
 	                        </tr>
 	                    </thead>
 	                    <tbody>
@@ -83,14 +81,6 @@
 	                            <td class="text-left">
 	                                <a th:href="@{/input/manager/functions/edit/{functionId}(functionId=${function.functionId})}"
 	                                    th:text="${function.functionName}" class="row-link"></a>
-	                            </td>
-	                            <td class="text-left">
-	                                <a th:href="@{/input/manager/functions/edit/{functionId}(functionId=${function.functionId})}"
-	                                    th:text="${function.functionName}" class="row-link"></a>
-	                            </td>
-	                            <td class="text-left">
-	                                <a th:href="@{/input/manager/functions/edit/{functionId}(functionId=${function.functionId})}"
-	                                    th:text="${function.functionTel}" class="row-link"></a>
 	                            </td>
 	                        </tr>
 	                    </tbody>

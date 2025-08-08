@@ -21,8 +21,30 @@ form.addEventListener('submit', async function(event) {
         }
     }
 
-    // Create FormData directly from form — includes files automatically
+	// Envia via fetch (modal)
     const formData = new FormData(form);
+    
+    // Se não há senha digitada, remove o campo do FormData para não alterar a senha atual
+    if (senhaInput.value === '') {
+        formData.delete('novaSenha');
+    }
+
+    // --- INÍCIO DA MODIFICAÇÃO PARA AGRUPAR PERMISSÕES ---
+    // 1. Pega todos os checkboxes de permissão que estão marcados
+    const permissionsCheckboxes = form.querySelectorAll('input[name="permissions"]:checked');
+
+    // 2. Extrai os valores (os nomes das permissões)
+    const permissionsValues = Array.from(permissionsCheckboxes).map(cb => cb.value);
+
+    // 3. Converte o array de valores para uma string JSON
+    const permissionsJson = JSON.stringify(permissionsValues);
+
+    // 4. Remove os campos "permissions" individuais do FormData
+    formData.delete('permissions');
+
+    // 5. Adiciona a string JSON como um único campo chamado "permissionsJson"
+    formData.append('permissionsJson', permissionsJson);
+    // --- FIM DA MODIFICAÇÃO PARA AGRUPAR PERMISSÕES ---
 
     // Now send with fetch
     fetch('/input/manager/users/save', {
@@ -575,19 +597,3 @@ document.addEventListener("DOMContentLoaded", function () {
        dropdown.classList.remove("show");
    });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   
-   

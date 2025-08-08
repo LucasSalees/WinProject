@@ -61,7 +61,6 @@ public class DirectorOccupationController {
         return mv;
     }
 
-    
     @GetMapping("/input/director/occupations/print")
     @PreAuthorize("hasAuthority('OCCUPATION_LIST')")
     public ModelAndView printOccupations(
@@ -80,6 +79,21 @@ public class DirectorOccupationController {
         ModelAndView mv = new ModelAndView("input/director/occupations/print");
         mv.addObject("LoggedUser", loggedUser);
         mv.addObject("occupationsList", occupations);
+        mv.addObject("dataAtual", new java.util.Date());
+        return mv;
+    }
+    
+    @GetMapping("/input/director/occupations/print/{occupationId}")
+    @PreAuthorize("hasAuthority('OCCUPATION_LIST')")
+    public ModelAndView printOccupation(@PathVariable Long occupationId, Authentication authentication) {
+
+        User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
+        Occupation occupation = occupationService.getOccupationById(occupationId)
+                                                 .orElseThrow(() -> new RuntimeException("Profissão não encontrada"));
+
+        ModelAndView mv = new ModelAndView("input/director/occupations/printOne");
+        mv.addObject("LoggedUser", loggedUser);
+        mv.addObject("occupation", occupation);
         mv.addObject("dataAtual", new java.util.Date());
         return mv;
     }

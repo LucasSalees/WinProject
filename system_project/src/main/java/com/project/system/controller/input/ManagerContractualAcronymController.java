@@ -124,7 +124,7 @@ public class ManagerContractualAcronymController {
 	@PostMapping("/input/manager/acronyms/edit")
 	@PreAuthorize("hasAuthority('CONTRACTUAL_ACRONYM_SAVE_EDIT')")
 	@ResponseBody
-	public ResponseEntity<StandardResponseDTO> saveEditions(@ModelAttribute("acronym") ContractualAcronym acronym,
+	public ResponseEntity<StandardResponseDTO> saveEditions(@ModelAttribute("contractualAcronym") ContractualAcronym acronym,
 			BindingResult result, Authentication authentication) {
 		return contractualAcronymService.saveEditions(acronym);
 	}

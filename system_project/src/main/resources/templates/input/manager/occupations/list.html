@@ -70,8 +70,6 @@
                             <tr>
                                 <th class="text-left" style="cursor: pointer;"> Cod </th>
                                 <th class="text-left" style="cursor: pointer"> Nome</th>
-                                <th class="text-left" style="cursor: pointer"> Email</th>
-                                <th class="text-left" style="cursor: pointer;"> Telefone</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -83,14 +81,6 @@
                                 <td class="text-left">
                                     <a th:href="@{/input/manager/occupations/edit/{occupationId}(occupationId=${occupation.occupationId})}"
                                         th:text="${occupation.occupationName}" class="row-link"></a>
-                                </td>
-                                <td class="text-left">
-                                    <a th:href="@{/input/manager/occupations/edit/{occupationId}(occupationId=${occupation.occupationId})}"
-                                        th:text="${occupation.occupationEmail}" class="row-link"></a>
-                                </td>
-                                <td class="text-left">
-                                    <a th:href="@{/input/manager/occupations/edit/{occupationId}(occupationId=${occupation.occupationId})}"
-                                        th:text="${occupation.occupationTel}" class="row-link"></a>
                                 </td>
                             </tr>
                         </tbody>

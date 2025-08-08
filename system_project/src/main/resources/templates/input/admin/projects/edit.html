@@ -38,7 +38,7 @@
                             <div class="col-md-2">
                                 <label class="form-label shadow-text">Nome</label>
                                 <input type="text" placeholder="Nome do projeto" class="form-control shadow-cantos"
-                                    required maxlength="40" th:field="*{projectName}" />
+                                    required maxlength="60" th:field="*{projectName}" />
                             </div>
                             
 							<div class="col-md-3">
@@ -112,14 +112,14 @@
                                 <div class="col-md-4">
                                     <label class="form-label shadow-text">Nome</label>
                                     <input type="text" placeholder="Nome do gestor" class="form-control shadow-cantos"
-                                        th:field="*{projectClientManager}" maxlength="40" />
+                                        th:field="*{projectClientManager}" maxlength="60" />
                                 </div>
                                 <div class="col-md-5">
                                     <label class="form-label shadow-text">Email</label>
                                     <div class="d-flex gap-2">
                                         <input type="text" placeholder="email@exemplo.com"
                                             class="form-control shadow-cantos" id="email-gestor"
-                                            th:field="*{projectClientManagerEmail}" maxlength="25" />
+                                            th:field="*{projectClientManagerEmail}" maxlength="40" />
                                     </div>
                                 </div>
 
@@ -244,7 +244,7 @@
                                     <div class="d-flex gap-2">
                                         <input type="text" id="email-gerente" placeholder="email@exemplo.com"
                                             class="form-control shadow-cantos flex-grow-1"
-                                            th:field="*{projectLocalManagerEmail}" maxlength="25" readonly />
+                                            th:field="*{projectLocalManagerEmail}" maxlength="40" readonly />
                                     </div>
                                 </div>
 

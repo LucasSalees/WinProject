@@ -16,15 +16,11 @@ public class Function implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long functionId;
     private String functionName;
-    private String functionEmail;
-    private String functionTel;
     
     public Function() {}
 
-	public Function(String functionName, String functionEmail, String functionTel) {
+	public Function(String functionName) {
 	    this.functionName = functionName;
-	    this.functionEmail = functionEmail;
-	    this.functionTel = functionTel;
 	}
 
 	public Long getFunctionId() {
@@ -41,21 +37,5 @@ public class Function implements Serializable {
 
 	public void setFunctionName(String functionName) {
 		this.functionName = functionName;
-	}
-
-	public String getFunctionEmail() {
-		return functionEmail;
-	}
-
-	public void setFunctionEmail(String functionEmail) {
-		this.functionEmail = functionEmail;
-	}
-
-	public String getFunctionTel() {
-		return functionTel;
-	}
-
-	public void setFunctionTel(String functionTel) {
-		this.functionTel = functionTel;
 	}
 }

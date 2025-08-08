@@ -48,9 +48,7 @@ public class DirectorOccupationService {
             Occupation occupationExists = occupationExistsOpt.get();
 
             occupationExists.setOccupationName(occupation.getOccupationName());
-            occupationExists.setOccupationEmail(occupation.getOccupationEmail());
-            occupationExists.setOccupationTel(occupation.getOccupationTel());
-
+            
             occupationRepository.save(occupationExists);
 
             return ResponseEntity.ok(StandardResponseDTO.success("Profissão atualizada com sucesso."));

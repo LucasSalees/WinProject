@@ -20,7 +20,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.project.system.dto.StandardResponseDTO;
 import com.project.system.entity.ContractualAcronym;
 import com.project.system.entity.User;
-import com.project.system.service.input.AdminContractualAcronymService;
 import com.project.system.service.input.DirectorContractualAcronymService;
 import com.project.system.utils.AuthenticationUtils;
 
@@ -125,7 +124,7 @@ public class DirectorContractualAcronymController {
 	@PostMapping("/input/director/acronyms/edit")
 	@PreAuthorize("hasAuthority('CONTRACTUAL_ACRONYM_SAVE_EDIT')")
 	@ResponseBody
-	public ResponseEntity<StandardResponseDTO> saveEditions(@ModelAttribute("acronym") ContractualAcronym acronym,
+	public ResponseEntity<StandardResponseDTO> saveEditions(@ModelAttribute("contractualAcronym") ContractualAcronym acronym,
 			BindingResult result, Authentication authentication) {
 		return contractualAcronymService.saveEditions(acronym);
 	}
