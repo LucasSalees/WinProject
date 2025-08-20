@@ -32,3 +32,5 @@ form.addEventListener('submit', async function(event) {
 
 //adiciona as mascaras
 $('#OccupationTel').mask('(00) 00000-0000');
+
+$('#occupationCBO').mask('0000-00');

@@ -1,5 +1,7 @@
 package com.project.system.enums.input;
 
+import java.text.Normalizer;
+
 public enum ProjectStatus {
     NOT_STARTED("Não iniciado", "🔴"),
     PLANNING("Em planejamento", "🟡"),
@@ -23,19 +25,21 @@ public enum ProjectStatus {
         return emoji;
     }
 
-    // Retorna o valor completo com emoji + label, como no select
     public String getDisplay() {
         return emoji + " " + label;
     }
-
-    // Método para obter enum a partir do label, útil para converter String em enum
+    
     public static ProjectStatus fromLabel(String label) {
-        for (ProjectStatus status : values()) {
-            if (status.label.equalsIgnoreCase(label)) {
+        String normalizedLabel = Normalizer.normalize(label, Normalizer.Form.NFD)
+                                         .replaceAll("[^\\p{ASCII}]", "");
+
+        for (ProjectStatus status : ProjectStatus.values()) {
+            String enumLabelNormalized = Normalizer.normalize(status.label, Normalizer.Form.NFD)
+                                                 .replaceAll("[^\\p{ASCII}]", "");
+            if (enumLabelNormalized.equalsIgnoreCase(normalizedLabel)) {
                 return status;
             }
         }
-        throw new IllegalArgumentException("Status desconhecido: " + label);
+        return null;
     }
 }
-

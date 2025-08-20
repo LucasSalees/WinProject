@@ -4,8 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import com.project.system.entity.Department;
 import com.project.system.entity.User;
 
 import java.util.List;
@@ -24,13 +22,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
     String findPasswordByEmail(String userEmail);
 
     boolean existsByUserEmail(String userEmail);
-    
+
     @Query("SELECT u FROM User u " +
-	       "WHERE LOWER(u.userName) LIKE LOWER(CONCAT('%', :filter, '%')) " +
-	       "OR LOWER(u.userEmail) LIKE LOWER(CONCAT('%', :filter, '%')) " +
-	       "OR LOWER(u.userRole) LIKE LOWER(CONCAT('%', :filter, '%')) " +
-	       "OR LOWER(u.userFunction.functionName) LIKE LOWER(CONCAT('%', :filter, '%')) " +
-	       "OR STR(u.userId) LIKE CONCAT('%', :filter, '%')")
-	List<User> searchByFilter(@Param("filter") String filter);
+           "WHERE LOWER(u.userName) LIKE LOWER(CONCAT('%', :filter, '%')) " +
+           "OR LOWER(u.userEmail) LIKE LOWER(CONCAT('%', :filter, '%')) " +
+           "OR LOWER(u.userRole) IN :roleNames " + 
+           "OR LOWER(u.userFunction.functionName) LIKE LOWER(CONCAT('%', :filter, '%')) " +
+           "OR STR(u.userId) LIKE CONCAT('%', :filter, '%')")
+    List<User> searchByFilterAndRole(@Param("filter") String filter, @Param("roleNames") List<String> roleNames);
 
 }

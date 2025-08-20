@@ -47,6 +47,7 @@ public class ManagerOccupationService {
             Occupation occupationExists = occupationExistsOpt.get();
 
             occupationExists.setOccupationName(occupation.getOccupationName());
+            occupationExists.setOccupationCBO(occupation.getOccupationCBO());
 
             occupationRepository.save(occupationExists);
 

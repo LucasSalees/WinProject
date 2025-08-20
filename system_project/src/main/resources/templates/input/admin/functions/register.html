@@ -17,7 +17,7 @@
     
     <div th:replace="~{fragments/sidebar :: sidebar}"></div>
     
-    <div th:replace="~{fragments/navbar :: navbar(pageTitle='Cadastro de funções')}"></div>
+    <div th:replace="~{fragments/navbar :: navbar(pageTitle='Cadastro de cargos/funções')}"></div>
     
     <main id="main-content" class="main-content">
 	    <div class="container">
@@ -26,12 +26,12 @@
 				    <div class="section-card access-config-section">
 				        <h3 class="section-title">
 				            <i class="fas fa-user"></i>
-				            Dados da função
+				            Dados do(a) cargo/função
 				        </h3>
 				        <div class="row g-3">
 				            <div class="col-md-6">
 				                <label class="form-label shadow-text">Nome</label>
-				                <input type="text" name="departmentName" placeholder="Digite o nome do função"
+				                <input type="text" name="departmentName" placeholder="Digite o nome do(a) cargo/função"
 				                    class="form-control shadow-cantos" required maxlength="60" th:field="*{functionName}"/>
 				            </div>
 				        </div>

@@ -1,5 +1,6 @@
 package com.project.system.service.input;
 
+import java.text.Normalizer;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -11,9 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
 import com.project.system.dto.StandardResponseDTO;
-import com.project.system.entity.Department;
-import com.project.system.entity.Occupation;
 import com.project.system.entity.Project;
+import com.project.system.enums.input.ProjectBusinessVertical;
+import com.project.system.enums.input.ProjectPriority;
+import com.project.system.enums.input.ProjectStatus;
 import com.project.system.repositories.DepartmentRepository;
 import com.project.system.repositories.ProjectRepository;
 
@@ -96,6 +98,8 @@ public class DirectorProjectService {
         existingProject.setProjectBudget(project.getProjectBudget());
         existingProject.setProjectRegisterDate(project.getProjectRegisterDate());
         existingProject.setUserDepartment(project.getUserDepartment());
+        existingProject.setProjectBusinessVertical(project.getProjectBusinessVertical());
+        existingProject.setProjectPriority(project.getProjectPriority());
 
         try {
             projectRepository.save(existingProject);
@@ -129,8 +133,38 @@ public class DirectorProjectService {
         }
     }
     
+    private String removeAccents(String text) {
+        if (text == null) {
+            return null;
+        }
+        text = Normalizer.normalize(text, Normalizer.Form.NFD);
+        return text.replaceAll("[^\\p{ASCII}]", "");
+    }
+    
     public List<Project> searchProjects(String filter) {
-        return projectRepository.searchByFilter(filter);
+        String processedFilter = filter;
+        String filterWithoutAccentsAndLower = removeAccents(filter).toLowerCase();
+
+        // Conversão para ProjectBusinessVertical
+        // Procuramos por "educacao" sem acentos e em minúsculo
+        ProjectBusinessVertical vertical = ProjectBusinessVertical.fromLabel(filterWithoutAccentsAndLower);
+        if (vertical != null) {
+            processedFilter = vertical.name();
+        }
+
+        // Conversão para ProjectPriority
+        ProjectPriority priority = ProjectPriority.fromLabel(filterWithoutAccentsAndLower);
+        if (priority != null) {
+            processedFilter = priority.name();
+        }
+        
+        // Conversão para ProjectStatus
+        ProjectStatus status = ProjectStatus.fromLabel(filterWithoutAccentsAndLower);
+        if (status != null) {
+            processedFilter = status.name();
+        }
+        
+        return projectRepository.searchByFilter(processedFilter);
     }
     
 }

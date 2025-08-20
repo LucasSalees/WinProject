@@ -12,19 +12,18 @@ import com.project.system.entity.Project;
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
-	@Query("""
-			    SELECT p FROM Project p
-			    LEFT JOIN p.projectContractualAcronym a
-			    WHERE CAST(p.projectId AS string) LIKE %:filter%
-			       OR LOWER(p.projectName) LIKE LOWER(CONCAT('%', :filter, '%'))
-			       OR LOWER(a.acronym) LIKE LOWER(CONCAT('%', :filter, '%'))
-			       OR LOWER(p.projectBusinessVertical) LIKE LOWER(CONCAT('%', :filter, '%'))
-			       OR CAST(p.projectPriority AS string) LIKE %:filter%
-			       OR CAST(p.projectStatus AS string) LIKE %:filter%
-			       OR CAST(p.projectExecutionPercentage AS string) LIKE %:filter%
-			       OR CAST(p.projectPlanningStartDate AS string) LIKE %:filter%
-			       OR CAST(p.projectPlanningEndDate AS string) LIKE %:filter%
-			""")
-	List<Project> searchByFilter(@Param("filter") String filter);
+    @Query("""
+            SELECT p FROM Project p
+            LEFT JOIN p.projectContractualAcronym a
+            WHERE CAST(p.projectId AS string) LIKE %:filter%
+               OR LOWER(p.projectName) LIKE LOWER(CONCAT('%', :filter, '%'))
+               OR LOWER(a.acronym) LIKE LOWER(CONCAT('%', :filter, '%'))
+               OR LOWER(p.projectBusinessVertical) LIKE LOWER(CONCAT('%', :filter, '%'))
+               OR LOWER(p.projectPriority) LIKE LOWER(CONCAT('%', :filter, '%'))
+               OR LOWER(p.projectStatus) LIKE LOWER(CONCAT('%', :filter, '%'))
+               OR CAST(p.projectExecutionPercentage AS string) LIKE %:filter%
+               OR CAST(p.projectPlanningStartDate AS string) LIKE %:filter%
+               OR CAST(p.projectPlanningEndDate AS string) LIKE %:filter% """)
+    List<Project> searchByFilter(@Param("filter") String filter);
 
 }

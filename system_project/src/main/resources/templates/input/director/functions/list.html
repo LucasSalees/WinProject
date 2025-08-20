@@ -16,7 +16,7 @@
     
     <div th:replace="~{fragments/sidebar :: sidebar}"></div>
     
-    <div th:replace="~{fragments/navbar :: navbar(pageTitle='Lista de funções')}"></div>
+    <div th:replace="~{fragments/navbar :: navbar(pageTitle='Lista de cargos/funções')}"></div>
     
     <main id="main-content" class="main-content">
         <div class="container">
@@ -35,13 +35,6 @@
 
 					    <!-- Campo de pesquisa + botão de dropdown à direita -->
 						<div class="botoes-direita">
-						
-							<a th:href="@{/input/director/functions/print(filter=${filter})}" 
-							   class="btn btn-primary" 
-							   target="_blank" 
-							   aria-label="Imprimir">
-							    <i class="fa-solid fa-print"></i>
-							</a>
 
 							<a href="/input/director/functions/list" class="btn btn-warning" aria-label="Remover Filtros">
 						        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">

@@ -52,7 +52,7 @@
 					                   onchange="previewPhoto(this)" />
 					
 					            <!-- Botão “Escolher Arquivo” -->
-					            <label for="profileImage" class="btn btn-primary">
+					            <label for="profileImage" class="btn btn-primary"> <i class="fa-solid fa-pencil"></i>
 					                Escolher arquivo
 					            </label>
 					
@@ -92,7 +92,7 @@
 	                        </div>
 	                        
 	                        <div class="col-md-6">
-	                            <label class="form-label shadow-text">Telefone</label>
+	                            <label class="form-label shadow-text">Celular</label>
 	                            <input type="text" name="userTel" placeholder="(00) 00000-0000" id="userTel"
 	                                class="form-control shadow-cantos" required th:field="*{userTel}"/>
 	                        </div>
@@ -508,6 +508,39 @@
 							</div>
 						</div>
 					</div>
+					
+					<div class="section-card access-config-section permission-group report-group">
+						<h3 class="section-title">
+							<i class="fas fa-lock"></i> Permissões de relatórios
+						</h3>
+
+						<div class="form-switch mb-2">
+							<input class="form-check-input" type="checkbox"
+								id="checkAllReport"
+								th:checked="${#lists.containsAll(
+						                user?.permissions != null ? user.permissions.![name()] : {},
+						                T(com.project.system.enums.input.UserPermission).values().?[name().startsWith('REPORT_')].![name()]
+						           )}">
+							<label class="form-check-label" for="checkAllReport">Marcar Todos</label>
+						</div>
+
+						<div class="dias-container">
+							<div
+								th:each="permission : ${T(com.project.system.enums.input.UserPermission).values()}"
+								th:if="${permission.name().startsWith('REPORT_')}"
+								class="dia-item form-switch">
+
+								<input class="form-check-input shadow-cantos" type="checkbox"
+									th:id="${'perm_' + permission.name()}" th:name="permissions"
+									th:value="${permission.name()}"
+									th:checked="${#lists.contains(user?.permissions?.![name()], permission.name())}">
+
+								<label class="form-check-label"
+									th:for="${'perm_' + permission.name()}"
+									th:text="${permission.label}"> Permissão </label>
+							</div>
+						</div>
+					</div>
 
 					<!-- Seção: Status do Usuário -->
 					<div class="row g-3">
@@ -751,10 +784,7 @@
 						   onclick="openExclusaoModal(this); return false;">
 						    <i class="fa-solid fa-trash" style="color: #ffffff;"></i> Excluir
 						</a>
-                        <a th:href="@{/input/director/users/print/{userId}(userId=${user.userId})}"
-						   class="btn btn-warning" target="_blank">
-						   <i class="fa-solid fa-print"></i> Imprimir
-						</a>
+
                         <div>
 						    <button 
 						        type="submit" 
@@ -822,13 +852,7 @@
 						        <input type="text" id="filtro" class="form-control shadow-cantos" placeholder="Pesquisar...">
 								<div class="dropdown botoes">
 								  <button class="btn btn-primary" type="button" id="dropdownMenuButton">
-									<svg xmlns="http://www.w3.org/2000/svg" 
-								       width="16" height="16" fill="currentColor" 
-								       class="bi bi-search" viewBox="0 0 16 16">
-								    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 
-								      1 0 0 0 1.415-1.414l-3.85-3.85zm-5.242 1.398a5 5 0 1 1 0-10 
-								      5 5 0 0 1 0 10z"/>
-								  	</svg>
+								      Selecionar
 								  </button>
 								  <div class="dropdown-menu" id="dropdownCampos">
 								      <h1 class="dropdown-item-titulo text-center">Campos Visíveis</h1>
@@ -1009,87 +1033,125 @@
 	<div th:replace="~{fragments/footer :: footer}"></div>
 	
 	<script>
-		document.addEventListener('DOMContentLoaded', function () {
-		    const select = document.getElementById('userRoleSelect');
-		
-		    function updatePermissionGroups() {
-		        const role = select.value;
-		
-		        const userGroup = document.querySelector('.user-group');
-		        const departmentGroup = document.querySelector('.department-group');
-		        const occupationGroup = document.querySelector('.occupation-group');
-		        const functionGroup = document.querySelector('.function-group');
-		        const projectGroup = document.querySelector('.project-group'); 
-		        const acronymGroup = document.querySelector('.acronym-group');
-		        
-		        // Sempre mostra as permissões de usuário
-		        userGroup.style.display = 'block';
-		
-		        if (role === 'ADMIN' || role === 'DIRECTOR' || role === 'MANAGER') {
-		            departmentGroup.style.display = 'block';
-		            occupationGroup.style.display = 'block';
-		            functionGroup.style.display = 'block';
-		            projectGroup.style.display = 'block';
-		            acronymGroup.style.display = 'block';
-		        } else {
-		            departmentGroup.style.display = 'none';
-		            occupationGroup.style.display = 'none';
-		            functionGroup.style.display = 'none';
-		            projectGroup.style.display = 'none';
-		            acronymGroup.style.display = 'none';
-		        }
-		    }
-		
-		    // Executa na inicialização (útil para edição de usuários)
-		    updatePermissionGroups();
-		
-		    // Atualiza sempre que o select mudar
-		    select.addEventListener('change', updatePermissionGroups);
-		});
-		
-		document.addEventListener('DOMContentLoaded', function () {
-		    function addCheckAllHandler(groupClass, checkAllId) {
-		        const checkAll = document.getElementById(checkAllId);
-		        const group = document.querySelector('.' + groupClass);
-	
-		        if (checkAll && group) {
-		            checkAll.addEventListener('change', function () {
-		                const checkboxes = group.querySelectorAll('input[type="checkbox"]:not(#' + checkAllId + ')');
-		                checkboxes.forEach(cb => cb.checked = checkAll.checked);
-		            });
-		        }
-		    }
-	
-		    // Ativa para cada grupo
-		    addCheckAllHandler('user-group', 'checkAllUser');
-		    addCheckAllHandler('department-group', 'checkAllDepartment');
-		    addCheckAllHandler('occupation-group', 'checkAllOccupation');
-		    addCheckAllHandler('function-group', 'checkAllFunction');
-		    addCheckAllHandler('project-group', 'checkAllProject');
-		    addCheckAllHandler('acronym-group', 'checkAllAcronym');
-		});
-		
-		document.addEventListener('DOMContentLoaded', function () {
-		    const select = document.getElementById('userRoleSelect');
-		    const description = document.getElementById('roleDescription');
-	
-		    const roleDescriptions = {
-		        'DIRECTOR': 'Diretor: possui acesso total ao sistema, incluindo todas as configurações e permissões.',
-		        'MANAGER': 'Gerente: gerencia usuários, departamentos e relatórios, com acesso administrativo intermediário.',
-		        'ADMIN': 'Administrador: controla cadastros, permissões e gerencia os principais módulos do sistema.',
-		        'USER': 'Usuário: acesso básico, limitado às suas próprias funções e permissões atribuídas.'
-		    };
-	
-		    function updateDescription() {
-		        const role = select.value;
-		        description.textContent = roleDescriptions[role] || '';
-		    }
-	
-		    select.addEventListener('change', updateDescription);
-	
-		    // Atualiza caso esteja em modo de edição e já tenha um valor selecionado
-		    updateDescription();
-		});
+	document.addEventListener('DOMContentLoaded', function () {
+	    const select = document.getElementById('userRoleSelect');
+	    const description = document.getElementById('roleDescription');
+
+	    const permissionGroups = {
+	        user: document.querySelector('.user-group'),
+	        department: document.querySelector('.department-group'),
+	        occupation: document.querySelector('.occupation-group'),
+	        function: document.querySelector('.function-group'),
+	        project: document.querySelector('.project-group'),
+	        acronym: document.querySelector('.acronym-group'),
+	        report: document.querySelector('.report-group')
+	    };
+
+	    const roleDescriptions = {
+	        'DIRECTOR': 'Diretor: possui acesso total ao sistema, incluindo todas as configurações e permissões.',
+	        'MANAGER': 'Gerente: gerencia usuários, projetos e relatórios, com acesso administrativo intermediário.',
+	        'ADMIN': 'Administrador: controla cadastros, permissões e gerencia os principais módulos do sistema.',
+	        'USER': 'Usuário: acesso básico, limitado apenas a relatórios.'
+	    };
+
+	    // Função para desmarcar todos os checkboxes de um grupo específico, incluindo o "Marcar Todos"
+	    function uncheckGroup(group) {
+	        if (group) {
+	            const checkboxes = group.querySelectorAll('input[type="checkbox"]');
+	            checkboxes.forEach(cb => {
+	                cb.checked = false;
+	            });
+	        }
+	    }
+
+	    // Função para habilitar ou desabilitar o checkbox "Marcar Todos" de um grupo
+	    function setCheckAllDisabledState(groupId, isDisabled) {
+	        const checkAll = document.getElementById(`checkAll${groupId.charAt(0).toUpperCase() + groupId.slice(1)}`);
+	        if (checkAll) {
+	            checkAll.disabled = isDisabled;
+	        }
+	    }
+
+	    // Função para atualizar a visibilidade dos grupos de permissões
+	    function updateGroupVisibility(role) {
+	        // Desabilita todos os "Marcar Todos" por padrão
+	        Object.keys(permissionGroups).forEach(key => {
+	            if (permissionGroups[key]) {
+	                permissionGroups[key].style.display = 'none';
+	                setCheckAllDisabledState(key, true);
+	            }
+	        });
+
+	        if (role === 'DIRECTOR' || role === 'ADMIN') {
+	            Object.keys(permissionGroups).forEach(key => {
+	                if (permissionGroups[key]) {
+	                    permissionGroups[key].style.display = 'block';
+	                    setCheckAllDisabledState(key, false); // Habilita quando visível
+	                }
+	            });
+	        } 
+	        else if (role === 'MANAGER') {
+	            ['user', 'project', 'report'].forEach(key => {
+	                if (permissionGroups[key]) {
+	                    permissionGroups[key].style.display = 'block';
+	                    setCheckAllDisabledState(key, false); // Habilita quando visível
+	                }
+	            });
+	        } 
+	        else if (role === 'USER') {
+	            if (permissionGroups.report) {
+	                permissionGroups.report.style.display = 'block';
+	                setCheckAllDisabledState('report', false); // Habilita quando visível
+	            }
+	        }
+	    }
+
+	    // Atualiza a descrição do papel
+	    function updateDescription() {
+	        const role = select.value;
+	        description.textContent = roleDescriptions[role] || '';
+	    }
+
+	    // Função para ativar "selecionar todos" em cada grupo
+	    function addCheckAllHandler(groupClass, checkAllId) {
+	        const checkAll = document.getElementById(checkAllId);
+	        const group = document.querySelector('.' + groupClass);
+
+	        if (checkAll && group) {
+	            checkAll.addEventListener('change', function () {
+	                const checkboxes = group.querySelectorAll('input[type="checkbox"]:not(#' + checkAllId + ')');
+	                checkboxes.forEach(cb => cb.checked = checkAll.checked);
+	            });
+	        }
+	    }
+	    
+	    // --- Lógica de inicialização específica para a página de edição ---
+	    const initialRole = select.value;
+	    updateGroupVisibility(initialRole);
+	    updateDescription();
+
+	    // --- Eventos ---
+	    select.addEventListener('change', () => {
+	        const newRole = select.value;
+	        
+	        // Desmarca todos os checkboxes antes de atualizar a visibilidade
+	        Object.keys(permissionGroups).forEach(key => {
+	            uncheckGroup(permissionGroups[key]);
+	        });
+
+	        updateGroupVisibility(newRole);
+	        updateDescription();
+	    });
+
+	    // Ativa "selecionar todos" para cada grupo
+	    addCheckAllHandler('user-group', 'checkAllUser');
+	    addCheckAllHandler('department-group', 'checkAllDepartment');
+	    addCheckAllHandler('occupation-group', 'checkAllOccupation');
+	    addCheckAllHandler('function-group', 'checkAllFunction');
+	    addCheckAllHandler('project-group', 'checkAllProject');
+	    addCheckAllHandler('acronym-group', 'checkAllAcronym');
+	    addCheckAllHandler('report-group', 'checkAllReport');
+	});
 	</script>
 
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>

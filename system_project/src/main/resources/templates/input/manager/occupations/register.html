@@ -34,7 +34,13 @@
 				                <input type="text" name="occupationName" placeholder="Digite o nome da profissão"
 				                    class="form-control shadow-cantos" required maxlength="40" th:field="*{occupationName}"/>
 				            </div>
-
+							
+							<div class="col-md-6">
+				                <label class="form-label shadow-text">Cód. CBO</label>
+				                <input type="text" name="occupationCBO" placeholder="0000-00"
+				                    class="form-control shadow-cantos" maxlength="40" th:field="*{occupationCBO}"/>
+				            </div>
+				            
 				        </div>
 				    </div>
 				    <div class="navegacaoLista custom-button-container">
@@ -54,7 +60,7 @@
 	    </div>
 	</main>
 	
-   	<div th:replace="~{fragments/sidebar :: modals}"></div>
+	<div th:replace="~{fragments/sidebar :: modals}"></div>
     
     <div th:replace="~{fragments/footer :: footer}"></div>
     
@@ -62,7 +68,7 @@
 	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
 	
-	<script th:src="@{/js/manager/components.js}"></script>
+    <script th:src="@{/js/manager/components.js}"></script>
 	
 	<script th:src="@{/js/manager/registrations/registerOccupations.js}"></script>
 	

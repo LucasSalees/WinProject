@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.project.system.dto.StandardResponseDTO;
-import com.project.system.entity.Department;
 import com.project.system.entity.Occupation;
 import com.project.system.repositories.OccupationRepository;
 
@@ -48,6 +47,7 @@ public class DirectorOccupationService {
             Occupation occupationExists = occupationExistsOpt.get();
 
             occupationExists.setOccupationName(occupation.getOccupationName());
+            occupationExists.setOccupationCBO(occupation.getOccupationCBO());
             
             occupationRepository.save(occupationExists);
 

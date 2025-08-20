@@ -171,7 +171,8 @@ public class ManagerProjectController {
             BindingResult result, Authentication authentication) {
         return projectService.saveEditions(project, result);
     }
-
+    
+    @PostMapping("/input/manager/projects/save")
     @PreAuthorize("hasAuthority('PROJECT_REGISTER')")
     @ResponseBody
     public ResponseEntity<StandardResponseDTO> saveProject(@ModelAttribute Project project, BindingResult result,

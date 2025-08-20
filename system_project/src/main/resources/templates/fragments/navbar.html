@@ -7,6 +7,17 @@
 	    <nav class="custom-navbar">
 	        <div class="navbar-container">
 	            <div class="navbar-left">
+	            	<button type="button" class="menu-button" onclick="history.back()">
+					    <i class="fa-solid fa-arrow-left"></i>
+					</button>
+					<a href="/home" class="menu-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                            <polyline points="9 22 9 12 15 12 15 22" />
+                        </svg>
+                    </a>
 	                <button id="sidebar-toggle" class="menu-button" aria-label="Menu">
 						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 						  <line x1="4" y1="6" x2="20" y2="6" />
@@ -14,10 +25,10 @@
 						  <line x1="4" y1="18" x2="20" y2="18" />
 						</svg>
 	                </button>
-	                <div class="logo-container">
-	                    <img src="/images/logoInput.png" alt="Logo" class="logo">
-	                    <span class="logo-text" th:text="${pageTitle} ?: 'WinCurch - Titulo padrão'"></span>
-	                </div>
+					<div class="logo-container">
+					    <a href="#" class="logo-link" rel="noopener noreferrer"></a>
+					    <span class="logo-text" th:text="${pageTitle} ?: 'WinChurch - Titulo padrão'"></span>
+					</div>
 	            </div>
 	            <div class="navbar-right">
 	                <button class="btn btn-danger" onclick="window.location.href='/logout'">

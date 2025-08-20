@@ -38,7 +38,7 @@
 									type="file" id="profileImage" name="profileImage"
 									accept="image/*" class="d-none" onchange="previewPhoto(this)" />
 
-								<label for="profileImage" class="btn btn-primary">
+								<label for="profileImage" class="btn btn-primary"> <i class="fa-solid fa-pencil"></i>
 									Escolher arquivo </label> <a href="#" class="btn btn-danger"
 									id="btnRemovePhoto" style="display: none;"
 									onclick="openExclusaoFotoModal(); return false;"> <i
@@ -63,7 +63,7 @@
 							</div>
 
 							<div class="col-md-6">
-								<label class="form-label shadow-text">Telefone</label> <input
+								<label class="form-label shadow-text">Celular</label> <input
 									type="text" name="userTel" placeholder="(00) 00000-0000"
 									id="UserDepartmentManager" class="form-control shadow-cantos"
 									required th:field="*{userTel}" />
@@ -421,6 +421,41 @@
 							</div>
 						</div>
 					</div>
+					
+					<!-- Permissões de Relatórios -->
+					<div class="section-card access-config-section permission-group report-group">
+						<h3 class="section-title">
+							<i class="fas fa-lock"></i> Permissões de relatórios
+						</h3>
+
+						<div class="form-switch mb-2">
+							<input class="form-check-input" type="checkbox"
+								id="checkAllReport"
+								th:checked="${#lists.containsAll(
+						                user?.permissions != null ? user.permissions.![name()] : {},
+						                T(com.project.system.enums.input.UserPermission).values().?[name().startsWith('REPORT_')].![name()]
+						           )}">
+							<label class="form-check-label" for="checkAllReport">Marcar
+								Todos</label>
+						</div>
+
+						<div class="dias-container">
+							<div
+								th:each="permission : ${T(com.project.system.enums.input.UserPermission).values()}"
+								th:if="${permission.name().startsWith('REPORT_')}"
+								class="dia-item form-switch">
+
+								<input class="form-check-input shadow-cantos" type="checkbox"
+									th:id="${'perm_' + permission.name()}" th:name="permissions"
+									th:value="${permission.name()}"
+									th:checked="${#lists.contains(user?.permissions?.![name()], permission.name())}">
+
+								<label class="form-check-label"
+									th:for="${'perm_' + permission.name()}"
+									th:text="${permission.label}"> Permissão </label>
+							</div>
+						</div>
+					</div>
 
 					<!-- Seção: Permissões de Horário e Dias -->
 					<div class="section-card access-config-section">
@@ -589,74 +624,71 @@
 	
 	<!-- MODAL DE SELEÇÃO DE PROFISSÃO -->
 	<div id="modalListaProfissoes" class="modal">
-	    <div class="modal-container" style="max-width: 90vw; width: 1000px;">
-	        <div class="modal-content">
-	            <div class="modal-header">
-	                <h2 class="modal-title">Selecionar profissão</h2>
-	                <button type="button" class="modal-close" id="fecharModalLista">
-	                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
-	                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+		<div class="modal-container" style="max-width: 90vw; width: 1000px;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2 class="modal-title">Selecionar profissão</h2>
+					<button type="button" class="modal-close" id="fecharModalLista">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+							fill="none" stroke="currentColor" stroke-width="2"
+							stroke-linecap="round" stroke-linejoin="round">
 	                        <line x1="18" y1="6" x2="6" y2="18"></line>
 	                        <line x1="6" y1="6" x2="18" y2="18"></line>
 	                    </svg>
-	                </button>
-	            </div>
-	            <div class="modal-body">
-	
-	                <!-- BARRA DE FILTRO E DROPDOWN -->
-	                <div class="form-inline mb-3">
-	                    <div class="navegacaoLista custom-button-container">
-						    <!-- Botão à esquerda -->
-						    <div class="botoes-esquerda">
-						        
-						    </div>
-						    <!-- Campo de pesquisa + botão de dropdown à direita -->
-						    <div class="botoes-direita">
-						        <input type="text" id="filtro" class="form-control shadow-cantos" placeholder="Pesquisar...">
+					</button>
+				</div>
+				<div class="modal-body">
+
+					<!-- BARRA DE FILTRO E DROPDOWN -->
+					<div class="form-inline mb-3">
+						<div class="navegacaoLista custom-button-container">
+							<!-- Botão à esquerda -->
+							<div class="botoes-esquerda"></div>
+							<!-- Campo de pesquisa + botão de dropdown à direita -->
+							<div class="botoes-direita">
+								<input type="text" id="filtro"
+									class="form-control shadow-cantos" placeholder="Pesquisar...">
 								<div class="dropdown botoes">
-								  
-								  <button class="btn btn-primary" type="button" id="dropdownMenuButton">
-								  	<svg xmlns="http://www.w3.org/2000/svg" 
-								       width="16" height="16" fill="currentColor" 
-								       class="bi bi-search" viewBox="0 0 16 16">
-								    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 
-								      1 0 0 0 1.415-1.414l-3.85-3.85zm-5.242 1.398a5 5 0 1 1 0-10 
-								      5 5 0 0 1 0 10z"/>
-								  	</svg>
-								  </button>
-								
-								  <div class="dropdown-menu" id="dropdownCampos">
-								      <h1 class="dropdown-item-titulo text-center">Campos Visíveis</h1>
-								      <label class="dropdown-item-1"><input type="checkbox" id="selecionarTodos"> <span>Selecionar Todos</span></label>
-								      <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoCodigo" checked> <span>Codigo</span></label>
-								      <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoNome" checked> <span>Nome</span></label>
-								  </div>
+									<button class="btn btn-primary" type="button"
+										id="dropdownMenuButton">Selecionar</button>
+									<div class="dropdown-menu" id="dropdownCampos">
+										<h1 class="dropdown-item-titulo text-center">Campos
+											Visíveis</h1>
+										<label class="dropdown-item-1"><input type="checkbox"
+											id="selecionarTodos"> <span>Selecionar Todos</span></label> <label
+											class="dropdown-item-1"><input type="checkbox"
+											class="campoCheckbox" id="campoCodigo" checked> <span>Codigo</span></label>
+										<label class="dropdown-item-1"><input type="checkbox"
+											class="campoCheckbox" id="campoNome" checked> <span>Nome</span></label>
+									</div>
 								</div>
-						    </div>
+							</div>
 						</div>
-	                </div>
-	
-	                <!-- TABELA DE PROFISSÕES -->
-	                <div class="table-container-modal">
-	                    <table class="table table-striped" id="tabela">
-	                        <thead>
-	                            <tr>
-	                                <th class="text-left">Cod</th>
-	                                <th class="text-left">Nome</th>
-	                            </tr>
-	                        </thead>
-	                        <tbody>
-	                            <tr th:each="occupation : ${occupations}" class="linha-profissao" style="cursor: pointer;"
-	                                th:data-id="${occupation.occupationId}" th:data-nome="${occupation.occupationName}">
-	                                <td th:text="${occupation.occupationId}"></td>
-	                                <td th:text="${occupation.occupationName}"></td>
-	                            </tr>
-	                        </tbody>
-	                    </table>
-	                </div>
-	            </div>
-	        </div>
-	    </div>
+					</div>
+
+					<!-- TABELA DE PROFISSÕES -->
+					<div class="table-container-modal">
+						<table class="table table-striped" id="tabela">
+							<thead>
+								<tr>
+									<th class="text-left">Cod</th>
+									<th class="text-left">Nome</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="occupation : ${occupations}"
+									class="linha-profissao" style="cursor: pointer;"
+									th:data-id="${occupation.occupationId}"
+									th:data-nome="${occupation.occupationName}">
+									<td th:text="${occupation.occupationId}"></td>
+									<td th:text="${occupation.occupationName}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 	
 	<!-- MODAL DE SELEÇÃO DE PROFISSÃO -->
@@ -805,88 +837,102 @@
 	
 	<script>
 		document.addEventListener('DOMContentLoaded', function () {
-		    const select = document.getElementById('userRoleSelect');
-		
-		    function updatePermissionGroups() {
-		        const role = select.value;
-		
-		        const userGroup = document.querySelector('.user-group');
-		        const departmentGroup = document.querySelector('.department-group');
-		        const occupationGroup = document.querySelector('.occupation-group');
-		        const functionGroup = document.querySelector('.function-group');
-		        const projectGroup = document.querySelector('.project-group'); 
-		        const acronymGroup = document.querySelector('.acronym-group');
-		        
-		        // Sempre mostra as permissões de usuário
-		        userGroup.style.display = 'block';
-		
-		        if (role === 'ADMIN' || role === 'DIRECTOR' || role === 'MANAGER') {
-		            departmentGroup.style.display = 'block';
-		            occupationGroup.style.display = 'block';
-		            functionGroup.style.display = 'block';
-		            projectGroup.style.display = 'block';
-		            acronymGroup.style.display = 'block';
-		        } else {
-		            departmentGroup.style.display = 'none';
-		            occupationGroup.style.display = 'none';
-		            functionGroup.style.display = 'none';
-		            projectGroup.style.display = 'none';
-		            acronymGroup.style.display = 'none';
-		        }
-		    }
-		
-		    // Executa na inicialização (útil para edição de usuários)
-		    updatePermissionGroups();
-		
-		    // Atualiza sempre que o select mudar
-		    select.addEventListener('change', updatePermissionGroups);
-		});
-		
-		document.addEventListener('DOMContentLoaded', function () {
-		    function addCheckAllHandler(groupClass, checkAllId) {
-		        const checkAll = document.getElementById(checkAllId);
-		        const group = document.querySelector('.' + groupClass);
+	        const select = document.getElementById('userRoleSelect');
+	        const description = document.getElementById('roleDescription');
 	
-		        if (checkAll && group) {
-		            checkAll.addEventListener('change', function () {
-		                const checkboxes = group.querySelectorAll('input[type="checkbox"]:not(#' + checkAllId + ')');
-		                checkboxes.forEach(cb => cb.checked = checkAll.checked);
-		            });
-		        }
-		    }
+	        const userGroup = document.querySelector('.user-group');
+	        const departmentGroup = document.querySelector('.department-group');
+	        const occupationGroup = document.querySelector('.occupation-group');
+	        const functionGroup = document.querySelector('.function-group');
+	        const projectGroup = document.querySelector('.project-group'); 
+	        const acronymGroup = document.querySelector('.acronym-group');
+	        const reportGroup = document.querySelector('.report-group');
 	
-		    // Ativa para cada grupo
-		    addCheckAllHandler('user-group', 'checkAllUser');
-		    addCheckAllHandler('department-group', 'checkAllDepartment');
-		    addCheckAllHandler('occupation-group', 'checkAllOccupation');
-		    addCheckAllHandler('function-group', 'checkAllFunction');
-		    addCheckAllHandler('project-group', 'checkAllProject');
-		    addCheckAllHandler('acronym-group', 'checkAllAcronym');
-		});
-		
-		document.addEventListener('DOMContentLoaded', function () {
-		    const select = document.getElementById('userRoleSelect');
-		    const description = document.getElementById('roleDescription');
+	        const roleDescriptions = {
+	            'DIRECTOR': 'Diretor: possui acesso total ao sistema, incluindo todas as configurações e permissões.',
+	            'MANAGER': 'Gerente: gerencia usuários, projetos e relatórios, com acesso administrativo intermediário.',
+	            'ADMIN': 'Administrador: controla cadastros, permissões e gerencia os principais módulos do sistema.',
+	            'USER': 'Usuário: acesso básico, limitado apenas a relatórios.'
+	        };
 	
-		    const roleDescriptions = {
-		        'DIRECTOR': 'Diretor: possui acesso total ao sistema, incluindo todas as configurações e permissões.',
-		        'MANAGER': 'Gerente: gerencia usuários, departamentos e relatórios, com acesso administrativo intermediário.',
-		        'ADMIN': 'Administrador: controla cadastros, permissões e gerencia os principais módulos do sistema.',
-		        'USER': 'Usuário: acesso básico, limitado às suas próprias funções e permissões atribuídas.'
-		    };
+	        // Função para desmarcar todos os checkboxes de um grupo específico
+	        function uncheckGroup(group) {
+	            if (group) {
+	                const checkboxes = group.querySelectorAll('input[type="checkbox"]');
+	                checkboxes.forEach(cb => {
+	                    cb.checked = false;
+	                });
+	            }
+	        }
 	
-		    function updateDescription() {
-		        const role = select.value;
-		        description.textContent = roleDescriptions[role] || '';
-		    }
+	        // Atualiza a visibilidade e desmarca os grupos de permissões
+	        function updatePermissionGroups() {
+	            const role = select.value;
 	
-		    select.addEventListener('change', updateDescription);
+	            // Desmarca todos os grupos primeiro
+	            [userGroup, departmentGroup, occupationGroup, functionGroup, projectGroup, acronymGroup, reportGroup]
+	                .forEach(group => {
+	                    uncheckGroup(group);
+	                    group.style.display = 'none';
+	                });
 	
-		    // Atualiza caso esteja em modo de edição e já tenha um valor selecionado
-		    updateDescription();
-		});
+	            if (role === 'DIRECTOR' || role === 'ADMIN') {
+	                // Acesso total
+	                [userGroup, departmentGroup, occupationGroup, functionGroup, projectGroup, acronymGroup, reportGroup]
+	                    .forEach(group => group.style.display = 'block');
+	            } 
+	            else if (role === 'MANAGER') {
+	                // Apenas usuários, projetos e relatórios
+	                userGroup.style.display = 'block';
+	                projectGroup.style.display = 'block';
+	                reportGroup.style.display = 'block';
+	            } 
+	            else if (role === 'USER') {
+	                // Apenas relatórios
+	                reportGroup.style.display = 'block';
+	            }
+	        }
+	
+	        // Atualiza a descrição do papel
+	        function updateDescription() {
+	            const role = select.value;
+	            description.textContent = roleDescriptions[role] || '';
+	        }
+	
+	        // Função para ativar "selecionar todos" em cada grupo
+	        function addCheckAllHandler(groupClass, checkAllId) {
+	            const checkAll = document.getElementById(checkAllId);
+	            const group = document.querySelector('.' + groupClass);
+	
+	            if (checkAll && group) {
+	                checkAll.addEventListener('change', function () {
+	                    const checkboxes = group.querySelectorAll('input[type="checkbox"]:not(#' + checkAllId + ')');
+	                    checkboxes.forEach(cb => cb.checked = checkAll.checked);
+	                });
+	            }
+	        }
+	
+	        // Inicializa
+	        updatePermissionGroups();
+	        updateDescription();
+	
+	        // Eventos
+	        select.addEventListener('change', () => {
+	            updatePermissionGroups();
+	            updateDescription();
+	        });
+	
+	        // Ativa "selecionar todos" para cada grupo
+	        addCheckAllHandler('user-group', 'checkAllUser');
+	        addCheckAllHandler('department-group', 'checkAllDepartment');
+	        addCheckAllHandler('occupation-group', 'checkAllOccupation');
+	        addCheckAllHandler('function-group', 'checkAllFunction');
+	        addCheckAllHandler('project-group', 'checkAllProject');
+	        addCheckAllHandler('acronym-group', 'checkAllAcronym');
+	        addCheckAllHandler('report-group', 'checkAllReport');
+	    });
 	</script>
-    
+
 	<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>

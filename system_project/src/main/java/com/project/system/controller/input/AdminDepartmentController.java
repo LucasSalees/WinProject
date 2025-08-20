@@ -56,42 +56,7 @@ public class AdminDepartmentController {
 		ModelAndView mv = new ModelAndView("input/admin/departments/list");
 		mv.addObject("LoggedUser", loggedUser);
 		mv.addObject("departmentsList", departments);
-		mv.addObject("filter", filter); // devolve o filtro para manter no input
-		return mv;
-	}
-
-	@GetMapping("/input/admin/departments/print")
-	@PreAuthorize("hasAuthority('DEPARTMENT_LIST')")
-	public ModelAndView printDepartments(@RequestParam(required = false) String filter, Authentication authentication) {
-
-		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		List<Department> departments;
-
-		if (filter != null && !filter.isEmpty()) {
-			departments = departmentService.searchDepartments(filter);
-		} else {
-			departments = departmentService.getAllDepartments();
-		}
-
-		ModelAndView mv = new ModelAndView("input/admin/departments/print");
-		mv.addObject("LoggedUser", loggedUser);
-		mv.addObject("departmentsList", departments);
-		mv.addObject("dataAtual", new java.util.Date());
-		return mv;
-	}
-
-	@GetMapping("/input/admin/departments/print/{departmentId}")
-	@PreAuthorize("hasAuthority('DEPARTMENT_LIST')")
-	public ModelAndView printDepartment(@PathVariable Long departmentId, Authentication authentication) {
-
-		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		Department department = departmentService.getDepartmentById(departmentId)
-				.orElseThrow(() -> new RuntimeException("Departamento não encontrado"));
-
-		ModelAndView mv = new ModelAndView("input/admin/departments/printOne");
-		mv.addObject("LoggedUser", loggedUser);
-		mv.addObject("department", department);
-		mv.addObject("dataAtual", new java.util.Date());
+		mv.addObject("filter", filter);
 		return mv;
 	}
 

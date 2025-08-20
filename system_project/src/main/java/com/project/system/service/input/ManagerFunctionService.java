@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.project.system.dto.StandardResponseDTO;
-import com.project.system.entity.Department;
 import com.project.system.entity.Function;
 import com.project.system.repositories.FunctionRepository;
 

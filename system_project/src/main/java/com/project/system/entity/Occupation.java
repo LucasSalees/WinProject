@@ -17,14 +17,24 @@ public class Occupation implements Serializable {
     private Long occupationId;
     
     private String occupationName;
+    private String occupationCBO;
 
     public Occupation() { }
 
-    public Occupation(String occupationName) {
+    public Occupation(String occupationName, String occupationCBO) {
         this.occupationName = occupationName;
+        this.occupationCBO = occupationCBO;
     }
 
-    public Long getOccupationId() {
+    public String getOccupationCBO() {
+		return occupationCBO;
+	}
+
+	public void setOccupationCBO(String occupationCBO) {
+		this.occupationCBO = occupationCBO;
+	}
+
+	public Long getOccupationId() {
         return occupationId;
     }
 

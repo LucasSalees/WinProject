@@ -11,15 +11,15 @@
     --color-light-purple: #d8baf7;          /* Roxo claro */
     --color-light-black: #666666;           /* Preto claro (cinza escuro) */
 
-    /* --------- CORES INTERMEDIÃRIAS --------- */
+    /* --------- CORES INTERMEDIÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚ÂRIAS --------- */
 
-    --color-medium-gray: #cccccc;           /* Cinza mÃ©dio */
-    --color-medium-blue: #003DA6;           /* Azul mÃ©dio */
-    --color-medium-red: #d9534f;            /* Vermelho mÃ©dio */
-    --color-medium-yellow: #f0ad4e;         /* Amarelo mÃ©dio */
-    --color-medium-purple: #7e57c2;         /* Roxo mÃ©dio */
-    --color-medium-black: #333333;           /* Preto mÃ©dio (cinza escuro) */
-    --color-medium-green: #218838;          /* Verde mÃ©dio */
+    --color-medium-gray: #cccccc;           /* Cinza mÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©dio */
+    --color-medium-blue: #003DA6;           /* Azul mÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©dio */
+    --color-medium-red: #d9534f;            /* Vermelho mÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©dio */
+    --color-medium-yellow: #f0ad4e;         /* Amarelo mÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©dio */
+    --color-medium-purple: #7e57c2;         /* Roxo mÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©dio */
+    --color-medium-black: #333333;           /* Preto mÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©dio (cinza escuro) */
+    --color-medium-green: #218838;          /* Verde mÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©dio */
 
     /* --------- CORES ESCURAS --------- */
 
@@ -84,28 +84,36 @@
 	    display: flex;
 	    flex-direction: column;
 	    justify-content: center;
-	    min-width: 450px; /* Largura mÃ­nima para evitar compressÃ£o */
+	    min-width: 450px; /* Largura mÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­nima para evitar compressÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o */
 	}
 	
 	.logo-header {
-	    text-align: center;
-	    margin-bottom: 25px;
+	    display: flex;
+	    justify-content: center; /* centraliza no eixo X */
+	    align-items: center;     /* centraliza no eixo Y */
+	    height: 100px;            /* altura do header, ajuste conforme preciso */
 	}
-	
-	.logo-header img {
-	    max-width: 150px;
-	    height: auto;
+		
+	.logo-header a {
+	    display: block;
+	    width: 450px;
+	    height: 80px;
+	    background-image: url('/images/logoWinProjectNovo.png');
+	    background-size: contain;
+	    background-repeat: no-repeat;
+	    background-position: center;
 	}
-	
+
 	.welcome-message {
 	    text-align: center;
-	    margin-bottom: 35px;
+	    /* margin-bottom: 35px; */
 	}
 	
 	.welcome-message h1 {
 	    font-size: 2.2rem;
 	    color: var(--color-medium-blue);
-	    margin-bottom: 12px;
+	    margin-top: 60px;
+	    /* margin-bottom: 12px; */
 	    font-weight: 700;
 	}
 	
@@ -144,7 +152,7 @@
 	
 	.login-form input[type="email"],
 	.login-form input[type="password"],
-	.login-form input[type="text"] { /* Adicionado type="text" para quando a senha Ã© visÃ­vel */
+	.login-form input[type="text"] { /* Adicionado type="text" para quando a senha ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â© visÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­vel */
 	    width: 100%;
 	    height: var(--input-height);
 	    padding: 12px 15px 12px 40px;
@@ -189,7 +197,6 @@
 	    width: 100%;
 	    box-shadow: var(--box-shadow);
 	}
-
 	
 	.login-button {
 	    width: 100%;
@@ -202,7 +209,7 @@
 	    font-weight: 600;
 	    cursor: pointer;
 	    transition: all 0.3s ease;
-	    height: 50px; /* Altura fixa para o botÃ£o */
+	    height: 50px; /* Altura fixa para o botÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o */
 	    box-shadow: var(--box-shadow);
 	    letter-spacing: 0.5px;
 	}
@@ -218,10 +225,21 @@
 	    box-shadow: var(--box-shadow);
 	}
 	
+	.login-image-content a {
+	    display: block;
+	    width: 150px;   /* largura da logo */
+	    height: 60px;   /* altura da logo */
+	    background-image: url('/images/LogoInput_novo.png');
+	    background-size: contain;
+	    background-repeat: no-repeat;
+	    background-position: center;
+	    margin-bottom: 20px; /* opcional: espaÃƒÆ’Ã‚Â§o abaixo do texto */
+	}
+	
 	/* Right side - Image */
 	.login-image {
 	    flex: 1;
-	    background-image: url('/images/Project.png');
+	    background-image: url('/images/Project_novo.jpg');
 	    background-size: cover;
 	    background-position: center;
 	    display: flex;
@@ -259,7 +277,7 @@
 	}
 	
 	.login-image-content p {
-	    font-size: 1.3rem;
+	    /* font-size: 1.3rem; */
 	    text-shadow: var(--box-shadow);
 	    max-width: 80%;
 	    margin: 0 auto;
@@ -375,7 +393,7 @@
 		}
 		
 		.input-with-icon input {
-		    padding-right: 35px; /* espaÃ§o para o Ã­cone */
+		    padding-right: 35px; /* espaÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§o para o ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­cone */
 		}
 		
 		.toggle-password-icon {

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema - WinProject</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/base.css?v=1.0}">
+    <link rel="stylesheet" th:href="@{/css/components.css?v=1.0}">
+    <link rel="stylesheet" th:href="@{/css/registrations/registerProjects.css?v=1.0}">
+    <link rel="stylesheet" th:href="@{/css/lists/departmentsList.css?v=1.0}">
+</head>
+
+<style>
+
+    .form-control[disabled], .form-select[disabled], .form-check-input[disabled], .btn[disabled] {
+        cursor: not-allowed;
+        opacity: 1;
+    }
+
+    .form-control#campoProjectContractualAcronym {
+        cursor: not-allowed;
+        background-color: var(--bs-secondary-bg);
+    }
+    .img-preview {
+         pointer-events: none;
+    }
+    .navegacaoLista {
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .form-check-input:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .form-check-input:disabled + .form-check-label {
+        opacity: 0.6;
+    }
+    
+</style>
+
+<body>
+    
+     <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    
+    <div th:replace="~{fragments/navbar :: navbar(pageTitle='Relatório de projeto')}"></div>
+    
+    <main id="main-content" class="main-content">
+        <div class="container">
+            <div class="card">
+				<form action="/input/user/reports/editProject" th:object="${project}" method="POST" id="formulario">
+
+					<!-- Seção: Informações Básicas do Projeto -->
+                    <div class="section-card access-config-section">
+                        <h3 class="section-title">📋 Informações Básicas</h3>
+                        <div class="row g-3">
+                        
+                        	<div class="col-md-1">
+		                        <label class="form-label shadow-text">Cod.</label>
+		                        <input type="text" disabled placeholder="Cod" class="form-control shadow-cantos cod"
+		                                th:field="*{projectId}" />
+		                    </div>
+		                    
+                            <div class="col-md-2">
+                                <label class="form-label shadow-text">Nome</label>
+                                <input type="text" placeholder="Nome do projeto" class="form-control shadow-cantos"
+                                    disabled maxlength="60" th:field="*{projectName}" />
+                            </div>
+                            
+							<div class="col-md-3">
+							 	 <label class="form-label shadow-text">Sigla contratual</label>
+							 	 
+							 	 <div class="time-range-container">
+							       <div class="form-control shadow-cantos" disabled id="campoProjectContractualAcronym">
+	                                    <span th:if="${project.projectContractualAcronym != null}" th:text="${project.projectContractualAcronym.acronym}"></span>
+	                                    <span th:if="${project.projectContractualAcronym == null}">Não informado</span>
+	                                </div>
+							    </div>
+							</div>
+
+                            <div class="col-md-3">
+                                <label class="form-label shadow-text"> Data de cadastro</label>
+                                <input type="date" class="form-control shadow-cantos" disabled
+                                    th:field="*{projectRegisterDate}" />
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label shadow-text"> Data de atual</label>
+                                <input type="date" class="form-control shadow-cantos" disabled
+                                    th:field="*{ProjectCurrentDate}" />
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label shadow-text">Site</label>
+                                <input type="url" placeholder="https://exemplo.com" class="form-control shadow-cantos"
+                                    maxlength="100" disabled th:field="*{projectWebsite}" />
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label shadow-text">Vertical de negócio</label>
+                                <select th:field="*{projectBusinessVertical}" class="form-control shadow-cantos" id="vertical" disabled>
+								    <option value="" disabled selected>Selecione a vertical de negócio</option>
+								    <option th:each="reg : ${projectBusinessVerticals}" 
+								            th:value="${reg}" 
+								            th:text="${reg.label}">
+								    </option>
+								</select>
+                            </div>
+                             
+							<div class="col-md-4">
+							    <label class="form-label shadow-text">Prioridade</label>
+							    <select th:field="*{projectPriority}"  class="form-control shadow-cantos" id="prioridade" disabled>
+							        <option value="" disabled selected>Selecione a prioridade</option>
+							        <option th:each="priority : ${projectPriorities}"
+							                th:value="${priority.name()}"
+							                th:text="${priority.label}">
+							        </option>
+							    </select>
+							</div>
+                        </div>
+                    </div>
+
+                    <!-- Seção: Responsáveis -->
+                    <div class="section-card personal-info-section">
+                        <h3 class="section-title">👥 Dados do cliente</h3>
+
+                        <!-- Gestor do Cliente -->
+                        <div>
+                            <h5 class="text-muted mb-3">Gestor do Cliente</h5>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label shadow-text">Nome</label>
+                                    <input type="text" disabled placeholder="Nome do gestor" class="form-control shadow-cantos"
+                                        th:field="*{projectClientManager}" maxlength="60" />
+                                </div>
+                                <div class="col-md-5">
+                                    <label class="form-label shadow-text">Email</label>
+                                    <div class="d-flex gap-2">
+                                        <input type="text" disabled placeholder="email@exemplo.com"
+                                            class="form-control shadow-cantos" id="email-gestor"
+                                            th:field="*{projectClientManagerEmail}" maxlength="40" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="form-label shadow-text">Telefone</label>
+                                    <input type="tel" disabled  placeholder="(00) 00000-0000" class="form-control shadow-cantos"
+                                        th:field="*{projectClientManagerPhone}" id="telefone-gestor" />
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label shadow-text">CEP</label> <input type="text"
+                                        placeholder="00000-000" disabled class="form-control shadow-cantos" maxlength="9"
+                                        th:field="*{projectClientZipCode}" id="cep-projeto" />
+                                </div>
+                                <div class="col-md-5">
+                                    <label class="form-label shadow-text">Endereço</label> <input type="text"
+                                        placeholder="Rua, Avenida, número" disabled class="form-control shadow-cantos"
+                                        maxlength="100" th:field="*{projectClientAddress}" id="endereco-projeto" />
+                                </div>
+                                <div class="col-md-1">
+                                    <label class="form-label shadow-text">Nº</label>
+                                    <input type="text" placeholder="123" disabled class="form-control shadow-cantos"
+                                        maxlength="100000" th:field="*{projectClientAddressNumber}" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label shadow-text">Complemento</label>
+                                    <input type="text" placeholder="Casa, Apto, fundos..." disabled
+                                        class="form-control shadow-cantos" maxlength="100"
+                                        th:field="*{projectClientAddressComplement}" />
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label shadow-text">Bairro</label> <input type="text"
+                                        placeholder="Nome do bairro" class="form-control shadow-cantos" disabled maxlength="50"
+                                        th:field="*{projectClientDistrict}" id="bairro-projeto" />
+                                </div>
+                                <div class="col-md-5">
+                                    <label class="form-label shadow-text">Cidade</label> <input type="text"
+                                        placeholder="Nome da cidade" class="form-control shadow-cantos" disabled maxlength="50"
+                                        th:field="*{projectClientCity}" id="cidade-projeto" />
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label shadow-text">Estado</label>
+                                    <select th:field="*{projectClientState}" disabled class="form-control shadow-cantos"
+                                        id="estado-projeto" >
+                                        <option value="" disabled selected>Selecione uma estado</option>
+                                        <option th:each="reg : ${T(com.project.system.enums.input.BrazilianStateUF).values()}"
+                                            th:value="${reg}" th:text="${reg.name()}">
+                                        </option>
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Seção: Cronograma do Projeto -->
+                    <div class="section-card access-config-section">
+                        <h3 class="section-title">📅 Cronograma</h3>
+
+                        <!-- Planejamento -->
+                        <div class="mb-4">
+                            <h5 class="text-muted mb-3">Planejamento</h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label shadow-text"  >Data Inicial do Planejamento</label>
+                                    <input type="date" disabled class="form-control shadow-cantos" 
+                                        th:field="*{projectPlanningStartDate}" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label shadow-text" >Data Final do Planejamento</label>
+                                    <input type="date" disabled class="form-control shadow-cantos" 
+                                        th:field="*{projectPlanningEndDate}" />
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label shadow-text">Duração</label>
+                                    <input type="text" class="form-control shadow-cantos" th:field="*{projectDuration}"
+                                        placeholder="0 dias" disabled />
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label shadow-text">Orçamento</label>
+                                    <input type="text" class="form-control shadow-cantos" disabled id="budgetInput"
+                                        name="projectBudget" placeholder="R$ 0,00" th:field="*{projectBudget}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Seção: Responsáveis -->
+                    <div class="section-card personal-info-section">
+                        <h3 class="section-title">👥 Dados do gerente</h3>
+
+                        <!-- Gerente Local -->
+                        <div class="mb-4">
+                            <h5 class="text-muted mb-3">Gerente Local</h5>
+
+                            <div class="row g-3">
+
+                                <div class="col-md-4">
+                                    <label class="form-label text-muted small">Cod - Nome - Gerente</label>
+                                    
+                                    <div class="time-range-container">
+								       <div class="form-control shadow-cantos" disabled id="campoProjectContractualAcronym">
+		                                    <span th:if="${project.userDepartment != null}" th:text="${project.userDepartment.departmentId + ' - ' + project.userDepartment.departmentName}"></span>
+		                                    <span th:if="${project.userDepartment == null}">Não informado</span>
+		                                </div>
+							    	</div>
+                                </div>
+
+                                <div class="col-md-5">
+                                    <label class="form-label shadow-text">Email</label>
+                                    <div class="d-flex gap-2">
+                                        <input type="text" id="email-gerente" placeholder="email@exemplo.com"
+                                            class="form-control shadow-cantos flex-grow-1"
+                                            th:field="*{projectLocalManagerEmail}" maxlength="40" disabled />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="form-label shadow-text">Telefone</label>
+                                    <input type="tel" placeholder="(00) 00000-0000" class="form-control shadow-cantos"
+                                        th:field="*{projectLocalManagerPhone}" id="telefone-gerente" disabled />
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                   <div class="section-card access-config-section">
+					    <h3 class="section-title">📊 Status e Progresso</h3>
+					    <div class="row g-3">
+					        <div class="col-md-6">
+					            <label class="form-label shadow-text">Status do Projeto</label>
+					            <select id="statusProjeto" class="form-control shadow-cantos" disabled
+					                th:field="*{projectStatus}">
+					                <option value="" disabled selected>Selecione o status</option>
+					                <option th:each="status : ${T(com.project.system.enums.input.ProjectStatus).values()}"
+					                        th:value="${status.label}"
+					                        th:text="${status.getDisplay()}">
+					                </option>
+					            </select>
+					        </div>
+					        <div class="col-md-6">
+					            <label class="form-label shadow-text">Percentual de Execução %</label>
+					            <div class="input-group">
+					                <input type="number" disabled min="0" max="100" step="1" class="form-control shadow-cantos"
+					                    placeholder="0" th:field="*{projectExecutionPercentage}"
+					                    id="percentualExecucao" />
+					                <span class="input-group-text">%</span>
+					            </div>
+					
+					            <!-- Barra de progresso abaixo do input -->
+					            
+					        </div>
+					    </div>
+					</div>
+
+                    <!-- Seção: Observações -->
+                    <div class="section-card personal-info-section">
+                        <h3 class="section-title">💬 Observações e Comentários</h3>
+                        <div class="mb-3">
+                            <label for="comentarios" class="form-label shadow-text">Comentários
+                                Adicionais</label>
+                            <textarea class="form-control shadow-cantos" disabled th:field="*{projectComment}" id="comentarios"
+                                rows="4" maxlength="700"
+                                placeholder="Adicione observações, notas importantes ou comentários sobre o projeto...">
+					        </textarea>
+                            <!--  Contador de caracteres -->
+                            
+                        </div>
+                    </div>
+
+				    <div class="navegacaoLista custom-button-container">
+				        
+				        <a th:href="@{/input/user/reports/printOneProject/{projectId}(projectId=${project.projectId})}"
+						   class="btn btn-warning" target="_blank">
+						   <i class="fa-solid fa-print"></i> Imprimir
+						</a>
+				        
+				    </div>
+				</form>
+            </div>
+        </div>
+    </main>
+	
+   	<div th:replace="~{fragments/sidebar :: modals}"></div>
+    
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+	
+    <script th:src="@{/js/user/components.js}"></script>
+    
+    <script th:src="@{/js/user/edits/editProjects.js}"></script>  
+
+</body>
+
+</html>

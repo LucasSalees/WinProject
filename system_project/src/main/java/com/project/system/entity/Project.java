@@ -13,6 +13,10 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.project.system.enums.input.ProjectBusinessVertical;
+import com.project.system.enums.input.ProjectPriority;
+import com.project.system.enums.input.ProjectStatus;
+
 @Entity
 @Table(name = "projects")
 public class Project implements Serializable {
@@ -303,6 +307,42 @@ public class Project implements Serializable {
 
 	public void setProjectRegisterDate(LocalDate projectRegisterDate) {
 		this.projectRegisterDate = projectRegisterDate;
+	}
+	
+	// Método para a label de Vertical de Negócio
+	public String getProjectBusinessVerticalLabel() {
+	    if (this.projectBusinessVertical != null && !this.projectBusinessVertical.isEmpty()) {
+	        try {
+	            return ProjectBusinessVertical.valueOf(this.projectBusinessVertical).getLabel();
+	        } catch (IllegalArgumentException e) {
+	            return this.projectBusinessVertical;
+	        }
+	    }
+	    return "N/A";
+	}
+
+	// Método para a label de Prioridade - CORRIGIDO
+	public String getProjectPriorityLabel() {
+	    if (this.projectPriority != null && !this.projectPriority.isEmpty()) {
+	        try {
+	            return ProjectPriority.valueOf(this.projectPriority).getLabel();
+	        } catch (IllegalArgumentException e) {
+	            return this.projectPriority;
+	        }
+	    }
+	    return "N/A";
+	}
+
+	// Método para a label de Status
+	public String getProjectStatusLabel() {
+	    if (this.projectStatus != null && !this.projectStatus.isEmpty()) {
+	        try {
+	            return ProjectStatus.valueOf(this.projectStatus).getLabel();
+	        } catch (IllegalArgumentException e) {
+	            return this.projectStatus;
+	        }
+	    }
+	    return "N/A";
 	}
 
 }

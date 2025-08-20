@@ -206,7 +206,6 @@
 
 .dia-item:hover {
     background: var(--color-lightGray);
-    border-color: var(--color-primary);
 }
 
 .dia-item input:checked + span {
@@ -325,7 +324,6 @@
     padding-left: 0em;
     display: flex;
     align-items: center;
-    cursor: pointer;
 }
 
 .form-switch .form-check-input {

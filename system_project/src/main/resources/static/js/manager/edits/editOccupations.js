@@ -4,6 +4,8 @@ const form = document.getElementById('formulario');
 //adiciona as mascaras
 $('#occupationTel').mask('(00) 00000-0000');
 
+$('#occupationCBO').mask('0000-00');
+
 form.addEventListener('submit', async function(event) {
     event.preventDefault();
     

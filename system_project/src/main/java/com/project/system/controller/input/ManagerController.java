@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.system.dto.StandardResponseDTO;
 import com.project.system.entity.User;
 import com.project.system.enums.input.UserPermission;
+import com.project.system.security.UserDetailsImpl;
 import com.project.system.service.CommomUserService;
 import com.project.system.service.input.ManagerService;
 import com.project.system.utils.AuthenticationUtils;
@@ -59,10 +60,8 @@ public class ManagerController {
         User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
         ModelAndView mv = new ModelAndView("input/manager/users/register");
 
-        // Envia todas as permissões (se quiser exibir todas)
         mv.addObject("allPermissions", UserPermission.values());
 
-        // Como user.getRole() pode estar null nesse ponto, envie todas ou deixe que o Thymeleaf filtre
         mv.addObject("availablePermissions", UserPermission.values());
 
         mv.addObject("LoggedUser", loggedUser);
@@ -92,45 +91,10 @@ public class ManagerController {
 		ModelAndView mv = new ModelAndView("input/manager/users/list");
 		mv.addObject("LoggedUser", loggedUser);
 		mv.addObject("usersList", users);
-		mv.addObject("filter", filter); // devolve o filtro para manter no input
+		mv.addObject("filter", filter);
 		return mv;
 	}
     
-    @GetMapping("/input/manager/users/print")
-	@PreAuthorize("hasAuthority('USER_LIST')")
-	public ModelAndView printUsers(@RequestParam(required = false) String filter, Authentication authentication) {
-
-		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		List<User> users;
-
-		if (filter != null && !filter.isEmpty()) {
-			users = managerService.searchUsers(filter);
-		} else {
-			users = managerService.getAllUsers();
-		}
-
-		ModelAndView mv = new ModelAndView("input/manager/users/print");
-		mv.addObject("LoggedUser", loggedUser);
-		mv.addObject("usersList", users);
-		mv.addObject("dataAtual", new java.util.Date());
-		return mv;
-	}
-
-	@GetMapping("/input/manager/users/print/{userId}")
-	@PreAuthorize("hasAuthority('USER_LIST')")
-	public ModelAndView printUser(@PathVariable Long userId, Authentication authentication) {
-
-		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		User user = managerService.getUserById(userId)
-				.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-
-		ModelAndView mv = new ModelAndView("input/manager/users/printOne");
-		mv.addObject("LoggedUser", loggedUser);
-		mv.addObject("users", user);
-		mv.addObject("dataAtual", new java.util.Date());
-		return mv;
-	}
-
     @GetMapping("/input/manager/users/edit/{id}")
     @PreAuthorize("hasAuthority('USER_EDIT')")
     public ModelAndView editUserForm(@PathVariable Long id, Authentication authentication) {
@@ -139,7 +103,7 @@ public class ManagerController {
 
         Optional<User> userOpt = managerService.getUserById(id);
         if (userOpt.isEmpty()) {
-            // redirecionar ou tratar o erro adequadamente
+
             return new ModelAndView("redirect:/error");
         }
         
@@ -202,9 +166,16 @@ public class ManagerController {
                 return ResponseEntity.badRequest().body(new StandardResponseDTO("Erro ao processar permissões.", "error"));
             }
         }
+        
         user.setPermissions(permissions);
 
-        return managerService.saveEditions(user, profileImage, removePhoto, newUserPassword);
+        // --- CORREÇÃO APLICADA AQUI ---
+        // 1. Obtém o objeto principal (que é do tipo UserDetailsImpl)
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        // 2. Extrai a entidade User a partir dele (assumindo que há um método .getUser() em UserDetailsImpl)
+        User loggedUser = userDetails.getUser();
+
+        return managerService.saveEditions(user, profileImage, removePhoto, newUserPassword, loggedUser);
     }
 
     @PostMapping("/input/manager/users/save")
@@ -231,9 +202,14 @@ public class ManagerController {
                 return ResponseEntity.badRequest().body(new StandardResponseDTO("Erro ao processar permissões.", "error"));
             }
         }
+        
+        // --- CORREÇÃO APLICADA AQUI ---
+        // Obtém o objeto principal (que é do tipo UserDetailsImpl)
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        // Extrai a entidade User a partir dele
+        User loggedUser = userDetails.getUser();
 
-        // Chame o service passando as permissões
-        return managerService.saveNewUser(user, profileImage, removePhoto, permissions); // Alterado aqui
+        return managerService.saveNewUser(user, profileImage, removePhoto, permissions, loggedUser); // Adicionado 'loggedUser'
     }
     
     @GetMapping("/input/manager/users/profile")

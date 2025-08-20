@@ -35,13 +35,6 @@
 
 					    <!-- Campo de pesquisa + botão de dropdown à direita -->
 						<div class="botoes-direita">
-						
-							<a th:href="@{/input/admin/users/print(filter=${filter})}"
-							   class="btn btn-primary" 
-							   target="_blank" 
-							   aria-label="Imprimir">
-							    <i class="fa-solid fa-print"></i>
-							</a>
 
 							<a href="/input/admin/users/list" class="btn btn-warning" aria-label="Remover Filtros">
 						        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -93,7 +86,7 @@
 	                            </td>
 	                            <td class="text-left">
 	                                <a th:href="@{/input/admin/users/edit/{userId}(userId=${user.userId})}"
-	                                    th:text="${user.userRole}" class="row-link"></a>
+    									th:text="${user.userRole.label}" class="row-link"></a>
 	                            </td>
 								<td class="text-left">
 								    <a th:href="@{/input/admin/users/edit/{userId}(userId=${user.userId})}"

@@ -60,44 +60,6 @@ public class AdminOccupationController {
         return mv;
     }
 
-    
-    @GetMapping("/input/admin/occupations/print")
-    @PreAuthorize("hasAuthority('OCCUPATION_LIST')")
-    public ModelAndView printOccupations(
-            @RequestParam(required = false) String filter,
-            Authentication authentication) {
-
-        User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-        List<Occupation> occupations;
-
-        if (filter != null && !filter.isEmpty()) {
-        	occupations = occupationService.searchOccupations(filter);
-        } else {
-        	occupations = occupationService.getAllOccupations();
-        }
-
-        ModelAndView mv = new ModelAndView("input/admin/occupations/print");
-        mv.addObject("LoggedUser", loggedUser);
-        mv.addObject("occupationsList", occupations);
-        mv.addObject("dataAtual", new java.util.Date());
-        return mv;
-    }
-    
-    @GetMapping("/input/admin/occupations/print/{occupationId}")
-    @PreAuthorize("hasAuthority('OCCUPATION_LIST')")
-    public ModelAndView printOccupation(@PathVariable Long occupationId, Authentication authentication) {
-
-        User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-        Occupation occupation = occupationService.getOccupationById(occupationId)
-                                                 .orElseThrow(() -> new RuntimeException("Profissão não encontrada"));
-
-        ModelAndView mv = new ModelAndView("input/admin/occupations/printOne");
-        mv.addObject("LoggedUser", loggedUser);
-        mv.addObject("occupation", occupation);
-        mv.addObject("dataAtual", new java.util.Date());
-        return mv;
-    }
-
     @GetMapping("/input/admin/occupations/edit/{occupationId}")
     @PreAuthorize("hasAuthority('OCCUPATION_EDIT')")
     public ModelAndView editOccupation(@PathVariable("occupationId") Long occupationId, Authentication authentication) {

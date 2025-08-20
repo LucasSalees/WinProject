@@ -34,13 +34,6 @@
 
 					    <!-- Campo de pesquisa + botão de dropdown à direita -->
 						<div class="botoes-direita">
-						
-							<a th:href="@{/input/admin/projects/print(filter=${filter})}"
-							   class="btn btn-primary" 
-							   target="_blank" 
-							   aria-label="Imprimir">
-							    <i class="fa-solid fa-print"></i>
-							</a>
 
 							<a href="/input/admin/projects/list" class="btn btn-warning" aria-label="Remover Filtros">
 						        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -91,20 +84,20 @@
 	                            </td>
 	                            <td class="text-left"> 
 	                                <a th:href="@{/input/admin/projects/edit/{projectId}(projectId=${project.projectId})}"
-	                                   th:text="${project.projectContractualAcronym.acronym}" class="row-link"></a>
+	                                    th:text="${project.projectContractualAcronym?.acronym ?: 'Sem Sigla'}" class="row-link"></a>
 	                            </td>
 	                            <td class="text-left">
-	                                <a th:href="@{/input/admin/projects/edit/{projectId}(projectId=${project.projectId})}"
-	                                   th:text="${project.projectBusinessVertical}" class="row-link"></a>
-	                            </td>
+								    <a th:href="@{/input/admin/projects/edit/{projectId}(projectId=${project.projectId})}"
+								       	th:text="${project.getProjectBusinessVerticalLabel()}" class="row-link"></a>
+						       </td>
 								<td class="text-left">
-	                                <a th:href="@{/input/admin/projects/edit/{projectId}(projectId=${project.projectId})}"
-								       th:text="${project.projectPriority}" class="row-link"></a>
+								    <a th:href="@{/input/admin/projects/edit/{projectId}(projectId=${project.projectId})}"
+								       th:text="${project.getProjectPriorityLabel()}" class="row-link"></a>
 								</td>
-	                            <td class="text-left">
-	                                <a th:href="@{/input/admin/projects/edit/{projectId}(projectId=${project.projectId})}"
-	                                   th:text="${project.projectStatus}" class="row-link"></a>
-	                            </td>
+								<td class="text-left">
+									<a th:href="@{/input/admin/projects/edit/{projectId}(projectId=${project.projectId})}"
+										th:text="${project.getProjectStatusLabel()}" class="row-link"></a>
+								</td>
 								<td class="text-left">
 	                                <a th:href="@{/input/admin/projects/edit/{projectId}(projectId=${project.projectId})}"
 								       th:text="${project.projectExecutionPercentage} + '%'" class="row-link"></a>

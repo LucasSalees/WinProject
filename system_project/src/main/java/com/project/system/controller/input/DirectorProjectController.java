@@ -73,24 +73,24 @@ public class DirectorProjectController {
     }
 
     @GetMapping("/input/director/projects/list")
-	@PreAuthorize("hasAuthority('PROJECT_LIST')")
-	public ModelAndView projectsList(@RequestParam(value = "filter", required = false) String filter,
-			Authentication authentication) {
-		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		List<Project> projects;
+    @PreAuthorize("hasAuthority('PROJECT_LIST')")
+    public ModelAndView projectsList(@RequestParam(value = "filter", required = false) String filter,
+            Authentication authentication) {
+        User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
+        List<Project> projects;
 
-		if (filter != null && !filter.trim().isEmpty()) {
-			projects = projectService.searchProjects(filter);
-		} else {
-			projects = projectService.getAllProjects();
-		}
+        if (filter != null && !filter.trim().isEmpty()) {
+            projects = projectService.searchProjects(filter);
+        } else {
+            projects = projectService.getAllProjects();
+        }
 
-		ModelAndView mv = new ModelAndView("input/director/projects/list");
-		mv.addObject("LoggedUser", loggedUser);
-		mv.addObject("projectsList", projects);
-		mv.addObject("filter", filter); // devolve o filtro para manter no input
-		return mv;
-	}
+        ModelAndView mv = new ModelAndView("input/director/projects/list");
+        mv.addObject("LoggedUser", loggedUser);
+        mv.addObject("projectsList", projects);
+        mv.addObject("filter", filter);
+        return mv;
+    }
 
 	@GetMapping("/input/director/projects/print")
 	@PreAuthorize("hasAuthority('PROJECT_LIST')")

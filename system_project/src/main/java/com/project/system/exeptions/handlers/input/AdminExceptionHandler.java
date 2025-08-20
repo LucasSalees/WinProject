@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.project.system.controller.input.AdminController;
+import com.project.system.dto.StandardResponseDTO;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -109,5 +110,12 @@ public class AdminExceptionHandler {
 
         ex.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+    }
+    
+    @ExceptionHandler(SecurityException.class)
+    public ResponseEntity<StandardResponseDTO> handleSecurityException(SecurityException ex) {
+        // Retorna um erro 403 Forbidden com a mensagem da exceção
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(StandardResponseDTO.error(ex.getMessage()));
     }
 } 

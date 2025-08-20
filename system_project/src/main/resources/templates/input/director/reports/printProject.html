@@ -1,0 +1,71 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Relatório de Projetos</title>
+    
+    <link rel="stylesheet" th:href="@{/css/reports/printList.css?v=1.0}">
+
+</head>
+<body onload="window.print()">
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <img src="/images/input.ico" width="40" alt="Logo">
+            </div>
+            <div class="header-content">
+                <h1 class="report-title">Relatório de projetos</h1>
+                <p class="report-subtitle">Sistema WinProject - Gestão Empresarial</p>
+            </div>
+            <div class="logo-container"></div>
+        </div>
+
+        <div class="report-info">
+            <div class="info-item">
+                <i>📅</i>
+                <span>Emitido em: <span th:text="${#dates.format(dataAtual, 'dd/MM/yyyy HH:mm')}"></span></span>
+            </div>
+            <div class="info-item">
+                <i>👤</i>
+                <span>Usuário: <span class="user-name" th:text="${LoggedUser.userName}"></span></span>
+            </div>
+            <div class="info-item">
+                <i>📋</i>
+                <span>Total de registros: <span th:text="${projectsList.size()}"></span></span>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Cód.</th>
+                    <th>Nome</th>
+                    <th>Sigla contr.</th>
+                    <th>Vert. de negócio</th>
+                    <th>Prior.</th>
+                    <th>Status</th>
+                    <th>Porc. de execução</th>
+                    <th>Planej. inicio</th>
+                    <th>Planej. fim</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="project : ${projectsList}">
+                    <td th:text="${project.projectId}"></td>
+                    <td th:text="${project.projectName}"></td>
+                    <td th:text="${project.projectContractualAcronym.acronym}"></td>
+                    <td th:text="${project.getProjectBusinessVerticalLabel()}"></td>
+                    <td th:text="${project.getProjectPriorityLabel()}"></td>
+                    <td th:text="${project.getProjectStatusLabel()}"></td>
+                    <td th:text="${project.projectExecutionPercentage}"></td>
+                    <td th:text="${project.projectPlanningStartDate}"></td>
+                    <td th:text="${project.projectPlanningEndDate}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="footer">
+            <div class="page-number"></div>
+            WinProject &copy; <span th:text="${#dates.format(dataAtual, 'yyyy')}"></span> - Sistema de Gestão Empresarial
+        </div>
+    </div>
+</body>
+</html>

@@ -27,7 +27,6 @@ import com.project.system.enums.input.ProjectPriority;
 import com.project.system.enums.input.ProjectStatus;
 import com.project.system.service.input.AdminProjectService;
 import com.project.system.service.input.AdminService;
-import com.project.system.service.input.DirectorService;
 import com.project.system.repositories.ContractualAcronymRepository;
 import com.project.system.repositories.DepartmentRepository;
 import com.project.system.utils.AuthenticationUtils;
@@ -91,41 +90,6 @@ public class AdminProjectController {
 		mv.addObject("LoggedUser", loggedUser);
 		mv.addObject("projectsList", projects);
 		mv.addObject("filter", filter); // devolve o filtro para manter no input
-		return mv;
-	}
-
-	@GetMapping("/input/admin/projects/print")
-	@PreAuthorize("hasAuthority('PROJECT_LIST')")
-	public ModelAndView printProjects(@RequestParam(required = false) String filter, Authentication authentication) {
-
-		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		List<Project> projects;
-
-		if (filter != null && !filter.isEmpty()) {
-			projects = projectService.searchProjects(filter);
-		} else {
-			projects = projectService.getAllProjects();
-		}
-
-		ModelAndView mv = new ModelAndView("input/admin/projects/print");
-		mv.addObject("LoggedUser", loggedUser);
-		mv.addObject("projectsList", projects);
-		mv.addObject("dataAtual", new java.util.Date());
-		return mv;
-	}
-
-	@GetMapping("/input/admin/projects/print/{projectId}")
-	@PreAuthorize("hasAuthority('PROJECT_LIST')")
-	public ModelAndView printProject(@PathVariable Long projectId, Authentication authentication) {
-
-		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		Project project = projectService.getProjectById(projectId)
-				.orElseThrow(() -> new RuntimeException("Projeto não encontrado"));
-
-		ModelAndView mv = new ModelAndView("input/admin/projects/printOne");
-		mv.addObject("LoggedUser", loggedUser);
-		mv.addObject("projects", project);
-		mv.addObject("dataAtual", new java.util.Date());
 		return mv;
 	}
 

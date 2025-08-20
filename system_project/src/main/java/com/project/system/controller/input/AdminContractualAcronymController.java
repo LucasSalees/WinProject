@@ -60,41 +60,6 @@ public class AdminContractualAcronymController {
 		return mv;
 	}
 
-	@GetMapping("/input/admin/acronyms/print")
-	@PreAuthorize("hasAuthority('CONTRACTUAL_ACRONYM_LIST')")
-	public ModelAndView printContractualAcronym(@RequestParam(required = false) String filter, Authentication authentication) {
-
-		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		List<ContractualAcronym> acronyms;
-
-		if (filter != null && !filter.isEmpty()) {
-			acronyms = contractualAcronymService.searchContractualAcronym(filter);
-		} else {
-			acronyms = contractualAcronymService.getAllContractualAcronym();
-		}
-
-		ModelAndView mv = new ModelAndView("input/admin/acronyms/print");
-		mv.addObject("LoggedUser", loggedUser);
-		mv.addObject("acronymsList", acronyms);
-		mv.addObject("dataAtual", new java.util.Date());
-		return mv;
-	}
-
-	@GetMapping("/input/admin/acronyms/print/{acronymId}")
-	@PreAuthorize("hasAuthority('CONTRACTUAL_ACRONYM_LIST')")
-	public ModelAndView printContractualAcronym(@PathVariable Long acronymId, Authentication authentication) {
-
-		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		ContractualAcronym acronym = contractualAcronymService.getContractualAcronymById(acronymId)
-				.orElseThrow(() -> new RuntimeException("Sigla contratual não encontrada"));
-
-		ModelAndView mv = new ModelAndView("input/admin/acronyms/printOne");
-		mv.addObject("LoggedUser", loggedUser);
-		mv.addObject("acronym", acronym);
-		mv.addObject("dataAtual", new java.util.Date());
-		return mv;
-	}
-
 	@GetMapping("/input/admin/acronyms/edit/{acronymId}")
 	@PreAuthorize("hasAuthority('CONTRACTUAL_ACRONYM_EDIT')")
 	public ModelAndView editContractualAcronym(@PathVariable("acronymId") Long acronymId, Authentication authentication) {

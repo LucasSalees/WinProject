@@ -1,21 +1,23 @@
 package com.project.system.service.input;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.system.dto.StandardResponseDTO;
 import com.project.system.entity.User;
 import com.project.system.enums.input.UserPermission;
+import com.project.system.enums.input.UserRole;
 import com.project.system.repositories.ContractualAcronymRepository;
 import com.project.system.repositories.DepartmentRepository;
 import com.project.system.repositories.FunctionRepository;
@@ -25,6 +27,7 @@ import com.project.system.repositories.UserRepository;
 import com.project.system.service.CommomUserService;
 import com.project.system.service.FileStorageService;
 import com.project.system.utils.PasswordUtils;
+import com.project.system.utils.RoleValidator;
 
 @Service
 public class AdminService {
@@ -87,15 +90,25 @@ public class AdminService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(StandardResponseDTO.error("Usuário não encontrado!"));
         }
         User userExists = userOpt.get();
+        
         if (loggedUser.getUserId().equals(userExists.getUserId())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(StandardResponseDTO.error("Você não pode excluir a si mesmo."));
         }
+        
+        if (loggedUser.getUserRole().getLevel() <= userExists.getUserRole().getLevel()) {
+
+            if (loggedUser.getUserRole() != UserRole.DIRECTOR || loggedUser.getUserId().equals(userExists.getUserId())) {
+                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                                    .body(StandardResponseDTO.error("Você não pode excluir um usuário com nível igual ou superior ao seu."));
+            }
+        }
+        
         userRepository.deleteById(userId);
         return ResponseEntity.ok(StandardResponseDTO.success("Usuário removido com sucesso!"));
     }
 
     public ResponseEntity<StandardResponseDTO> saveEditions(User user, MultipartFile profileImage, Boolean removePhoto,
-            String newUserPassword) {
+            String newUserPassword, User loggedUser) {
 
         try {
             Optional<User> userExistsOpt = userRepository.findById(user.getUserId());
@@ -111,6 +124,26 @@ public class AdminService {
             }
 
             User userExists = userExistsOpt.get();
+            
+            try {
+                // --- CORREÇÃO APLICADA AQUI ---
+                // A chamada agora passa a lista de permissões do usuário
+                RoleValidator.validateRoleChange(loggedUser, user.getUserRole(), userExists, user.getPermissions());
+            } catch (SecurityException e) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(StandardResponseDTO.error(e.getMessage()));
+            }
+
+            // --- LÓGICA DE FILTRAGEM DE PERMISSÕES (mantida como uma camada de segurança extra) ---
+            Set<UserPermission> allowedPermissionsForLoggedUser = loggedUser.getUserRole().getBasePermissions();
+            Set<UserPermission> allowedPermissionsForTargetRole = user.getUserRole().getBasePermissions();
+            
+            Set<UserPermission> validPermissions = user.getPermissions().stream()
+                .filter(allowedPermissionsForLoggedUser::contains)
+                .filter(allowedPermissionsForTargetRole::contains)
+                .collect(Collectors.toSet());
+
+            userExists.setPermissions(validPermissions);
 
             if (Boolean.TRUE.equals(removePhoto)) {
                 if (userExists.getPhotoPath() != null && !userExists.getPhotoPath().equals("DefaultAvatar.png")) {
@@ -151,11 +184,8 @@ public class AdminService {
                 }
                 userExists.setUserPassword(PasswordUtils.hashPassword(newUserPassword));
             }
-            
-            userExists.setPermissions(user.getPermissions() != null ? user.getPermissions() : Collections.emptySet());
 
             userRepository.save(userExists);
-
             return ResponseEntity.ok(StandardResponseDTO.success("Usuário atualizado com sucesso."));
 
         } catch (Exception e) {
@@ -168,12 +198,18 @@ public class AdminService {
             User user, 
             MultipartFile profileImage, 
             Boolean removePhoto, 
-            Set<UserPermission> permissions) {
+            Set<UserPermission> permissions, 
+            User loggedUser) {
         try {
             Optional<User> emailOwner = userRepository.findByEmail(user.getUserEmail());
             if (emailOwner.isPresent()) {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
                         .body(StandardResponseDTO.error("Este e-mail já está cadastrado."));
+            }
+
+            if (loggedUser.getUserRole().getLevel() < user.getUserRole().getLevel()) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(StandardResponseDTO.error("Você não pode atribuir um nível de acesso acima do seu."));
             }
 
             // Define as permissões no objeto 'user' antes de salvar
@@ -203,7 +239,32 @@ public class AdminService {
     }
 
     public List<User> searchUsers(String filter) {
-        return userRepository.searchByFilter(filter);
+        // 1. Cria uma lista para armazenar os nomes dos enums
+        List<String> roleNames = new ArrayList<>();
+
+        // 2. Itera sobre todos os enums de UserRole
+        for (UserRole role : UserRole.values()) {
+            // 3. Se a label do enum contém o filtro, adicione o nome do enum à lista
+            if (role.getLabel().toLowerCase().contains(filter.toLowerCase())) {
+                roleNames.add(role.name()); 
+            }
+        }
+        
+        // 4. Se a lista de nomes de enums não estiver vazia, use a nova query
+        if (!roleNames.isEmpty()) {
+            // Chama o novo método do repositório
+            return userRepository.searchByFilterAndRole(filter, roleNames);
+        } else {
+            // 5. Se não houver correspondência, faça a pesquisa padrão sem o filtro de role
+            // Aqui, você pode usar a query que já existe, mas passando uma lista vazia,
+            // ou pode criar uma nova query no repositório que não tenha o critério de role
+            
+            // A melhor forma é usar a mesma query, mas passando o filtro de role vazio.
+            // Para isso, a sua query no repositório precisa ser ajustada para aceitar a lista vazia.
+            // O Spring Data JPA já lida bem com a cláusula IN com uma lista vazia,
+            // fazendo com que o critério de busca seja ignorado.
+            return userRepository.searchByFilterAndRole(filter, Collections.emptyList());
+        }
     }
 
 }

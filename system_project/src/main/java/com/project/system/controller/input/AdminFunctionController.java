@@ -60,41 +60,6 @@ public class AdminFunctionController {
 		return mv;
 	}
 
-	@GetMapping("/input/admin/functions/print")
-	@PreAuthorize("hasAuthority('FUNCTION_LIST')")
-	public ModelAndView printFunctions(@RequestParam(required = false) String filter, Authentication authentication) {
-
-		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		List<Function> functions;
-
-		if (filter != null && !filter.trim().isEmpty()) {
-			functions = functionService.searchFunctions(filter);
-		} else {
-			functions = functionService.getAllFunctions();
-		}
-
-		ModelAndView mv = new ModelAndView("input/admin/functions/print");
-		mv.addObject("LoggedUser", loggedUser);
-		mv.addObject("functionsList", functions);
-		mv.addObject("dataAtual", new java.util.Date());
-		return mv;
-	}
-
-	@GetMapping("/input/admin/functions/print/{functionId}")
-	@PreAuthorize("hasAuthority('FUNCTION_LIST')")
-	public ModelAndView printDepartment(@PathVariable Long functionId, Authentication authentication) {
-
-		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		Function function = functionService.getFunctionById(functionId)
-				.orElseThrow(() -> new RuntimeException("Função não encontrada"));
-
-		ModelAndView mv = new ModelAndView("input/admin/functions/printOne");
-		mv.addObject("LoggedUser", loggedUser);
-		mv.addObject("function", function);
-		mv.addObject("dataAtual", new java.util.Date());
-		return mv;
-	}
-
 	@GetMapping("/input/admin/functions/edit/{functionId}")
 	@PreAuthorize("hasAuthority('FUNCTION_EDIT')")
 	public ModelAndView editFunction(@PathVariable("functionId") Long functionId, Authentication authentication) {
