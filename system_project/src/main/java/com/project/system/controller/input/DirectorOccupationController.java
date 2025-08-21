@@ -1,6 +1,5 @@
 package com.project.system.controller.input;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +22,9 @@ import com.project.system.entity.User;
 import com.project.system.service.input.DirectorOccupationService;
 import com.project.system.utils.AuthenticationUtils;
 
+//Para paginação
+import org.springframework.data.domain.Page;
+
 @Controller
 public class DirectorOccupationController {
 
@@ -42,59 +44,31 @@ public class DirectorOccupationController {
     
     @GetMapping("/input/director/occupations/list")
     @PreAuthorize("hasAuthority('OCCUPATION_LIST')")
-    public ModelAndView occupationsList(@RequestParam(value = "filter", required = false) String filter,
-                                        Authentication authentication) {
-        User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-        List<Occupation> occupations;
-
-        if (filter != null && !filter.trim().isEmpty()) {
-            occupations = occupationService.searchOccupations(filter);
-        } else {
-            occupations = occupationService.getAllOccupations();
-        }
-
-        ModelAndView mv = new ModelAndView("input/director/occupations/list");
-        mv.addObject("LoggedUser", loggedUser);
-        mv.addObject("occupationsList", occupations);
-        mv.addObject("filter", filter); // devolve o filtro para manter no input
-        return mv;
-    }
-
-    @GetMapping("/input/director/occupations/print")
-    @PreAuthorize("hasAuthority('OCCUPATION_LIST')")
-    public ModelAndView printOccupations(
-            @RequestParam(required = false) String filter,
+    public ModelAndView occupationsList(
+            @RequestParam(value = "filter", required = false) String filter,
             Authentication authentication) {
 
         User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-        List<Occupation> occupations;
 
-        if (filter != null && !filter.isEmpty()) {
-        	occupations = occupationService.searchOccupations(filter);
-        } else {
-        	occupations = occupationService.getAllOccupations();
-        }
-
-        ModelAndView mv = new ModelAndView("input/director/occupations/print");
+        ModelAndView mv = new ModelAndView("input/director/occupations/list");
         mv.addObject("LoggedUser", loggedUser);
-        mv.addObject("occupationsList", occupations);
-        mv.addObject("dataAtual", new java.util.Date());
+        mv.addObject("filter", filter);
         return mv;
     }
     
-    @GetMapping("/input/director/occupations/print/{occupationId}")
+    @GetMapping("/input/director/occupations/page")
     @PreAuthorize("hasAuthority('OCCUPATION_LIST')")
-    public ModelAndView printOccupation(@PathVariable Long occupationId, Authentication authentication) {
+    @ResponseBody
+    public Page<Occupation> occupationsPage(
+            @RequestParam(value = "filter", required = false) String filter,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "50") int size) {
 
-        User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-        Occupation occupation = occupationService.getOccupationById(occupationId)
-                                                 .orElseThrow(() -> new RuntimeException("Profissão não encontrada"));
-
-        ModelAndView mv = new ModelAndView("input/director/occupations/printOne");
-        mv.addObject("LoggedUser", loggedUser);
-        mv.addObject("occupation", occupation);
-        mv.addObject("dataAtual", new java.util.Date());
-        return mv;
+        if (filter != null && !filter.trim().isEmpty()) {
+            return occupationService.searchOccupationsPaginated(filter, page, size);
+        } else {
+            return occupationService.getAllOccupationsPaginated(page, size);
+        }
     }
 
     @GetMapping("/input/director/occupations/edit/{occupationId}")
@@ -139,3 +113,4 @@ public class DirectorOccupationController {
         return occupationService.saveOccupation(occupation);
     }
 }
+

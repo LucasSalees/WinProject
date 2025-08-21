@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 public class MainService {
 
     public void configurarMensagemLogin(HttpServletRequest request, Model model,
-                                        String erro, String logout, String expired) {
+                                        String erro, String logout) {
         String errorMessage = (String) request.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
 
         if (errorMessage != null) {
@@ -27,17 +27,16 @@ public class MainService {
         if (logout != null) {
             model.addAttribute("msg", "Logout realizado com sucesso.");
         }
-
-        if (expired != null) {
-            model.addAttribute("erro", "Sessão expirada, faça login novamente.");
-        }
     }
 
-    public void configurarHome(Authentication authentication, Model model) {
+    public void configurarHome(HttpServletRequest request, Authentication authentication, Model model) {
         User user = AuthenticationUtils.getLoggedUser(authentication);
         model.addAttribute("user", user);
         model.addAttribute("LoggedUser", user);
-        model.addAttribute("sessionTimeout", 1800);
+
+        // Pega o timeout real configurado no application.properties
+        int sessionTimeout = request.getSession().getMaxInactiveInterval();
+        model.addAttribute("sessionTimeout", sessionTimeout);
 
         if (user.getEndTime() != null) {
             model.addAttribute("horaFim", user.getEndTime()

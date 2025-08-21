@@ -12,12 +12,28 @@ import com.project.system.dto.StandardResponseDTO;
 import com.project.system.entity.Occupation;
 import com.project.system.repositories.OccupationRepository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 @Service
 public class DirectorOccupationService {
 
     @Autowired
     private OccupationRepository occupationRepository;
+    
+    // Método paginado para pegar todas as ocupações
+    public Page<Occupation> getAllOccupationsPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return occupationRepository.findAll(pageable);
+    }
 
+    // Método paginado para buscar com filtro
+    public Page<Occupation> searchOccupationsPaginated(String filter, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return occupationRepository.searchByFilterPaginated(filter, pageable);
+    }
+    
     public List<Occupation> getAllOccupations() {
         return occupationRepository.findAll();
     }

@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.project.system.service.AuditService;
 import com.project.system.service.MainService;
 
+import org.springframework.web.bind.annotation.ResponseBody;
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class MainController {
 
@@ -33,7 +36,7 @@ public class MainController {
     public String mostrarTelaLogin(
             @RequestParam(value = "erro", required = false) String erro,
             @RequestParam(value = "logout", required = false) String logout,
-            @RequestParam(value = "expired", required = false) String expired,
+            @RequestParam(value = "expired", required = false) String expired, // Parâmetro da sessão expirada
             HttpServletRequest request,
             Authentication authentication,
             Model model) {
@@ -44,8 +47,13 @@ public class MainController {
             auditService.logLogin(authentication);
         }
 
-        // Configura mensagens no model para o thymeleaf
-        mainService.configurarMensagemLogin(request, model, erro, logout, expired);
+        // Adiciona uma mensagem específica se a sessão expirou
+        if (expired != null) {
+            model.addAttribute("msg", "Sua sessão expirou. Por favor, faça o login novamente.");
+        }
+
+        // Configura outras mensagens (erro, logout)
+        mainService.configurarMensagemLogin(request, model, erro, logout);
 
         return "login";
     }
@@ -83,11 +91,16 @@ public class MainController {
 
         return "redirect:/login"; // fallback
     }
+    
+    @GetMapping("/session/timeout")
+    @ResponseBody
+    public int getSessionTimeout(HttpSession session) {
+        return session.getMaxInactiveInterval(); 
+    }
 
     @GetMapping("/logout")
-    public String logout(HttpSession session, HttpServletResponse response,
-                         @RequestParam(required = false) Boolean expired,
-                         Authentication authentication) {
-        return "redirect:/login" + (expired != null && expired ? "?expired=true" : "");
+    public String logout() {
+        // Redirecionamento de logout agora é tratado pelo Spring Security
+        return "redirect:/login";
     }
 }

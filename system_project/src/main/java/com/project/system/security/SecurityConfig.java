@@ -3,18 +3,14 @@ package com.project.system.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
@@ -51,7 +47,7 @@ public class SecurityConfig {
         .formLogin(form -> form
     	    .loginPage("/login")
     	    .loginProcessingUrl("/login")
-    	    .successHandler(customAuthenticationSuccessHandler)  // aqui, substitui o defaultSuccessUrl
+    	    .successHandler(customAuthenticationSuccessHandler)
     	    .failureHandler(failureHandler)
     	    .permitAll()
     	)
@@ -65,8 +61,12 @@ public class SecurityConfig {
     	)
         
         .sessionManagement(session -> session
-            .invalidSessionUrl("/login?expired=true")
-        )
+    	    .invalidSessionUrl("/login?expired=true")
+    	    .maximumSessions(1)
+    	    .maxSessionsPreventsLogin(true)
+    	    .expiredUrl("/login?expired=true")
+    	)
+
         .exceptionHandling(ex -> ex
             .accessDeniedPage("/accessDenied")
         )
@@ -93,7 +93,7 @@ public class SecurityConfig {
     @Bean
     public HttpFirewall allowDoubleSlashHttpFirewall() {
         StrictHttpFirewall firewall = new StrictHttpFirewall();
-        firewall.setAllowUrlEncodedDoubleSlash(true);  // Permite barras duplas codificadas (%2F)
+        firewall.setAllowUrlEncodedDoubleSlash(true);
         firewall.setAllowUrlEncodedPercent(true);
         firewall.setAllowSemicolon(true);
         return firewall;

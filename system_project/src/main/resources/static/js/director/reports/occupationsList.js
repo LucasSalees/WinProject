@@ -7,14 +7,19 @@ const tableBody = document.getElementById('table-body');
 const loadingIndicator = document.getElementById('loading-indicator');
 const backToTopButton = document.getElementById('back-to-top');
 
-// Função para obter o filtro atual do campo de input
+// Função para obter o filtro atual da URL ou do campo de input
 function getCurrentFilter() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const filterFromUrl = urlParams.get('filter') || '';
     const filterInput = document.getElementById('filter');
-    return filterInput ? filterInput.value : '';
+    if (filterInput) {
+        filterInput.value = filterFromUrl;
+    }
+    return filterFromUrl;
 }
 
-async function loadAcronyms(resetTable = false) {
-    if (loading || (!hasNext && !resetTable)) return;
+async function loadOccupations(resetTable = false) {
+    if (loading || !hasNext) return;
     
     loading = true;
     loadingIndicator.style.display = 'block';
@@ -34,20 +39,20 @@ async function loadAcronyms(resetTable = false) {
             hasNext = true;
         }
 
-        const response = await fetch(`/input/director/acronyms/page?page=${currentPage}&size=${pageSize}&filter=${encodeURIComponent(filter)}`);
+        const response = await fetch(`/input/director/reports/page?page=${currentPage}&size=${pageSize}&filter=${encodeURIComponent(filter)}`);
         const data = await response.json();
 
-        data.content.forEach(acronym => {
+        data.content.forEach(occupation => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td class="text-left">
-                    <a href="/input/director/acronyms/edit/${acronym.acronymId}" class="row-link">${acronym.acronymId}</a>
+                    <a href="/input/director/reports/editOccupation/${occupation.occupationId}" class="row-link">${occupation.occupationId}</a>
                 </td>
                 <td class="text-left">
-                    <a href="/input/director/acronyms/edit/${acronym.acronymId}" class="row-link">${acronym.contractualAcronymName}</a>
+                    <a href="/input/director/reports/editOccupation/${occupation.occupationId}" class="row-link">${occupation.occupationName}</a>
                 </td>
                 <td class="text-left">
-                    <a href="/input/director/acronyms/edit/${acronym.acronymId}" class="row-link">${acronym.acronym}</a>
+                    <a href="/input/director/reports/editOccupation/${occupation.occupationId}" class="row-link">${occupation.occupationCBO}</a>
                 </td>
             `;
             tableBody.appendChild(row);
@@ -67,7 +72,7 @@ async function loadAcronyms(resetTable = false) {
 // Detecta quando o usuário chega perto do fim da página
 window.addEventListener('scroll', () => {
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 300) {
-        loadAcronyms();
+        loadOccupations();
     }
 
     // Mostra ou esconde o botão Voltar ao Topo
@@ -88,7 +93,7 @@ function topFunction() {
 document.getElementById('search-form').addEventListener('submit', function(e) {
     e.preventDefault();
     
-    const filterValue = getCurrentFilter();
+    const filterValue = document.getElementById('filter').value;
     
     // Atualiza a URL sem recarregar a página
     const url = new URL(window.location);
@@ -100,18 +105,11 @@ document.getElementById('search-form').addEventListener('submit', function(e) {
     window.history.pushState({}, '', url);
     
     // Recarrega a tabela com o novo filtro
-    loadAcronyms(true);
+    loadOccupations(true);
 });
 
 // Carrega a primeira página ao abrir
 document.addEventListener('DOMContentLoaded', function() {
-    // Inicializa o filtro a partir da URL na primeira carga
-    const urlParams = new URLSearchParams(window.location.search);
-    const filterFromUrl = urlParams.get('filter') || '';
-    const filterInput = document.getElementById('filter');
-    if (filterInput) {
-        filterInput.value = filterFromUrl;
-    }
-    currentFilter = filterFromUrl;
-    loadAcronyms(true);
+    currentFilter = getCurrentFilter();
+    loadOccupations(true);
 });

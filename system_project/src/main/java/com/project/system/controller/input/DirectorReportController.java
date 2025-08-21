@@ -8,12 +8,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.project.system.entity.ContractualAcronym;
@@ -152,25 +154,32 @@ public class DirectorReportController {
     /*USUÁRIOS*/
     
     /*PROFISSÕES*/
-	
-	@GetMapping("/input/director/reports/listOccupation")
+    
+    @GetMapping("/input/director/reports/listOccupation")
     @PreAuthorize("hasAuthority('REPORT_OCCUPATION')")
     public ModelAndView occupationsList(@RequestParam(value = "filter", required = false) String filter,
                                         Authentication authentication) {
         User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-        List<Occupation> occupations;
-
-        if (filter != null && !filter.trim().isEmpty()) {
-            occupations = occupationService.searchOccupations(filter);
-        } else {
-            occupations = occupationService.getAllOccupations();
-        }
 
         ModelAndView mv = new ModelAndView("input/director/reports/listOccupation");
         mv.addObject("LoggedUser", loggedUser);
-        mv.addObject("occupationsList", occupations);
         mv.addObject("filter", filter); // devolve o filtro para manter no input
         return mv;
+    }
+
+    @GetMapping("/input/director/reports/page")
+    @PreAuthorize("hasAuthority('REPORT_OCCUPATION')")
+    @ResponseBody
+    public Page<Occupation> occupationsPage(
+            @RequestParam(value = "filter", required = false) String filter,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "50") int size) {
+
+        if (filter != null && !filter.trim().isEmpty()) {
+            return occupationService.searchOccupationsPaginated(filter, page, size);
+        } else {
+            return occupationService.getAllOccupationsPaginated(page, size);
+        }
     }
 
     @GetMapping("/input/director/reports/editOccupation/{occupationId}")
@@ -190,8 +199,8 @@ public class DirectorReportController {
         mv.addObject("occupation", occupation);
         return mv;
     }
-	
-	@GetMapping("/input/director/reports/printOccupation")
+
+    @GetMapping("/input/director/reports/printOccupation")
     @PreAuthorize("hasAuthority('REPORT_OCCUPATION')")
     public ModelAndView printOccupations(
             @RequestParam(required = false) String filter,
@@ -212,7 +221,7 @@ public class DirectorReportController {
         mv.addObject("dataAtual", new java.util.Date());
         return mv;
     }
-    
+
     @GetMapping("/input/director/reports/printOneOccupation/{occupationId}")
     @PreAuthorize("hasAuthority('REPORT_OCCUPATION')")
     public ModelAndView printOccupation(@PathVariable Long occupationId, Authentication authentication) {
