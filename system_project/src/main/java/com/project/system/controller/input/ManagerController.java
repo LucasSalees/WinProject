@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -80,20 +81,27 @@ public class ManagerController {
     public ModelAndView userList(@RequestParam(value = "filter", required = false) String filter,
 			Authentication authentication) {
 		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		List<User> users;
-
-		if (filter != null && !filter.trim().isEmpty()) {
-			users = managerService.searchUsers(filter);
-		} else {
-			users = managerService.getAllUsers();
-		}
 
 		ModelAndView mv = new ModelAndView("input/manager/users/list");
 		mv.addObject("LoggedUser", loggedUser);
-		mv.addObject("usersList", users);
 		mv.addObject("filter", filter);
 		return mv;
 	}
+    
+    @GetMapping("/input/manager/users/page")
+    @PreAuthorize("hasAnyAuthority('USER_LIST', 'USER_EDIT')")
+    @ResponseBody
+    public Page<User> usersPage(
+            @RequestParam(value = "filter", required = false) String filter,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "50") int size) {
+
+        if (filter != null && !filter.trim().isEmpty()) {
+            return managerService.searchUsersPaginated(filter, page, size);
+        } else {
+            return managerService.getAllUsersPaginated(page, size);
+        }
+    }
     
     @GetMapping("/input/manager/users/edit/{id}")
     @PreAuthorize("hasAuthority('USER_EDIT')")

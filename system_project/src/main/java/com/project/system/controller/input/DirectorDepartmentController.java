@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -45,58 +46,26 @@ public class DirectorDepartmentController {
     public ModelAndView departmentsList(@RequestParam(value = "filter", required = false) String filter,
                                         Authentication authentication) {
         User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-        List<Department> departments;
-
-        if (filter != null && !filter.trim().isEmpty()) {
-            departments = departmentService.searchDepartments(filter);
-        } else {
-            departments = departmentService.getAllDepartments();
-        }
 
         ModelAndView mv = new ModelAndView("input/director/departments/list");
         mv.addObject("LoggedUser", loggedUser);
-        mv.addObject("departmentsList", departments);
         mv.addObject("filter", filter); // devolve o filtro para manter no input
         return mv;
     }
     
-    @GetMapping("/input/director/departments/print")
+    @GetMapping("/input/director/departments/page")
     @PreAuthorize("hasAuthority('DEPARTMENT_LIST')")
-    public ModelAndView printDepartments(
-            @RequestParam(required = false) String filter,
-            Authentication authentication) {
+    @ResponseBody
+    public Page<Department> departmentsPage(
+            @RequestParam(value = "filter", required = false) String filter,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "50") int size) {
 
-        User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-        List<Department> departments;
-
-        if (filter != null && !filter.isEmpty()) {
-            departments = departmentService.searchDepartments(filter);
+        if (filter != null && !filter.trim().isEmpty()) {
+            return departmentService.searchDepartmentsPaginated(filter, page, size);
         } else {
-            departments = departmentService.getAllDepartments();
+            return departmentService.getAllDepartmentsPaginated(page, size);
         }
-
-        ModelAndView mv = new ModelAndView("input/director/departments/print");
-        mv.addObject("LoggedUser", loggedUser);
-        mv.addObject("departmentsList", departments);
-        mv.addObject("dataAtual", new java.util.Date());
-        return mv;
-    }
-    
-    @GetMapping("/input/director/departments/print/{departmentId}")
-    @PreAuthorize("hasAuthority('DEPARTMENT_LIST')")
-    public ModelAndView printDepartment(
-            @PathVariable Long departmentId,
-            Authentication authentication) {
-
-        User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-        Department department = departmentService.getDepartmentById(departmentId)
-                                                 .orElseThrow(() -> new RuntimeException("Departamento não encontrado"));
-
-        ModelAndView mv = new ModelAndView("input/director/departments/printOne");
-        mv.addObject("LoggedUser", loggedUser);
-        mv.addObject("department", department);
-        mv.addObject("dataAtual", new java.util.Date());
-        return mv;
     }
 
     @GetMapping("/input/director/departments/edit/{departmentId}")

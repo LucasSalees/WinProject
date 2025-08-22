@@ -10,11 +10,14 @@ const backToTopButton = document.getElementById('back-to-top');
 // Função para obter o filtro atual do campo de input
 function getCurrentFilter() {
     const filterInput = document.getElementById('filter');
+    // Retorna o valor do campo de input, ou uma string vazia se o input não existir.
     return filterInput ? filterInput.value : '';
 }
 
-async function loadAcronyms(resetTable = false) {
-    if (loading || (!hasNext && !resetTable)) return;
+async function loadUsers(resetTable = false) {
+    if (loading || (!hasNext && !resetTable)) {
+        return;
+    }
     
     loading = true;
     loadingIndicator.style.display = 'block';
@@ -22,7 +25,6 @@ async function loadAcronyms(resetTable = false) {
     try {
         const filter = getCurrentFilter();
         
-        // Se o filtro mudou, resetar a tabela
         if (filter !== currentFilter) {
             resetTable = true;
             currentFilter = filter;
@@ -34,20 +36,44 @@ async function loadAcronyms(resetTable = false) {
             hasNext = true;
         }
 
-        const response = await fetch(`/input/director/acronyms/page?page=${currentPage}&size=${pageSize}&filter=${encodeURIComponent(filter)}`);
-        const data = await response.json();
+        const response = await fetch(`/input/director/reports/pageUser?page=${currentPage}&size=${pageSize}&filter=${encodeURIComponent(filter)}`);
 
-        data.content.forEach(acronym => {
+        // VERIFICAÇÃO ADICIONADA AQUI
+        if (!response.ok) {
+            console.error('Erro na requisição:', response.statusText);
+            // Lança um erro para ser capturado pelo bloco 'catch'
+            throw new Error(`Erro na resposta do servidor: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        // VERIFICAÇÃO ADICIONADA AQUI TAMBÉM
+        if (!data || !Array.isArray(data.content)) {
+            console.error('Erro: O formato da resposta da API é inválido.', data);
+            // Lança um erro para ser capturado pelo bloco 'catch'
+            throw new Error('Formato de dados inesperado da API.');
+        }
+
+        data.content.forEach(user => {
             const row = document.createElement('tr');
+            
+            const userFunction = user.userFunction ? user.userFunction.functionName : '—';
+            
             row.innerHTML = `
                 <td class="text-left">
-                    <a href="/input/director/acronyms/edit/${acronym.acronymId}" class="row-link">${acronym.acronymId}</a>
+                    <a href="/input/director/reports/editUser/${user.userId}" class="row-link">${user.userId}</a>
                 </td>
                 <td class="text-left">
-                    <a href="/input/director/acronyms/edit/${acronym.acronymId}" class="row-link">${acronym.contractualAcronymName}</a>
+                    <a href="/input/director/reports/editUser/${user.userId}" class="row-link">${user.userName}</a>
                 </td>
                 <td class="text-left">
-                    <a href="/input/director/acronyms/edit/${acronym.acronymId}" class="row-link">${acronym.acronym}</a>
+                    <a href="/input/director/reports/editUser/${user.userId}" class="row-link">${user.userEmail}</a>
+                </td>
+				<td class="text-left">
+				    <a href="/input/director/users/edit/${user.userId}" class="row-link">${user.userRole}</a>
+				</td>
+                <td class="text-left">
+                    <a href="/input/director/reports/editUser/${user.userId}" class="row-link">${userFunction}</a>
                 </td>
             `;
             tableBody.appendChild(row);
@@ -57,7 +83,7 @@ async function loadAcronyms(resetTable = false) {
         currentPage++;
         
     } catch (error) {
-        console.error('Erro ao carregar ocupações:', error);
+        console.error('Erro ao carregar usuários:', error);
     } finally {
         loading = false;
         loadingIndicator.style.display = 'none';
@@ -67,7 +93,7 @@ async function loadAcronyms(resetTable = false) {
 // Detecta quando o usuário chega perto do fim da página
 window.addEventListener('scroll', () => {
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 300) {
-        loadAcronyms();
+        loadUsers();
     }
 
     // Mostra ou esconde o botão Voltar ao Topo
@@ -80,8 +106,8 @@ window.addEventListener('scroll', () => {
 
 // Função para rolar para o topo da página
 function topFunction() {
-    document.body.scrollTop = 0; // For Safari
-    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
 }
 
 // Carrega a primeira página ao abrir
@@ -94,5 +120,5 @@ document.addEventListener('DOMContentLoaded', function() {
         filterInput.value = filterFromUrl;
     }
     currentFilter = filterFromUrl;
-    loadAcronyms(true);
+    loadUsers(true);
 });

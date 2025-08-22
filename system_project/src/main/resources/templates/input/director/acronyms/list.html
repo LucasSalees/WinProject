@@ -41,7 +41,7 @@
 						        </svg>
 						    </a>
 						    
-						    <form id="search-form" method="get" class="form-inline">
+						     <form method="get" th:action="@{/input/director/acronyms/list}" class="form-inline">
 						        <input type="text" name="filter" id="filter" class="form-control shadow-cantos"
 						               placeholder="Pesquisar..." th:value="${filter}">
 						        <button type="submit" class="btn btn-primary" aria-label="Buscar">

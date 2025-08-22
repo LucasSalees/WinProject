@@ -2,13 +2,13 @@ package com.project.system.controller.input;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -80,20 +80,27 @@ public class DirectorController {
     public ModelAndView userList(@RequestParam(value = "filter", required = false) String filter,
 			Authentication authentication) {
 		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		List<User> users;
-
-		if (filter != null && !filter.trim().isEmpty()) {
-			users = directorService.searchUsers(filter);
-		} else {
-			users = directorService.getAllUsers();
-		}
 
 		ModelAndView mv = new ModelAndView("input/director/users/list");
 		mv.addObject("LoggedUser", loggedUser);
-		mv.addObject("usersList", users);
 		mv.addObject("filter", filter);
 		return mv;
 	}
+    
+    @GetMapping("/input/director/users/page")
+    @PreAuthorize("hasAnyAuthority('USER_LIST', 'USER_EDIT')")
+    @ResponseBody
+    public Page<User> usersPage(
+            @RequestParam(value = "filter", required = false) String filter,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "50") int size) {
+
+        if (filter != null && !filter.trim().isEmpty()) {
+            return directorService.searchUsersPaginated(filter, page, size);
+        } else {
+            return directorService.getAllUsersPaginated(page, size);
+        }
+    }
 
     @GetMapping("/input/director/users/edit/{id}")
     @PreAuthorize("hasAuthority('USER_EDIT')")

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -45,57 +46,27 @@ public class ManagerOccupationController {
     public ModelAndView occupationsList(@RequestParam(value = "filter", required = false) String filter,
                                         Authentication authentication) {
         User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-        List<Occupation> occupations;
-
-        if (filter != null && !filter.trim().isEmpty()) {
-            occupations = occupationService.searchOccupations(filter);
-        } else {
-            occupations = occupationService.getAllOccupations();
-        }
 
         ModelAndView mv = new ModelAndView("input/manager/occupations/list");
         mv.addObject("LoggedUser", loggedUser);
-        mv.addObject("occupationsList", occupations);
         mv.addObject("filter", filter); // devolve o filtro para manter no input
         return mv;
     }
     
-    @GetMapping("/input/manager/occupations/print")
+    @GetMapping("/input/manager/occupations/page")
     @PreAuthorize("hasAuthority('OCCUPATION_LIST')")
-    public ModelAndView printOccupations(
-            @RequestParam(required = false) String filter,
-            Authentication authentication) {
+    @ResponseBody
+    public Page<Occupation> occupationsPage(
+            @RequestParam(value = "filter", required = false) String filter,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "50") int size) {
 
-        User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-        List<Occupation> occupations;
-
-        if (filter != null && !filter.isEmpty()) {
-        	occupations = occupationService.searchOccupations(filter);
+        if (filter != null && !filter.trim().isEmpty()) {
+            return occupationService.searchOccupationsPaginated(filter, page, size);
         } else {
-        	occupations = occupationService.getAllOccupations();
+            return occupationService.getAllOccupationsPaginated(page, size);
         }
-
-        ModelAndView mv = new ModelAndView("input/manager/occupations/print");
-        mv.addObject("LoggedUser", loggedUser);
-        mv.addObject("occupationsList", occupations);
-        mv.addObject("dataAtual", new java.util.Date());
-        return mv;
     }
-    
-	@GetMapping("/input/manager/occupations/print/{occupationId}")
-	@PreAuthorize("hasAuthority('OCCUPATION_LIST')")
-	public ModelAndView printDepartment(@PathVariable Long occupationId, Authentication authentication) {
-
-		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		Occupation occupation = occupationService.getOccupationById(occupationId)
-				.orElseThrow(() -> new RuntimeException("Profissão não encontrada"));
-
-		ModelAndView mv = new ModelAndView("input/manager/occupations/printOne");
-		mv.addObject("LoggedUser", loggedUser);
-		mv.addObject("occupation", occupation);
-		mv.addObject("dataAtual", new java.util.Date());
-		return mv;
-	}
 
     @GetMapping("/input/manager/occupations/edit/{occupationId}")
     @PreAuthorize("hasAuthority('OCCUPATION_EDIT')")

@@ -67,29 +67,27 @@
 	                            <th class="text-left" style="cursor: pointer"> Nome</th>
 	                        </tr>
 	                    </thead>
-	                    <tbody>
-	                        <tr th:each="function : ${functionsList}">
-	                            <td class="text-left">
-	                                <a th:href="@{/input/director/functions/edit/{functionId}(functionId=${function.functionId})}"
-	                                    th:text="${function.functionId}" class="row-link"></a>
-	                            </td>
-	                            <td class="text-left">
-	                                <a th:href="@{/input/director/functions/edit/{functionId}(functionId=${function.functionId})}"
-	                                    th:text="${function.functionName}" class="row-link"></a>
-	                            </td>
-	                        </tr>
-	                    </tbody>
+	                     <tbody id="table-body">
+	                    
+				        </tbody>
 	                </table>
+	                <div id="loading-indicator" style="text-align: center; padding: 20px; display: none;">
+				        <i class="fa fa-spinner fa-spin"></i> Carregando...
+				    </div>
             	</div>
             </div>
         </div>
     </main>
+    
+    <button onclick="topFunction()" id="back-to-top" title="Voltar ao Topo"><i class="fa-solid fa-arrow-up"></i></button>
     
    	<div th:replace="~{fragments/sidebar :: modals}"></div>
     
     <div th:replace="~{fragments/footer :: footer}"></div>
     
     <script th:src="@{/js/director/components.js}"></script>
+    
+	<script th:src="@{/js/director/lists/functionsList.js}"></script>
     
 </body>
 </html>

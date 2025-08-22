@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,18 @@ public class ManagerProjectService {
 
     private final ProjectRepository projectRepository;
     private final DepartmentRepository departmentRepository;
+    
+    // Método paginado para pegar todas as ocupações
+    public Page<Project> getAllProjectsPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return projectRepository.findAll(pageable);
+    }
+
+    // Método paginado para buscar com filtro
+    public Page<Project> searchProjectsPaginated(String filter, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return projectRepository.searchByFilterPaginated(filter, pageable);
+    }
 
     public ManagerProjectService(ProjectRepository projectRepository, DepartmentRepository departmentRepository) {
         this.projectRepository = projectRepository;

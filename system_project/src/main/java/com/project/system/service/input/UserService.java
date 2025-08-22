@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.project.system.entity.User;
@@ -37,7 +40,29 @@ public class UserService {
     
     @Autowired
     private ProjectRepository projectRepository;
+    
+    public Page<User> getAllUsersPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return userRepository.findAll(pageable);
+    }
 
+    public Page<User> searchUsersPaginated(String filter, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        
+        List<UserRole> matchingRoles = new ArrayList<>();
+
+        if (filter != null && !filter.trim().isEmpty()) {
+            String lowerCaseFilter = filter.trim().toLowerCase();
+            
+            for (UserRole role : UserRole.values()) {
+                if (role.getLabel().toLowerCase().contains(lowerCaseFilter)) {
+                    matchingRoles.add(role);
+                }
+            }
+        }
+
+        return userRepository.searchByFilterPaginated(filter, pageable, matchingRoles);
+    }
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -68,30 +93,21 @@ public class UserService {
     }
     
     public List<User> searchUsers(String filter) {
-        // 1. Cria uma lista para armazenar os nomes dos enums
+
         List<String> roleNames = new ArrayList<>();
 
-        // 2. Itera sobre todos os enums de UserRole
         for (UserRole role : UserRole.values()) {
-            // 3. Se a label do enum contém o filtro, adicione o nome do enum à lista
+
             if (role.getLabel().toLowerCase().contains(filter.toLowerCase())) {
                 roleNames.add(role.name()); 
             }
         }
-        
-        // 4. Se a lista de nomes de enums não estiver vazia, use a nova query
+
         if (!roleNames.isEmpty()) {
-            // Chama o novo método do repositório
+
             return userRepository.searchByFilterAndRole(filter, roleNames);
         } else {
-            // 5. Se não houver correspondência, faça a pesquisa padrão sem o filtro de role
-            // Aqui, você pode usar a query que já existe, mas passando uma lista vazia,
-            // ou pode criar uma nova query no repositório que não tenha o critério de role
-            
-            // A melhor forma é usar a mesma query, mas passando o filtro de role vazio.
-            // Para isso, a sua query no repositório precisa ser ajustada para aceitar a lista vazia.
-            // O Spring Data JPA já lida bem com a cláusula IN com uma lista vazia,
-            // fazendo com que o critério de busca seja ignorado.
+
             return userRepository.searchByFilterAndRole(filter, Collections.emptyList());
         }
     }

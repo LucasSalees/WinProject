@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.project.system.entity.User;
+import com.project.system.enums.input.UserRole;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,19 +28,23 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUserEmail(String userEmail);
 
     @Query("SELECT u FROM User u " +
-           "WHERE LOWER(u.userName) LIKE LOWER(CONCAT('%', :filter, '%')) " +
-           "OR LOWER(u.userEmail) LIKE LOWER(CONCAT('%', :filter, '%')) " +
-           "OR LOWER(u.userRole) IN :roleNames " + 
-           "OR LOWER(u.userFunction.functionName) LIKE LOWER(CONCAT('%', :filter, '%')) " +
-           "OR STR(u.userId) LIKE CONCAT('%', :filter, '%')")
-    List<User> searchByFilterAndRole(@Param("filter") String filter, @Param("roleNames") List<String> roleNames);
-    
-    @Query("SELECT u FROM User u " +
             "WHERE LOWER(u.userName) LIKE LOWER(CONCAT('%', :filter, '%')) " +
             "OR LOWER(u.userEmail) LIKE LOWER(CONCAT('%', :filter, '%')) " +
             "OR LOWER(u.userRole) IN :roleNames " + 
             "OR LOWER(u.userFunction.functionName) LIKE LOWER(CONCAT('%', :filter, '%')) " +
             "OR STR(u.userId) LIKE CONCAT('%', :filter, '%')")
-    Page<User> searchByFilterPaginated(@Param("filter") String filter, Pageable pageable);
+    List<User> searchByFilterAndRole(@Param("filter") String filter, @Param("roleNames") List<String> roleNames);
 
+    @Query("SELECT u FROM User u " +
+            "WHERE LOWER(u.userName) LIKE LOWER(CONCAT('%', :filter, '%')) " +
+            "OR LOWER(u.userEmail) LIKE LOWER(CONCAT('%', :filter, '%')) " +
+            // A condição OR foi adicionada aqui para que a busca funcione se a lista de roles estiver vazia
+            "OR (:roleNames IS NULL OR u.userRole IN :roleNames) " + 
+            "OR LOWER(u.userFunction.functionName) LIKE LOWER(CONCAT('%', :filter, '%')) " +
+            "OR STR(u.userId) LIKE CONCAT('%', :filter, '%')")
+     Page<User> searchByFilterPaginated(
+         @Param("filter") String filter, 
+         Pageable pageable,  
+         @Param("roleNames") List<UserRole> roleNames // Alterado para List<UserRole>
+     );
 }

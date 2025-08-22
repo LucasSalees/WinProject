@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -45,57 +46,27 @@ public class ManagerFunctionController {
     public ModelAndView functionsList(@RequestParam(value = "filter", required = false) String filter,
                                         Authentication authentication) {
         User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-        List<Function> functions;
-
-        if (filter != null && !filter.trim().isEmpty()) {
-            functions = functionService.searchFunctions(filter);
-        } else {
-        	functions = functionService.getAllFunctions();
-        }
 
         ModelAndView mv = new ModelAndView("input/manager/functions/list");
         mv.addObject("LoggedUser", loggedUser);
-        mv.addObject("functionsList", functions);
         mv.addObject("filter", filter); // devolve o filtro para manter no input
         return mv;
     }
     
-    @GetMapping("/input/manager/functions/print")
+    @GetMapping("/input/manager/functions/page")
     @PreAuthorize("hasAuthority('FUNCTION_LIST')")
-    public ModelAndView printFunctions(
-            @RequestParam(required = false) String filter,
-            Authentication authentication) {
-
-        User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-        List<Function> functions;
+    @ResponseBody
+    public Page<Function> functionsPage(
+            @RequestParam(value = "filter", required = false) String filter,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "50") int size) {
 
         if (filter != null && !filter.trim().isEmpty()) {
-            functions = functionService.searchFunctions(filter);
+            return functionService.searchFunctionsPaginated(filter, page, size);
         } else {
-        	functions = functionService.getAllFunctions();
+            return functionService.getAllFunctionsPaginated(page, size);
         }
-
-        ModelAndView mv = new ModelAndView("input/manager/functions/print");
-        mv.addObject("LoggedUser", loggedUser);
-        mv.addObject("functionsList", functions);
-        mv.addObject("dataAtual", new java.util.Date());
-        return mv;
     }
-    
-    @GetMapping("/input/manager/functions/print/{functionId}")
-	@PreAuthorize("hasAuthority('FUNCTION_LIST')")
-	public ModelAndView printDepartment(@PathVariable Long functionId, Authentication authentication) {
-
-		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		Function function = functionService.getFunctionById(functionId)
-				.orElseThrow(() -> new RuntimeException("Função não encontrada"));
-
-		ModelAndView mv = new ModelAndView("input/manager/functions/printOne");
-		mv.addObject("LoggedUser", loggedUser);
-		mv.addObject("function", function);
-		mv.addObject("dataAtual", new java.util.Date());
-		return mv;
-	}
 
     @GetMapping("/input/manager/functions/edit/{functionId}")
     @PreAuthorize("hasAuthority('FUNCTION_EDIT')")

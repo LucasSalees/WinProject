@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum UserRole {
     USER("Usuário", 1),
     MANAGER("Gerente", 2),
@@ -18,7 +20,8 @@ public enum UserRole {
         this.label = label;
         this.level = level;
     }
-
+    
+    @JsonValue  // 👈 Diz ao Jackson para serializar pelo label
     public String getLabel() {
         return label;
     }

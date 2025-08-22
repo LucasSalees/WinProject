@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -45,55 +46,27 @@ public class ManagerContractualAcronymController {
 	public ModelAndView contractualAcronymList(@RequestParam(value = "filter", required = false) String filter,
 			Authentication authentication) {
 		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		List<ContractualAcronym> acronyms;
-
-		if (filter != null && !filter.trim().isEmpty()) {
-			acronyms = contractualAcronymService.searchContractualAcronym(filter);
-		} else {
-			acronyms = contractualAcronymService.getAllContractualAcronym();
-		}
 
 		ModelAndView mv = new ModelAndView("input/manager/acronyms/list");
 		mv.addObject("LoggedUser", loggedUser);
-		mv.addObject("acronymsList", acronyms);
 		mv.addObject("filter", filter); // devolve o filtro para manter no input
 		return mv;
 	}
+	
+	@GetMapping("/input/manager/acronyms/page")
+    @PreAuthorize("hasAuthority('CONTRACTUAL_ACRONYM_LIST')")
+    @ResponseBody
+    public Page<ContractualAcronym> acronymsPage(
+            @RequestParam(value = "filter", required = false) String filter,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "50") int size) {
 
-	@GetMapping("/input/manager/acronyms/print")
-	@PreAuthorize("hasAuthority('CONTRACTUAL_ACRONYM_LIST')")
-	public ModelAndView printContractualAcronym(@RequestParam(required = false) String filter, Authentication authentication) {
-
-		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		List<ContractualAcronym> acronyms;
-
-		if (filter != null && !filter.isEmpty()) {
-			acronyms = contractualAcronymService.searchContractualAcronym(filter);
-		} else {
-			acronyms = contractualAcronymService.getAllContractualAcronym();
-		}
-
-		ModelAndView mv = new ModelAndView("input/manager/acronyms/print");
-		mv.addObject("LoggedUser", loggedUser);
-		mv.addObject("acronymsList", acronyms);
-		mv.addObject("dataAtual", new java.util.Date());
-		return mv;
-	}
-
-	@GetMapping("/input/manager/acronyms/print/{acronymId}")
-	@PreAuthorize("hasAuthority('CONTRACTUAL_ACRONYM_LIST')")
-	public ModelAndView printContractualAcronym(@PathVariable Long acronymId, Authentication authentication) {
-
-		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		ContractualAcronym acronym = contractualAcronymService.getContractualAcronymById(acronymId)
-				.orElseThrow(() -> new RuntimeException("Sigla contratual não encontrada"));
-
-		ModelAndView mv = new ModelAndView("input/manager/acronyms/printOne");
-		mv.addObject("LoggedUser", loggedUser);
-		mv.addObject("acronym", acronym);
-		mv.addObject("dataAtual", new java.util.Date());
-		return mv;
-	}
+        if (filter != null && !filter.trim().isEmpty()) {
+            return contractualAcronymService.searchAcronymsPaginated(filter, page, size);
+        } else {
+            return contractualAcronymService.getAllAcronymsPaginated(page, size);
+        }
+    }
 
 	@GetMapping("/input/manager/acronyms/edit/{acronymId}")
 	@PreAuthorize("hasAuthority('CONTRACTUAL_ACRONYM_EDIT')")

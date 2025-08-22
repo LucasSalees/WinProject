@@ -8,12 +8,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.project.system.entity.ContractualAcronym;
@@ -64,20 +66,27 @@ public class ManagerReportController {
     public ModelAndView userList(@RequestParam(value = "filter", required = false) String filter,
 			Authentication authentication) {
 		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		List<User> users;
-
-		if (filter != null && !filter.trim().isEmpty()) {
-			users = Service.searchUsers(filter);
-		} else {
-			users = Service.getAllUsers();
-		}
 
 		ModelAndView mv = new ModelAndView("input/manager/reports/listUser");
 		mv.addObject("LoggedUser", loggedUser);
-		mv.addObject("usersList", users);
 		mv.addObject("filter", filter);
 		return mv;
 	}
+    
+    @GetMapping("/input/manager/reports/pageUser")
+    @PreAuthorize("hasAuthority('REPORT_USER')")
+    @ResponseBody
+    public Page<User> usersPage(
+            @RequestParam(value = "filter", required = false) String filter,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "50") int size) {
+
+        if (filter != null && !filter.trim().isEmpty()) {
+            return Service.searchUsersPaginated(filter, page, size);
+        } else {
+            return Service.getAllUsersPaginated(page, size);
+        }
+    }
     
 	@GetMapping("/input/manager/reports/editUser/{id}")
     @PreAuthorize("hasAuthority(\'USER_EDIT\')")
@@ -158,19 +167,26 @@ public class ManagerReportController {
     public ModelAndView occupationsList(@RequestParam(value = "filter", required = false) String filter,
                                         Authentication authentication) {
         User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-        List<Occupation> occupations;
-
-        if (filter != null && !filter.trim().isEmpty()) {
-            occupations = occupationService.searchOccupations(filter);
-        } else {
-            occupations = occupationService.getAllOccupations();
-        }
 
         ModelAndView mv = new ModelAndView("input/manager/reports/listOccupation");
         mv.addObject("LoggedUser", loggedUser);
-        mv.addObject("occupationsList", occupations);
         mv.addObject("filter", filter); // devolve o filtro para manter no input
         return mv;
+    }
+	
+	@GetMapping("/input/manager/reports/pageOccupation")
+    @PreAuthorize("hasAuthority('REPORT_OCCUPATION')")
+    @ResponseBody
+    public Page<Occupation> occupationsPage(
+            @RequestParam(value = "filter", required = false) String filter,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "50") int size) {
+
+        if (filter != null && !filter.trim().isEmpty()) {
+            return occupationService.searchOccupationsPaginated(filter, page, size);
+        } else {
+            return occupationService.getAllOccupationsPaginated(page, size);
+        }
     }
 
     @GetMapping("/input/manager/reports/editOccupation/{occupationId}")
@@ -237,20 +253,28 @@ public class ManagerReportController {
 	public ModelAndView functionsList(@RequestParam(value = "filter", required = false) String filter,
 			Authentication authentication) {
 		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		List<Function> functions;
-
-		if (filter != null && !filter.trim().isEmpty()) {
-			functions = functionService.searchFunctions(filter);
-		} else {
-			functions = functionService.getAllFunctions();
-		}
 
 		ModelAndView mv = new ModelAndView("input/manager/reports/listFunction");
 		mv.addObject("LoggedUser", loggedUser);
-		mv.addObject("functionsList", functions);
 		mv.addObject("filter", filter); // devolve o filtro para manter no input
 		return mv;
 	}
+    
+    @GetMapping("/input/manager/reports/pageFunction")
+    @PreAuthorize("hasAuthority('REPORT_FUNCTION')")
+    @ResponseBody
+    public Page<Function> functionsPage(
+            @RequestParam(value = "filter", required = false) String filter,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "50") int size) {
+
+        if (filter != null && !filter.trim().isEmpty()) {
+            return functionService.searchFunctionsPaginated(filter, page, size);
+        } else {
+            return functionService.getAllFunctionsPaginated(page, size);
+        }
+    }
+
 
 	@GetMapping("/input/manager/reports/editFunction/{functionId}")
 	@PreAuthorize("hasAuthority('REPORT_FUNCTION')")
@@ -314,20 +338,27 @@ public class ManagerReportController {
 	public ModelAndView departmentsList(@RequestParam(value = "filter", required = false) String filter,
 			Authentication authentication) {
 		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		List<Department> departments;
-
-		if (filter != null && !filter.trim().isEmpty()) {
-			departments = departmentService.searchDepartments(filter);
-		} else {
-			departments = departmentService.getAllDepartments();
-		}
 
 		ModelAndView mv = new ModelAndView("input/manager/reports/listDepartment");
 		mv.addObject("LoggedUser", loggedUser);
-		mv.addObject("departmentsList", departments);
 		mv.addObject("filter", filter); // devolve o filtro para manter no input
 		return mv;
 	}
+	
+	 @GetMapping("/input/manager/reports/pageDepartment")
+	    @PreAuthorize("hasAuthority('REPORT_DEPARTMENT')")
+	    @ResponseBody
+	    public Page<Department> departmentsPage(
+	            @RequestParam(value = "filter", required = false) String filter,
+	            @RequestParam(value = "page", defaultValue = "0") int page,
+	            @RequestParam(value = "size", defaultValue = "50") int size) {
+
+	        if (filter != null && !filter.trim().isEmpty()) {
+	            return departmentService.searchDepartmentsPaginated(filter, page, size);
+	        } else {
+	            return departmentService.getAllDepartmentsPaginated(page, size);
+	        }
+	    }
 	
 	@GetMapping("/input/manager/reports/editDepartment/{departmentId}")
 	@PreAuthorize("hasAuthority('REPORT_DEPARTMENT')")
@@ -391,20 +422,27 @@ public class ManagerReportController {
 	public ModelAndView contractualAcronymList(@RequestParam(value = "filter", required = false) String filter,
 			Authentication authentication) {
 		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		List<ContractualAcronym> acronyms;
-
-		if (filter != null && !filter.trim().isEmpty()) {
-			acronyms = contractualAcronymService.searchContractualAcronym(filter);
-		} else {
-			acronyms = contractualAcronymService.getAllContractualAcronym();
-		}
 
 		ModelAndView mv = new ModelAndView("input/manager/reports/listAcronym");
 		mv.addObject("LoggedUser", loggedUser);
-		mv.addObject("acronymsList", acronyms);
 		mv.addObject("filter", filter);
 		return mv;
 	}
+	
+    @GetMapping("/input/manager/reports/pageAcronym")
+    @PreAuthorize("hasAuthority('REPORT_CONTRACTUAL_ACRONYM')")
+    @ResponseBody
+    public Page<ContractualAcronym> acronymsPage(
+            @RequestParam(value = "filter", required = false) String filter,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "50") int size) {
+
+        if (filter != null && !filter.trim().isEmpty()) {
+            return contractualAcronymService.searchAcronymsPaginated(filter, page, size);
+        } else {
+            return contractualAcronymService.getAllAcronymsPaginated(page, size);
+        }
+    }
 	
 	@GetMapping("/input/manager/reports/editAcronym/{acronymId}")
 	@PreAuthorize("hasAuthority('REPORT_CONTRACTUAL_ACRONYM')")
@@ -468,20 +506,27 @@ public class ManagerReportController {
 	public ModelAndView projectsList(@RequestParam(value = "filter", required = false) String filter,
 			Authentication authentication) {
 		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		List<Project> projects;
-
-		if (filter != null && !filter.trim().isEmpty()) {
-			projects = projectService.searchProjects(filter);
-		} else {
-			projects = projectService.getAllProjects();
-		}
 
 		ModelAndView mv = new ModelAndView("input/manager/reports/listProject");
 		mv.addObject("LoggedUser", loggedUser);
-		mv.addObject("projectsList", projects);
 		mv.addObject("filter", filter); // devolve o filtro para manter no input
 		return mv;
 	}
+    
+    @GetMapping("/input/manager/reports/pageProject")
+    @PreAuthorize("hasAuthority('REPORT_PROJECT')")
+    @ResponseBody
+    public Page<Project> projectsPage(
+            @RequestParam(value = "filter", required = false) String filter,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "50") int size) {
+
+        if (filter != null && !filter.trim().isEmpty()) {
+            return projectService.searchProjectsPaginated(filter, page, size);
+        } else {
+            return projectService.getAllProjectsPaginated(page, size);
+        }
+    }
     
     @GetMapping("/input/manager/reports/editProject/{projectId}")
     @PreAuthorize("hasAuthority('REPORT_PROJECT')")

@@ -7,14 +7,19 @@ const tableBody = document.getElementById('table-body');
 const loadingIndicator = document.getElementById('loading-indicator');
 const backToTopButton = document.getElementById('back-to-top');
 
-// Função para obter o filtro atual do campo de input
+// Função para obter o filtro atual da URL ou do campo de input
 function getCurrentFilter() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const filterFromUrl = urlParams.get('filter') || '';
     const filterInput = document.getElementById('filter');
-    return filterInput ? filterInput.value : '';
+    if (filterInput) {
+        filterInput.value = filterFromUrl;
+    }
+    return filterFromUrl;
 }
 
-async function loadAcronyms(resetTable = false) {
-    if (loading || (!hasNext && !resetTable)) return;
+async function loadFunctions(resetTable = false) {
+    if (loading || !hasNext) return;
     
     loading = true;
     loadingIndicator.style.display = 'block';
@@ -34,20 +39,17 @@ async function loadAcronyms(resetTable = false) {
             hasNext = true;
         }
 
-        const response = await fetch(`/input/director/acronyms/page?page=${currentPage}&size=${pageSize}&filter=${encodeURIComponent(filter)}`);
+        const response = await fetch(`/input/manager/reports/pageFunction?page=${currentPage}&size=${pageSize}&filter=${encodeURIComponent(filter)}`);
         const data = await response.json();
 
-        data.content.forEach(acronym => {
+        data.content.forEach(func => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td class="text-left">
-                    <a href="/input/director/acronyms/edit/${acronym.acronymId}" class="row-link">${acronym.acronymId}</a>
+                    <a href="/input/manager/reports/editFunction/${func.functionId}" class="row-link">${func.functionId}</a>
                 </td>
                 <td class="text-left">
-                    <a href="/input/director/acronyms/edit/${acronym.acronymId}" class="row-link">${acronym.contractualAcronymName}</a>
-                </td>
-                <td class="text-left">
-                    <a href="/input/director/acronyms/edit/${acronym.acronymId}" class="row-link">${acronym.acronym}</a>
+                    <a href="/input/manager/reports/editFunction/${func.functionId}" class="row-link">${func.functionName}</a>
                 </td>
             `;
             tableBody.appendChild(row);
@@ -67,7 +69,7 @@ async function loadAcronyms(resetTable = false) {
 // Detecta quando o usuário chega perto do fim da página
 window.addEventListener('scroll', () => {
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 300) {
-        loadAcronyms();
+        loadFunctions();
     }
 
     // Mostra ou esconde o botão Voltar ao Topo
@@ -86,13 +88,6 @@ function topFunction() {
 
 // Carrega a primeira página ao abrir
 document.addEventListener('DOMContentLoaded', function() {
-    // Inicializa o filtro a partir da URL na primeira carga
-    const urlParams = new URLSearchParams(window.location.search);
-    const filterFromUrl = urlParams.get('filter') || '';
-    const filterInput = document.getElementById('filter');
-    if (filterInput) {
-        filterInput.value = filterFromUrl;
-    }
-    currentFilter = filterFromUrl;
-    loadAcronyms(true);
+    currentFilter = getCurrentFilter();
+    loadFunctions(true);
 });
