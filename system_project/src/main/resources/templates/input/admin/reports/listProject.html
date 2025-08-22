@@ -74,59 +74,27 @@
 	                            <th class="text-left" style="cursor: pointer;">Planej. Fim</th>
 	                        </tr>
 	                    </thead>
-	                    <tbody>
-	                        <tr th:each="project : ${projectsList}">
-	                        	<td class="text-left">
-	                                <a th:href="@{/input/admin/reports/editProject/{projectId}(projectId=${project.projectId})}" 
-	                                    th:text="${project.projectId}" class="row-link"></a>
-	                            </td>
-	                            <td class="text-left">
-	                                <a th:href="@{/input/admin/reports/editProject/{projectId}(projectId=${project.projectId})}"
-	                                    th:text="${project.projectName}" class="row-link"></a>
-	                            </td>
-	                            <td class="text-left"> 
-	                                <a th:href="@{/input/admin/reports/editProject/{projectId}(projectId=${project.projectId})}"
-	                                    th:text="${project.projectContractualAcronym?.acronym ?: 'Sem Sigla'}" class="row-link"></a>
-	                            </td>
-	                            <td class="text-left">
-								    <a th:href="@{/input/admin/reports/editProject/{projectId}(projectId=${project.projectId})}"
-								       	th:text="${project.getProjectBusinessVerticalLabel()}" class="row-link"></a>
-						        </td>
-								<td class="text-left">
-								    <a th:href="@{/input/admin/reports/editProject/{projectId}(projectId=${project.projectId})}"
-								       th:text="${project.getProjectPriorityLabel()}" class="row-link"></a>
-								</td>
-								<td class="text-left">
-									<a th:href="@{/input/admin/reports/editProject/{projectId}(projectId=${project.projectId})}"
-										th:text="${project.getProjectStatusLabel()}" class="row-link"></a>
-								</td>
-								<td class="text-left">
-	                                <a th:href="@{/input/admin/reports/editProject/{projectId}(projectId=${project.projectId})}"
-								       th:text="${project.projectExecutionPercentage} + '%'" class="row-link"></a>
-								</td>
-	                            <td class="text-left">
-	                                <a th:href="@{/input/admin/reports/editProject/{projectId}(projectId=${project.projectId})}" 
-	                                   th:text="${#temporals.format(project.projectPlanningStartDate, 'dd/MM/yyyy')}" 
-	                                   class="row-link"></a>
-	                            </td>
-	                            <td class="text-left">
-	                                <a th:href="@{/input/admin/reports/editProject/{projectId}(projectId=${project.projectId})}" 
-	                                   th:text="${#temporals.format(project.projectPlanningEndDate, 'dd/MM/yyyy')}" 
-	                                   class="row-link"></a>
-	                            </td>
-	                        </tr>
-	                    </tbody>
+	                    <tbody id="table-body">
+	                    
+				        </tbody>
 	                </table>
+	                 <div id="loading-indicator" style="text-align: center; padding: 20px; display: none;">
+				        <i class="fa fa-spinner fa-spin"></i> Carregando...
+				    </div>
             	</div>
             </div>
         </div>
     </main>
+    
+    <button onclick="topFunction()" id="back-to-top" title="Voltar ao Topo"><i class="fa-solid fa-arrow-up"></i></button>
     
    	<div th:replace="~{fragments/sidebar :: modals}"></div>
     
     <div th:replace="~{fragments/footer :: footer}"></div>
     
     <script th:src="@{/js/admin/components.js}"></script>
+    
+    <script th:src="@{/js/admin/reports/projectsList.js}"></script>
 
 </body>
 </html>

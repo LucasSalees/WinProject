@@ -84,25 +84,6 @@ function topFunction() {
     document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 }
 
-// Intercepta o envio do formulário de pesquisa para recarregar via AJAX
-document.getElementById('search-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const filterValue = getCurrentFilter();
-    
-    // Atualiza a URL sem recarregar a página
-    const url = new URL(window.location);
-    if (filterValue.trim()) {
-        url.searchParams.set('filter', filterValue);
-    } else {
-        url.searchParams.delete('filter');
-    }
-    window.history.pushState({}, '', url);
-    
-    // Recarrega a tabela com o novo filtro
-    loadAcronyms(true);
-});
-
 // Carrega a primeira página ao abrir
 document.addEventListener('DOMContentLoaded', function() {
     // Inicializa o filtro a partir da URL na primeira carga

@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,18 @@ public class AdminOccupationService {
     @Autowired
     private OccupationRepository occupationRepository;
 
+ // Método paginado para pegar todas as ocupações
+    public Page<Occupation> getAllOccupationsPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return occupationRepository.findAll(pageable);
+    }
+
+    // Método paginado para buscar com filtro
+    public Page<Occupation> searchOccupationsPaginated(String filter, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return occupationRepository.searchByFilterPaginated(filter, pageable);
+    }
+    
     public List<Occupation> getAllOccupations() {
         return occupationRepository.findAll();
     }

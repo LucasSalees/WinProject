@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -74,24 +75,31 @@ public class AdminProjectController {
     }
 
     @GetMapping("/input/admin/projects/list")
-	@PreAuthorize("hasAuthority('PROJECT_LIST')")
-	public ModelAndView projectsList(@RequestParam(value = "filter", required = false) String filter,
-			Authentication authentication) {
-		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		List<Project> projects;
+    @PreAuthorize("hasAuthority('PROJECT_LIST')")
+    public ModelAndView projectsList(@RequestParam(value = "filter", required = false) String filter,
+            Authentication authentication) {
+        User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
 
-		if (filter != null && !filter.trim().isEmpty()) {
-			projects = projectService.searchProjects(filter);
-		} else {
-			projects = projectService.getAllProjects();
-		}
+        ModelAndView mv = new ModelAndView("input/admin/projects/list");
+        mv.addObject("LoggedUser", loggedUser);
+        mv.addObject("filter", filter);
+        return mv;
+    }
+    
+    @GetMapping("/input/admin/projects/page")
+    @PreAuthorize("hasAuthority('PROJECT_LIST')")
+    @ResponseBody
+    public Page<Project> projectsPage(
+            @RequestParam(value = "filter", required = false) String filter,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "50") int size) {
 
-		ModelAndView mv = new ModelAndView("input/admin/projects/list");
-		mv.addObject("LoggedUser", loggedUser);
-		mv.addObject("projectsList", projects);
-		mv.addObject("filter", filter); // devolve o filtro para manter no input
-		return mv;
-	}
+        if (filter != null && !filter.trim().isEmpty()) {
+            return projectService.searchProjectsPaginated(filter, page, size);
+        } else {
+            return projectService.getAllProjectsPaginated(page, size);
+        }
+    }
 
     @GetMapping("/input/admin/projects/edit/{projectId}")
     @PreAuthorize("hasAuthority('PROJECT_EDIT')")

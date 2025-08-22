@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -39,26 +40,33 @@ public class AdminDepartmentController {
 		mv.addObject("department", department);
 		return mv;
 	}
-
+	
 	@GetMapping("/input/admin/departments/list")
-	@PreAuthorize("hasAuthority('DEPARTMENT_LIST')")
-	public ModelAndView departmentsList(@RequestParam(value = "filter", required = false) String filter,
-			Authentication authentication) {
-		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-		List<Department> departments;
+    @PreAuthorize("hasAuthority('DEPARTMENT_LIST')")
+    public ModelAndView departmentsList(@RequestParam(value = "filter", required = false) String filter,
+                                        Authentication authentication) {
+        User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
 
-		if (filter != null && !filter.trim().isEmpty()) {
-			departments = departmentService.searchDepartments(filter);
-		} else {
-			departments = departmentService.getAllDepartments();
-		}
+        ModelAndView mv = new ModelAndView("input/admin/departments/list");
+        mv.addObject("LoggedUser", loggedUser);
+        mv.addObject("filter", filter); // devolve o filtro para manter no input
+        return mv;
+    }
+	
+	 @GetMapping("/input/admin/departments/page")
+	    @PreAuthorize("hasAuthority('DEPARTMENT_LIST')")
+	    @ResponseBody
+	    public Page<Department> departmentsPage(
+	            @RequestParam(value = "filter", required = false) String filter,
+	            @RequestParam(value = "page", defaultValue = "0") int page,
+	            @RequestParam(value = "size", defaultValue = "50") int size) {
 
-		ModelAndView mv = new ModelAndView("input/admin/departments/list");
-		mv.addObject("LoggedUser", loggedUser);
-		mv.addObject("departmentsList", departments);
-		mv.addObject("filter", filter);
-		return mv;
-	}
+	        if (filter != null && !filter.trim().isEmpty()) {
+	            return departmentService.searchDepartmentsPaginated(filter, page, size);
+	        } else {
+	            return departmentService.getAllDepartmentsPaginated(page, size);
+	        }
+	    }
 
 	@GetMapping("/input/admin/departments/edit/{departmentId}")
 	@PreAuthorize("hasAuthority('DEPARTMENT_EDIT')")

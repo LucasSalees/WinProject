@@ -18,7 +18,7 @@ function getCurrentFilter() {
     return filterFromUrl;
 }
 
-async function loadFunctions(resetTable = false) {
+async function loadOccupations(resetTable = false) {
     if (loading || !hasNext) return;
     
     loading = true;
@@ -39,17 +39,20 @@ async function loadFunctions(resetTable = false) {
             hasNext = true;
         }
 
-        const response = await fetch(`/input/admin/functions/page?page=${currentPage}&size=${pageSize}&filter=${encodeURIComponent(filter)}`);
+        const response = await fetch(`/input/admin/reports/pageOccupation?page=${currentPage}&size=${pageSize}&filter=${encodeURIComponent(filter)}`);
         const data = await response.json();
 
-        data.content.forEach(func => {
+        data.content.forEach(occupation => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td class="text-left">
-                    <a href="/input/admin/functions/edit/${func.functionId}" class="row-link">${func.functionId}</a>
+                    <a href="/input/admin/reports/editOccupation/${occupation.occupationId}" class="row-link">${occupation.occupationId}</a>
                 </td>
                 <td class="text-left">
-                    <a href="/input/admin/functions/edit/${func.functionId}" class="row-link">${func.functionName}</a>
+                    <a href="/input/admin/reports/editOccupation/${occupation.occupationId}" class="row-link">${occupation.occupationName}</a>
+                </td>
+                <td class="text-left">
+                    <a href="/input/admin/reports/editOccupation/${occupation.occupationId}" class="row-link">${occupation.occupationCBO}</a>
                 </td>
             `;
             tableBody.appendChild(row);
@@ -69,7 +72,7 @@ async function loadFunctions(resetTable = false) {
 // Detecta quando o usuário chega perto do fim da página
 window.addEventListener('scroll', () => {
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 300) {
-        loadFunctions();
+        loadOccupations();
     }
 
     // Mostra ou esconde o botão Voltar ao Topo
@@ -86,8 +89,9 @@ function topFunction() {
     document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 }
 
+
 // Carrega a primeira página ao abrir
 document.addEventListener('DOMContentLoaded', function() {
     currentFilter = getCurrentFilter();
-    loadFunctions(true);
+    loadOccupations(true);
 });

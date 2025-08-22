@@ -1,9 +1,9 @@
 package com.project.system.controller.input;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -42,22 +42,31 @@ public class AdminOccupationController {
 
     @GetMapping("/input/admin/occupations/list")
     @PreAuthorize("hasAuthority('OCCUPATION_LIST')")
-    public ModelAndView occupationsList(@RequestParam(value = "filter", required = false) String filter,
-                                        Authentication authentication) {
+    public ModelAndView occupationsList(
+    		@RequestParam(value = "filter", required = false) String filter,
+            Authentication authentication) {
+    	
         User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
-        List<Occupation> occupations;
-
-        if (filter != null && !filter.trim().isEmpty()) {
-            occupations = occupationService.searchOccupations(filter);
-        } else {
-            occupations = occupationService.getAllOccupations();
-        }
 
         ModelAndView mv = new ModelAndView("input/admin/occupations/list");
         mv.addObject("LoggedUser", loggedUser);
-        mv.addObject("occupationsList", occupations);
         mv.addObject("filter", filter); // devolve o filtro para manter no input
         return mv;
+    }
+    
+    @GetMapping("/input/admin/occupations/page")
+    @PreAuthorize("hasAuthority('OCCUPATION_LIST')")
+    @ResponseBody
+    public Page<Occupation> occupationsPage(
+            @RequestParam(value = "filter", required = false) String filter,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "50") int size) {
+
+        if (filter != null && !filter.trim().isEmpty()) {
+            return occupationService.searchOccupationsPaginated(filter, page, size);
+        } else {
+            return occupationService.getAllOccupationsPaginated(page, size);
+        }
     }
 
     @GetMapping("/input/admin/occupations/edit/{occupationId}")
