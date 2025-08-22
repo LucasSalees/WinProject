@@ -36,7 +36,7 @@ async function loadUsers(resetTable = false) {
             hasNext = true;
         }
 
-        const response = await fetch(`/input/admin/users/page?page=${currentPage}&size=${pageSize}&filter=${encodeURIComponent(filter)}`);
+        const response = await fetch(`/input/admin/reports/pageUser?page=${currentPage}&size=${pageSize}&filter=${encodeURIComponent(filter)}`);
 
         // VERIFICAÇÃO ADICIONADA AQUI
         if (!response.ok) {
@@ -61,19 +61,19 @@ async function loadUsers(resetTable = false) {
             
             row.innerHTML = `
                 <td class="text-left">
-                    <a href="/input/admin/users/edit/${user.userId}" class="row-link">${user.userId}</a>
+                    <a href="/input/admin/reports/editUser/${user.userId}" class="row-link">${user.userId}</a>
                 </td>
                 <td class="text-left">
-                    <a href="/input/admin/users/edit/${user.userId}" class="row-link">${user.userName}</a>
+                    <a href="/input/admin/reports/editUser/${user.userId}" class="row-link">${user.userName}</a>
                 </td>
                 <td class="text-left">
-                    <a href="/input/admin/users/edit/${user.userId}" class="row-link">${user.userEmail}</a>
+                    <a href="/input/admin/reports/editUser/${user.userId}" class="row-link">${user.userEmail}</a>
                 </td>
 				<td class="text-left">
 				    <a href="/input/admin/users/edit/${user.userId}" class="row-link">${user.userRole}</a>
 				</td>
                 <td class="text-left">
-                    <a href="/input/admin/users/edit/${user.userId}" class="row-link">${userFunction}</a>
+                    <a href="/input/admin/reports/editUser/${user.userId}" class="row-link">${userFunction}</a>
                 </td>
             `;
             tableBody.appendChild(row);

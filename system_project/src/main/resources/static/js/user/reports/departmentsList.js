@@ -39,26 +39,26 @@ async function loadDepartments(resetTable = false) {
             hasNext = true;
         }
 
-        const response = await fetch(`/input/admin/reports/pageDepartment?page=${currentPage}&size=${pageSize}&filter=${encodeURIComponent(filter)}`);
+        const response = await fetch(`/input/user/reports/pageDepartment?page=${currentPage}&size=${pageSize}&filter=${encodeURIComponent(filter)}`);
         const data = await response.json();
 
         data.content.forEach(department => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td class="text-left">
-                    <a href="/input/admin/reports/editDepartment/${department.departmentId}" class="row-link">${department.departmentId}</a>
+                    <a href="/input/user/reports/editDepartment/${department.departmentId}" class="row-link">${department.departmentId}</a>
                 </td>
                 <td class="text-left">
-                    <a href="/input/admin/reports/editDepartment/${department.departmentId}" class="row-link">${department.departmentName}</a>
+                    <a href="/input/user/reports/editDepartment/${department.departmentId}" class="row-link">${department.departmentName}</a>
                 </td>
 				<td class="text-left">
-                    <a href="/input/admin/reports/editDepartment/${department.departmentId}" class="row-link">${department.departmentManager}</a>
+                    <a href="/input/user/reports/editDepartment/${department.departmentId}" class="row-link">${department.departmentManager}</a>
                 </td>
 				<td class="text-left">
-				    <a href="/input/admin/reports/editDepartment/${department.departmentId}" class="row-link">${department.departmentEmail}</a>
+				    <a href="/input/user/reports/editDepartment/${department.departmentId}" class="row-link">${department.departmentEmail}</a>
 				</td>
 				<td class="text-left">
-				    <a href="/input/admin/reports/editDepartment/${department.departmentId}" class="row-link">${department.departmentTel}</a>
+				    <a href="/input/user/reports/editDepartment/${department.departmentId}" class="row-link">${department.departmentTel}</a>
 				</td>
             `;
             tableBody.appendChild(row);

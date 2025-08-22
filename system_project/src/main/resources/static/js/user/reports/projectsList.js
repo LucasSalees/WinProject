@@ -39,7 +39,7 @@ async function loadProjects(resetTable = false) {
             hasNext = true;
         }
 
-        const response = await fetch(`/input/admin/reports/pageProject?page=${currentPage}&size=${pageSize}&filter=${encodeURIComponent(filter)}`);
+        const response = await fetch(`/input/user/reports/pageProject?page=${currentPage}&size=${pageSize}&filter=${encodeURIComponent(filter)}`);
         const data = await response.json();
 
         data.content.forEach(project => {
@@ -51,31 +51,31 @@ async function loadProjects(resetTable = false) {
 
             row.innerHTML = `
 			<td class="text-left">
-                <a href="/input/admin/reports/editProject/${project.projectId}" class="row-link">${project.projectId}</a>
+                <a href="/input/user/reports/editProject/${project.projectId}" class="row-link">${project.projectId}</a>
             </td>
             <td class="text-left">
-                <a href="/input/admin/reports/editProject/${project.projectId}" class="row-link">${project.projectName}</a>
+                <a href="/input/user/reports/editProject/${project.projectId}" class="row-link">${project.projectName}</a>
             </td>
             <td class="text-left">
-                <a href="/input/admin/reports/editProject/${project.projectId}" class="row-link">${project.projectContractualAcronym.acronym}</a>
+                <a href="/input/user/reports/editProject/${project.projectId}" class="row-link">${project.projectContractualAcronym.acronym}</a>
             </td>
             <td class="text-left">
-                <a href="/input/admin/reports/editProject/${project.projectId}" class="row-link">${project.projectBusinessVerticalLabel}</a>
+                <a href="/input/user/reports/editProject/${project.projectId}" class="row-link">${project.projectBusinessVerticalLabel}</a>
             </td>
             <td class="text-left">
-                <a href="/input/admin/reports/editProject/${project.projectId}" class="row-link">${project.projectPriorityLabel}</a>
+                <a href="/input/user/reports/editProject/${project.projectId}" class="row-link">${project.projectPriorityLabel}</a>
             </td>
             <td class="text-left">
-                <a href="/input/admin/reports/editProject/${project.projectId}" class="row-link">${project.projectStatusLabel}</a>
+                <a href="/input/user/reports/editProject/${project.projectId}" class="row-link">${project.projectStatusLabel}</a>
             </td>
             <td class="text-left">
-                <a href="/input/admin/reports/editProject/${project.projectId}" class="row-link">${project.projectExecutionPercentage}%</a>
+                <a href="/input/user/reports/editProject/${project.projectId}" class="row-link">${project.projectExecutionPercentage}%</a>
             </td>
             <td class="text-left">
-                <a href="/input/admin/reports/editProject/${project.projectId}" class="row-link">${startDate}</a>
+                <a href="/input/user/reports/editProject/${project.projectId}" class="row-link">${startDate}</a>
             </td>
             <td class="text-left">
-                <a href="/input/admin/reports/editProject/${project.projectId}" class="row-link">${endDate}</a>
+                <a href="/input/user/reports/editProject/${project.projectId}" class="row-link">${endDate}</a>
             </td>
             `;
             tableBody.appendChild(row);

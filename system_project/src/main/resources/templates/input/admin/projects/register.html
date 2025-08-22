@@ -207,16 +207,28 @@
 
                             <div class="row g-3">
 
-                                <div class="col-md-4">
-                                    <label class="form-label text-muted small">Cod - Nome - Gerente</label>
-                                    <div class="time-range-container">
-                                        <div class="form-control shadow-cantos" id="campoDepartamento"
-                                            style="cursor: pointer;">
-                                            <span id="textoDepartamentoSelecionada">Selecione um departamento</span>
-                                        </div>
-                                        <input type="hidden" name="userDepartment" id="userDepartment">
-                                    </div>
-                                </div>
+                                 <!-- ... dentro da seção "Dados do gerente" ... -->
+								<div class="col-md-4">
+								    <label class="form-label text-muted small">Cod - Nome - Gerente</label>
+								    <div class="time-range-container">
+								        <div class="form-control shadow-cantos" id="campoDepartamento" style="cursor: pointer;">
+								            <span id="textoDepartamentoSelecionada"
+								                  th:if="${project.userDepartment != null}"
+								                  th:text="${project.userDepartment.departmentId + ' - ' + project.userDepartment.departmentName}">
+								            </span>
+								            <span id="textoDepartamentoSelecionada"
+								                  th:if="${project.userDepartment == null}">
+								                Selecione um departamento
+								            </span>
+								        </div>
+								        <!-- ÍCONE DE LIMPAR ADICIONADO AQUI -->
+								        <i class="fas fa-times campo-limpar" id="limparDepartamento" title="Limpar seleção" style="display: none;"></i>
+								        
+								        <input type="hidden" name="userDepartment" id="userDepartment"
+								               th:value="${project.userDepartment != null ? project.userDepartment.departmentId : ''}" />
+								    </div>
+								</div>
+								<!-- ... resto do HTML ... -->
 
                                 <div class="col-md-5">
                                     <label class="form-label shadow-text">Email</label>
@@ -307,62 +319,56 @@
         </div>
     </main>
 
-    <!-- Modal para seleção do departamento -->
-    <div id="modalListaDepartamentos" class="modal">
-        <div class="modal-container" style="max-width: 90vw; width: 1000px;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="modal-title">Selecionar departamento</h2>
-                    <button type="button" class="modal-close" id="fecharModalListaDepartamento">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                    </button>
-                </div>
-                <div class="modal-body">
-
-                    <!-- Filtro e seleção de campos -->
-                    <div class="form-inline mb-3">
-                        <div class="navegacaoLista custom-button-container">
-                        <!-- Botão à esquerda -->
-                        <div class="botoes-esquerda">
-                            
-                        </div>
-                            <div class="botoes-direita">
-                                <input type="text" id="filtroDepatamento" class="form-control shadow-cantos" placeholder="Pesquisar...">
-	                        	<div class="dropdown botoes">
-		                           <button class="btn btn-primary" type="button" id="dropdownMenuButtonDepartamentos">
-								      Selecionar
-								  </button>
-                                    <div class="dropdown-menu" id="dropdownCamposDepartamentos">
-                                        <h1 class="dropdown-item-titulo text-center">Campos Visíveis</h1>
-                                        <label class="dropdown-item-1"><input type="checkbox"
-                                                id="selecionarTodosDepartamentos"> <span>Selecionar Todos</span></label>
-                                        <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox"
-                                                id="campoCodigoDepartamento" checked> <span>Código</span></label>
-                                        <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox"
-                                                id="campoNomeDepartamento" checked> <span>Nome</span></label>
-                                        <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox"
-                                                id="campoGerenteDepartamento" checked> <span>Gerente</span></label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> 
-
-                    <!-- Tabela de departamentos -->
-                    <div class="table-container-modal">
-                        <table class="table table-striped" id="tabelaDepartamentos">
-                            <thead>
+<!-- MODAL DE SELEÇÃO DE DEPARTAMENTOS -->
+	<div id="modalListaDepartamentos" class="modal">
+	    <div class="modal-container" style="max-width: 90vw; width: 1000px;">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h2 class="modal-title">Selecionar departamento</h2>
+	                <!-- 1. ID ÚNICO para o botão de fechar -->
+	                <button type="button" class="modal-close" id="fecharModalListaDepartamento">
+	                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+	                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+	                        <line x1="18" y1="6" x2="6" y2="18"></line>
+	                        <line x1="6" y1="6" x2="18" y2="18"></line>
+	                    </svg>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	                <div class="form-inline mb-3">
+	                    <div class="navegacaoLista custom-button-container">
+	                        <div class="botoes-direita">
+	                            <!-- 2. ID ÚNICO para o campo de filtro -->
+	                            <input type="text" id="filtroDepartamentos" class="form-control shadow-cantos" placeholder="Pesquisar...">
+	                            <div class="dropdown botoes">
+	                                <!-- 3. Adicionar classe 'dropdown-toggle' para o JS -->
+	                                <button class="btn btn-primary dropdown-toggle" type="button">
+	                                    Selecionar
+	                                </button>
+	                                <div class="dropdown-menu">
+	                                    <h1 class="dropdown-item-titulo text-center">Campos Visíveis</h1>
+	                                    <!-- 4. ID e classe ÚNICOS para o "Selecionar Todos" -->
+	                                    <label class="dropdown-item-1"><input type="checkbox" class="selecionarTodos"> <span>Selecionar Todos</span></label>
+	                                    <!-- 5. IDs ÚNICOS para os checkboxes de campo -->
+                                        <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoCodigoDepartamento" checked> <span>Código</span></label>
+                                        <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoNomeDepartamento" checked> <span>Nome</span></label>
+                                        <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoGerenteDepartamento" checked> <span>Gerente</span></label>
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+	                <!-- 6. A tabela NÃO precisa mais de ID, pois o JS a encontrará dentro do modal -->
+	                <div class="table-container-modal">
+	                    <table class="table table-striped">
+	                    	<thead>
                                 <tr>
                                     <th class="text-left">Cod</th>
                                     <th class="text-left">Nome</th>
                                     <th class="text-left">Gerente</th>
                                 </tr>
                             </thead>
-                            <tbody>
+	                        <tbody>
                                 <tr th:each="department : ${departments}" class="linha-departamento"
                                     style="cursor: pointer;" th:data-id="${department.departmentId}"
                                     th:data-nome="${department.departmentName}"
@@ -373,64 +379,57 @@
                                     <td th:text="${department.departmentName}"></td>
                                     <td th:text="${department.departmentManager}"></td>
                                 </tr>
-
                             </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal para seleção da Sigla Contratual -->
-    <div id="modalListaAcronym" class="modal">
-        <div class="modal-container" style="max-width: 90vw; width: 1000px;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="modal-title">Selecionar sigla</h2>
-                    <button type="button" class="modal-close" id="fecharModalListaAcronym">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                    </button>
-                </div>
-                <div class="modal-body">
-
-                    <!-- Filtro e seleção de campos -->
-                    <div class="form-inline mb-3">
-                        <div class="navegacaoLista custom-button-container">
-                        <!-- Botão à esquerda -->
-                        <div class="botoes-esquerda">
-                            
-                        </div>
-                            <div class="botoes-direita">
-                                <input type="text" id="filtroAcronym" class="form-control shadow-cantos" placeholder="Pesquisar...">
-	                        	<div class="dropdown botoes">
-		                           <button class="btn btn-primary" type="button" id="dropdownMenuButtonAcronym">
-								      Selecionar
-								  </button>
-                                    <div class="dropdown-menu" id="dropdownCamposAcronym">
-                                        <h1 class="dropdown-item-titulo text-center">Campos Visíveis</h1>
-                                        <label class="dropdown-item-1"><input type="checkbox"
-                                                id="selecionarTodosAcronym"> <span>Selecionar Todos</span></label>
-                                        <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox"
-                                                id="campoCodigoAcronym" checked> <span>Código</span></label>
-                                        <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox"
-                                                id="campoNomeAcronym" checked> <span>Nome</span></label>
-                                        <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox"
-                                                id="campoAcronym" checked> <span>Sigla</span></label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> 
-
-                    <!-- Tabela de departamentos -->
-                    <div class="table-container-modal">
-                        <table class="table table-striped" id="tabelaAcronyms">
-                            <thead>
+	                    </table>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	
+	<!-- MODAL DE SELEÇÃO DE SIGLAS CONTRATUAIS -->
+	<div id="modalListaAcronym" class="modal">
+	    <div class="modal-container" style="max-width: 90vw; width: 1000px;">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h2 class="modal-title">Selecionar sigla</h2>
+	                <!-- 1. ID ÚNICO para o botão de fechar -->
+	                <button type="button" class="modal-close" id="fecharModalListaAcronym">
+	                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+	                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+	                        <line x1="18" y1="6" x2="6" y2="18"></line>
+	                        <line x1="6" y1="6" x2="18" y2="18"></line>
+	                    </svg>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	                <div class="form-inline mb-3">
+	                    <div class="navegacaoLista custom-button-container">
+	                        <div class="botoes-direita">
+	                            <!-- 2. ID ÚNICO para o campo de filtro -->
+	                            <input type="text" id="filtroAcronym" class="form-control shadow-cantos" placeholder="Pesquisar...">
+	                            <div class="dropdown botoes">
+	                                <!-- 3. Adicionar classe 'dropdown-toggle' para o JS -->
+	                                <button class="btn btn-primary dropdown-toggle" type="button">
+	                                    Selecionar
+	                                </button>
+	                                <div class="dropdown-menu">
+	                                    <h1 class="dropdown-item-titulo text-center">Campos Visíveis</h1>
+	                                    <!-- 4. ID e classe ÚNICOS para o "Selecionar Todos" -->
+	                                    <label class="dropdown-item-1"><input type="checkbox" class="selecionarTodos"> <span>Selecionar Todos</span></label>
+	                                    <!-- 5. IDs ÚNICOS para os checkboxes de campo -->
+                                        <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoCodigoAcronym" checked> <span>Código</span></label>
+                                        <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoNomeAcronym" checked> <span>Nome</span></label>
+                                        <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoAcronym" checked> <span>Sigla</span></label>
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+	                <!-- 6. A tabela NÃO precisa mais de ID, pois o JS a encontrará dentro do modal -->
+	                <div class="table-container-modal">
+	                    <table class="table table-striped">
+	                    	<thead>
                                 <tr>
                                     <th class="text-left">Cod</th>
                                     <th class="text-left">Nome</th>
@@ -447,12 +446,12 @@
 							        <td th:text="${acronym.acronym}"></td>
 							    </tr>
 							</tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+	                    </table>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</div>
 
     <div th:replace="~{fragments/sidebar :: modals}"></div>
 

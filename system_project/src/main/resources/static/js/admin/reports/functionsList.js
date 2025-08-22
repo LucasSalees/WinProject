@@ -39,17 +39,17 @@ async function loadFunctions(resetTable = false) {
             hasNext = true;
         }
 
-        const response = await fetch(`/input/admin/functions/page?page=${currentPage}&size=${pageSize}&filter=${encodeURIComponent(filter)}`);
+        const response = await fetch(`/input/admin/reports/pageFunction?page=${currentPage}&size=${pageSize}&filter=${encodeURIComponent(filter)}`);
         const data = await response.json();
 
         data.content.forEach(func => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td class="text-left">
-                    <a href="/input/admin/functions/edit/${func.functionId}" class="row-link">${func.functionId}</a>
+                    <a href="/input/admin/reports/editFunction/${func.functionId}" class="row-link">${func.functionId}</a>
                 </td>
                 <td class="text-left">
-                    <a href="/input/admin/functions/edit/${func.functionId}" class="row-link">${func.functionName}</a>
+                    <a href="/input/admin/reports/editFunction/${func.functionId}" class="row-link">${func.functionName}</a>
                 </td>
             `;
             tableBody.appendChild(row);

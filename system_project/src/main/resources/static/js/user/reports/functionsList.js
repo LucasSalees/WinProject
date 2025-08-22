@@ -18,7 +18,7 @@ function getCurrentFilter() {
     return filterFromUrl;
 }
 
-async function loadDepartments(resetTable = false) {
+async function loadFunctions(resetTable = false) {
     if (loading || !hasNext) return;
     
     loading = true;
@@ -39,27 +39,18 @@ async function loadDepartments(resetTable = false) {
             hasNext = true;
         }
 
-        const response = await fetch(`/input/admin/reports/pageDepartment?page=${currentPage}&size=${pageSize}&filter=${encodeURIComponent(filter)}`);
+        const response = await fetch(`/input/user/reports/pageFunction?page=${currentPage}&size=${pageSize}&filter=${encodeURIComponent(filter)}`);
         const data = await response.json();
 
-        data.content.forEach(department => {
+        data.content.forEach(func => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td class="text-left">
-                    <a href="/input/admin/reports/editDepartment/${department.departmentId}" class="row-link">${department.departmentId}</a>
+                    <a href="/input/user/reports/editFunction/${func.functionId}" class="row-link">${func.functionId}</a>
                 </td>
                 <td class="text-left">
-                    <a href="/input/admin/reports/editDepartment/${department.departmentId}" class="row-link">${department.departmentName}</a>
+                    <a href="/input/user/reports/editFunction/${func.functionId}" class="row-link">${func.functionName}</a>
                 </td>
-				<td class="text-left">
-                    <a href="/input/admin/reports/editDepartment/${department.departmentId}" class="row-link">${department.departmentManager}</a>
-                </td>
-				<td class="text-left">
-				    <a href="/input/admin/reports/editDepartment/${department.departmentId}" class="row-link">${department.departmentEmail}</a>
-				</td>
-				<td class="text-left">
-				    <a href="/input/admin/reports/editDepartment/${department.departmentId}" class="row-link">${department.departmentTel}</a>
-				</td>
             `;
             tableBody.appendChild(row);
         });
@@ -78,7 +69,7 @@ async function loadDepartments(resetTable = false) {
 // Detecta quando o usuário chega perto do fim da página
 window.addEventListener('scroll', () => {
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 300) {
-        loadDepartments();
+        loadFunctions();
     }
 
     // Mostra ou esconde o botão Voltar ao Topo
@@ -98,5 +89,5 @@ function topFunction() {
 // Carrega a primeira página ao abrir
 document.addEventListener('DOMContentLoaded', function() {
     currentFilter = getCurrentFilter();
-    loadDepartments(true);
+    loadFunctions(true);
 });

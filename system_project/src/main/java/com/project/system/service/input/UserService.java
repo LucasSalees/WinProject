@@ -11,6 +11,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.project.system.entity.ContractualAcronym;
+import com.project.system.entity.Department;
+import com.project.system.entity.Function;
+import com.project.system.entity.Occupation;
+import com.project.system.entity.Project;
 import com.project.system.entity.User;
 import com.project.system.enums.input.UserRole;
 import com.project.system.repositories.ContractualAcronymRepository;
@@ -41,11 +46,12 @@ public class UserService {
     @Autowired
     private ProjectRepository projectRepository;
     
+    // Método paginado para pegar todas os usários
     public Page<User> getAllUsersPaginated(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return userRepository.findAll(pageable);
     }
-
+    // Método paginado para buscar com filtro
     public Page<User> searchUsersPaginated(String filter, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         
@@ -62,6 +68,66 @@ public class UserService {
         }
 
         return userRepository.searchByFilterPaginated(filter, pageable, matchingRoles);
+    }
+    
+    // Método paginado para pegar todas as ocupações
+    public Page<Occupation> getAllOccupationsPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return occupationRepository.findAll(pageable);
+    }
+
+    // Método paginado para buscar com filtro
+    public Page<Occupation> searchOccupationsPaginated(String filter, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return occupationRepository.searchByFilterPaginated(filter, pageable);
+    }
+    
+    // Método paginado para pegar todas as funções
+    public Page<Function> getAllFunctionsPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return functionRepository.findAll(pageable);
+    }
+
+    // Método paginado para buscar com filtro
+    public Page<Function> searchFunctionsPaginated(String filter, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return functionRepository.searchByFilterPaginated(filter, pageable);
+    }
+    
+    // Método paginado para pegar todas os departamentos
+    public Page<Department> getAllDepartmentsPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return departmentRepository.findAll(pageable);
+    }
+
+    // Método paginado para buscar com filtro
+    public Page<Department> searchDepartmentsPaginated(String filter, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return departmentRepository.searchByFilterPaginated(filter, pageable);
+    }
+    
+    // Método paginado para pegar todas as siglas contratuais
+    public Page<ContractualAcronym> getAllAcronymsPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return contractualAcronymRepository.findAll(pageable);
+    }
+
+    // Método paginado para buscar com filtro
+    public Page<ContractualAcronym> searchAcronymsPaginated(String filter, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return contractualAcronymRepository.searchByFilterPaginated(filter, pageable);
+    }
+    
+    // Método paginado para pegar todas os projetos
+    public Page<Project> getAllProjectsPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return projectRepository.findAll(pageable);
+    }
+
+    // Método paginado para buscar com filtro
+    public Page<Project> searchProjectsPaginated(String filter, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return projectRepository.searchByFilterPaginated(filter, pageable);
     }
 
     public List<User> getAllUsers() {

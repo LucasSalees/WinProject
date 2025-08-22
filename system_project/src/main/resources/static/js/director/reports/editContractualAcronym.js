@@ -6,7 +6,7 @@ form.addEventListener('submit', async function(event) {
     
     // Envia via fetch (modal)
     const formData = new FormData(form);
-    fetch('/input/admin/acronyms/edit', {
+    fetch('/input/director/acronyms/edit', {
         method: 'POST',
         body: formData
     })
@@ -17,7 +17,7 @@ form.addEventListener('submit', async function(event) {
 	.then(data => {
 	    if (data.status === "success") {
 	        showMessageModal(data.mensagem, true, {
-	            redirectUrl: "/input/admin/acronyms/list"
+	            redirectUrl: "/input/director/acronyms/list"
 	        });
 	    }
 	})
@@ -59,7 +59,7 @@ function openExclusaoModal(link, redirectUrl = null) {
             .then(data => {
                 exclusaoModal.classList.remove('show');
                 showMessageModal(data.mensagem, data.status === "success", {
-                    redirectUrl: "/input/admin/acronyms/list"
+                    redirectUrl: "/input/director/acronyms/list"
                 });
             })
             .catch(error => {

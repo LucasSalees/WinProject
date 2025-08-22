@@ -317,269 +317,191 @@ async function validarEmail(emailInput) {
         return true;
     }
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-   document.querySelectorAll('.linha-profissao').forEach(row => {
-       row.addEventListener('click', () => {
-           const id = row.getAttribute('data-id');
-           const nome = row.getAttribute('data-nome');
-           document.getElementById('userOccupation').value = id;
-           document.getElementById('textoProfissaoSelecionada').innerText = `${id} - ${nome}`;
-           document.getElementById('modalListaProfissoes').style.display = 'none';
-       });
-   });
-
-   document.getElementById('campoProfissao').addEventListener('click', () => {
-       document.getElementById('modalListaProfissoes').style.display = 'flex';
-   });
-
-   document.getElementById('fecharModalLista').addEventListener('click', () => {
-       document.getElementById('modalListaProfissoes').style.display = 'none';
-   });
-});
-   
 document.addEventListener("DOMContentLoaded", function () {
-   const selecionarTodos = document.getElementById("selecionarTodos");
-   const checkboxes = document.querySelectorAll(".campoCheckbox");
 
-   // Marcar ou desmarcar todos os campos ao clicar no "Selecionar Todos"
-   selecionarTodos.addEventListener("change", function () {
-       checkboxes.forEach(checkbox => checkbox.checked = this.checked);
-       filtrarTabela(); // refiltra após mudança
-   });
+    /**
+     * Função genérica e reutilizável para configurar a lógica de um modal de seleção com filtro.
+     * @param {string} modalId - O ID do elemento do modal (ex: 'modalListaProfissoes').
+     * @param {string} campoId - O ID do campo de texto que abre o modal (ex: 'campoProfissao').
+     * @param {string} inputId - O ID do input hidden que armazenará o valor selecionado (ex: 'userOccupation').
+     * @param {string} textoId - O ID do span que mostrará o texto selecionado (ex: 'textoProfissaoSelecionada').
+     * @param {string} filtroInputId - O ID do campo de texto para o filtro (ex: 'filtro').
+     * @param {string} fecharBtnId - O ID do botão para fechar o modal.
+     * @param {string} linhaClasse - A classe CSS das linhas clicáveis da tabela (ex: 'linha-profissao').
+     * @param {object} camposFiltro - Um objeto mapeando o ID do checkbox do filtro para a coluna da tabela (ex: { campoCodigo: 0, campoNome: 1 }).
+     */
+    function configurarModalDeSelecao(modalId, campoId, inputId, textoId, filtroInputId, fecharBtnId, linhaClasse, camposFiltro) {
+        const modal = document.getElementById(modalId);
+        if (!modal) return; // Se o modal não existir na página, não faz nada.
 
-   // Se algum for desmarcado, desmarcar o "Selecionar Todos"
-   checkboxes.forEach(checkbox => {
-       checkbox.addEventListener("change", function () {
-           selecionarTodos.checked = [...checkboxes].every(cb => cb.checked);
-           filtrarTabela(); // refiltra após mudança
-       });
-   });
+        const campo = document.getElementById(campoId);
+        const inputValor = document.getElementById(inputId);
+        const textoSelecionado = document.getElementById(textoId);
+        const filtroInput = document.getElementById(filtroInputId);
+        const fecharBtn = document.getElementById(fecharBtnId);
+        const tabela = modal.querySelector('table'); // Pega a tabela específica DENTRO do modal
+        const linhas = tabela.querySelectorAll(`.${linhaClasse}`);
+        const checkboxesFiltro = modal.querySelectorAll('.campoCheckbox');
+        const selecionarTodosCheckbox = modal.querySelector('.selecionarTodos');
 
-   // Ativar filtro ao digitar
-   document.getElementById("filtro").addEventListener("input", filtrarTabela);
+        // 1. Abrir o modal
+        campo.addEventListener('click', () => {
+            modal.style.display = 'flex';
+            filtroInput.focus(); // Foca no campo de busca ao abrir
+        });
 
-   function filtrarTabela() {
-       const filtro = document.getElementById("filtro").value.toLowerCase().trim();
-       const linhas = document.querySelectorAll("#tabela tbody tr");
+        // 2. Fechar o modal
+        fecharBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
 
-       linhas.forEach(linha => {
-           let mostrarLinha = false;
+        // 3. Selecionar um item na tabela
+        linhas.forEach(row => {
+            row.addEventListener('click', () => {
+                const id = row.getAttribute('data-id');
+                const nome = row.getAttribute('data-nome');
+                
+                inputValor.value = id;
+                textoSelecionado.innerText = `${id} - ${nome}`;
+                modal.style.display = 'none';
+            });
+        });
 
-           // Obter os campos da linha
-           const campos = {
-               codigo: linha.querySelector("td:nth-child(1)")?.textContent.toLowerCase(),
-               nome: linha.querySelector("td:nth-child(2)")?.textContent.toLowerCase(),
-           };
+        // 4. Filtrar a tabela
+        function filtrarTabela() {
+            const filtro = filtroInput.value.toLowerCase().trim();
+            const linhasTabela = tabela.querySelectorAll('tbody tr');
+            
+            const camposAtivos = {};
+            checkboxesFiltro.forEach(cb => {
+                if (cb.checked) {
+                    // Extrai o nome do campo do ID do checkbox (ex: 'campoCodigoProfissao' -> 'campoCodigo')
+                    const nomeCampo = cb.id.replace(modalId.replace('modalLista', ''), '');
+                    camposAtivos[nomeCampo] = true;
+                }
+            });
 
-           // ✅ Se o campo de busca estiver vazio, mostrar tudo
-           if (!filtro) {
-               mostrarLinha = true;
-           } else {
-               // Verifica se o texto aparece nos campos selecionados
-               mostrarLinha = (
-                   (document.getElementById("campoCodigo").checked && campos.codigo?.includes(filtro)) ||
-                   (document.getElementById("campoNome").checked && campos.nome?.includes(filtro))
-               );
-           }
+            linhasTabela.forEach(linha => {
+                if (!filtro) {
+                    linha.style.display = ""; // Mostra a linha se o filtro estiver vazio
+                    return;
+                }
 
-           linha.style.display = mostrarLinha ? "" : "none";
-       });
-   }
+                let mostrarLinha = false;
+                for (const [checkboxId, colunaIndex] of Object.entries(camposFiltro)) {
+                    const checkbox = document.getElementById(checkboxId);
+                    if (checkbox && checkbox.checked) {
+                        const cell = linha.querySelector(`td:nth-child(${colunaIndex + 1})`);
+                        if (cell && cell.textContent.toLowerCase().includes(filtro)) {
+                            mostrarLinha = true;
+                            break; // Encontrou uma correspondência, não precisa verificar outras colunas
+                        }
+                    }
+                }
+                linha.style.display = mostrarLinha ? "" : "none";
+            });
+        }
 
-   // Toggle do dropdown
-   document.getElementById("dropdownMenuButton").addEventListener("click", function (event) {
-       event.stopPropagation(); // Impede que o clique propague para o document
-       const dropdownMenu = document.getElementById("dropdownCampos");
-       dropdownMenu.classList.toggle("show");
-   });
+        filtroInput.addEventListener('input', filtrarTabela);
+        checkboxesFiltro.forEach(cb => cb.addEventListener('change', filtrarTabela));
 
-   // Impede que cliques dentro do menu fechem o dropdown
-   document.getElementById("dropdownCampos").addEventListener("click", function (event) {
-       event.stopPropagation();
-   });
+        // 5. Lógica do "Selecionar Todos"
+        if (selecionarTodosCheckbox) {
+            selecionarTodosCheckbox.addEventListener('change', function () {
+                checkboxesFiltro.forEach(checkbox => checkbox.checked = this.checked);
+                filtrarTabela();
+            });
 
-   // Fechar dropdown ao clicar fora
-   document.addEventListener("click", function () {
-       const dropdown = document.getElementById("dropdownCampos");
-       dropdown.classList.remove("show");
-   });
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-   document.querySelectorAll('.linha-funcao').forEach(row => {
-       row.addEventListener('click', () => {
-           const id = row.getAttribute('data-id');
-           const nome = row.getAttribute('data-nome');
-           document.getElementById('userFunction').value = id;
-           document.getElementById('textoFuncaoSelecionada').innerText = `${id} - ${nome}`;
-           document.getElementById('modalListaFuncoes').style.display = 'none';
-       });
-   });
-
-   document.getElementById('campoFuncao').addEventListener('click', () => {
-       document.getElementById('modalListaFuncoes').style.display = 'flex';
-   });
-
-   document.getElementById('fecharModalListaFuncao').addEventListener('click', () => {
-       document.getElementById('modalListaFuncoes').style.display = 'none';
-   });
-});
-   
-document.addEventListener("DOMContentLoaded", function () {
-   const selecionarTodos = document.getElementById("selecionarTodosFuncoes");
-   const checkboxes = document.querySelectorAll(".campoCheckbox");
-
-   // Marcar ou desmarcar todos os campos ao clicar no "Selecionar Todos"
-   selecionarTodos.addEventListener("change", function () {
-       checkboxes.forEach(checkbox => checkbox.checked = this.checked);
-       filtrarTabela(); // refiltra após mudança
-   });
-
-   // Se algum for desmarcado, desmarcar o "Selecionar Todos"
-   checkboxes.forEach(checkbox => {
-       checkbox.addEventListener("change", function () {
-           selecionarTodos.checked = [...checkboxes].every(cb => cb.checked);
-           filtrarTabela(); // refiltra após mudança
-       });
-   });
-
-   // Ativar filtro ao digitar
-   document.getElementById("filtroFuncoes").addEventListener("input", filtrarTabela);
-
-   function filtrarTabela() {
-       const filtro = document.getElementById("filtroFuncoes").value.toLowerCase().trim();
-       const linhas = document.querySelectorAll("#tabela tbody tr");
-
-       linhas.forEach(linha => {
-           let mostrarLinha = false;
-
-           // Obter os campos da linha
-           const campos = {
-               codigo: linha.querySelector("td:nth-child(1)")?.textContent.toLowerCase(),
-               nome: linha.querySelector("td:nth-child(2)")?.textContent.toLowerCase(),
-           };
-
-           // ✅ Se o campo de busca estiver vazio, mostrar tudo
-           if (!filtro) {
-               mostrarLinha = true;
-           } else {
-               // Verifica se o texto aparece nos campos selecionados
-               mostrarLinha = (
-                   (document.getElementById("campoCodigoFuncao").checked && campos.codigo?.includes(filtro)) ||
-                   (document.getElementById("campoNomeFuncao").checked && campos.nome?.includes(filtro))
-               );
-           }
-
-           linha.style.display = mostrarLinha ? "" : "none";
-       });
-   }
-
-   // Toggle do dropdown
-   document.getElementById("dropdownMenuButtonFuncoes").addEventListener("click", function (event) {
-       event.stopPropagation(); // Impede que o clique propague para o document
-       const dropdownMenu = document.getElementById("dropdownCamposFuncoes");
-       dropdownMenu.classList.toggle("show");
-   });
-
-   // Impede que cliques dentro do menu fechem o dropdown
-   document.getElementById("dropdownCamposFuncoes").addEventListener("click", function (event) {
-       event.stopPropagation();
-   });
-
-   // Fechar dropdown ao clicar fora
-   document.addEventListener("click", function () {
-       const dropdown = document.getElementById("dropdownCamposFuncoes");
-       dropdown.classList.remove("show");
-   });
-});
+            checkboxesFiltro.forEach(checkbox => {
+                checkbox.addEventListener('change', function () {
+                    selecionarTodosCheckbox.checked = [...checkboxesFiltro].every(cb => cb.checked);
+                });
+            });
+        }
+        
+        // 6. Lógica do Dropdown de seleção de campos
+        const dropdownButton = modal.querySelector('.dropdown-toggle');
+        const dropdownMenu = modal.querySelector('.dropdown-menu');
+        if(dropdownButton && dropdownMenu) {
+            dropdownButton.addEventListener('click', (event) => {
+                event.stopPropagation();
+                dropdownMenu.classList.toggle('show');
+            });
+            
+            dropdownMenu.addEventListener('click', (event) => event.stopPropagation());
+        }
+    }
+    
+    // Fechar dropdowns ao clicar fora
+    document.addEventListener("click", function () {
+        document.querySelectorAll(".dropdown-menu.show").forEach(menu => {
+            menu.classList.remove("show");
+        });
+    });
 
 
+    // --- INICIALIZAÇÃO DOS MODAIS ---
+    // Cada modal é configurado com seus próprios IDs e classes, evitando conflitos.
 
-document.addEventListener('DOMContentLoaded', () => {
-   document.querySelectorAll('.linha-departamento').forEach(row => {
-       row.addEventListener('click', () => {
-           const id = row.getAttribute('data-id');
-           const nome = row.getAttribute('data-nome');
-           document.getElementById('userDepartment').value = id;
-           document.getElementById('textoDepartamentoSelecionada').innerText = `${id} - ${nome}`;
-           document.getElementById('modalListaDepartamentos').style.display = 'none';
-       });
-   });
+    // Configura o Modal de Profissões
+    configurarModalDeSelecao(
+        'modalListaProfissoes',
+        'campoProfissao',
+        'userOccupation',
+        'textoProfissaoSelecionada',
+        'filtroProfissao', // ID único para o input de filtro
+        'fecharModalListaProfissao', // ID único para o botão de fechar
+        'linha-profissao',
+        { 
+            'campoCodigoProfissao': 0, // ID único para o checkbox + índice da coluna
+            'campoNomeProfissao': 1    // ID único para o checkbox + índice da coluna
+        }
+    );
 
-   document.getElementById('campoDepartamento').addEventListener('click', () => {
-       document.getElementById('modalListaDepartamentos').style.display = 'flex';
-   });
+    // Configura o Modal de Funções
+    configurarModalDeSelecao(
+        'modalListaFuncoes',
+        'campoFuncao',
+        'userFunction',
+        'textoFuncaoSelecionada',
+        'filtroFuncoes',
+        'fecharModalListaFuncao',
+        'linha-funcao',
+        { 
+            'campoCodigoFuncao': 0, 
+            'campoNomeFuncao': 1 
+        }
+    );
 
-   document.getElementById('fecharModalListaDepartamento').addEventListener('click', () => {
-       document.getElementById('modalListaDepartamentos').style.display = 'none';
-   });
-});
-   
-document.addEventListener("DOMContentLoaded", function () {
-   const selecionarTodos = document.getElementById("selecionarTodosDepartamentos");
-   const checkboxes = document.querySelectorAll(".campoCheckbox");
-
-   // Marcar ou desmarcar todos os campos ao clicar no "Selecionar Todos"
-   selecionarTodos.addEventListener("change", function () {
-       checkboxes.forEach(checkbox => checkbox.checked = this.checked);
-       filtrarTabela(); // refiltra após mudança
-   });
-
-   // Se algum for desmarcado, desmarcar o "Selecionar Todos"
-   checkboxes.forEach(checkbox => {
-       checkbox.addEventListener("change", function () {
-           selecionarTodos.checked = [...checkboxes].every(cb => cb.checked);
-           filtrarTabela(); // refiltra após mudança
-       });
-   });
-
-   // Ativar filtro ao digitar
-   document.getElementById("filtroDepartamentos").addEventListener("input", filtrarTabela);
-
-   function filtrarTabela() {
-       const filtro = document.getElementById("filtroDepartamentos").value.toLowerCase().trim();
-       const linhas = document.querySelectorAll("#tabela tbody tr");
-
-       linhas.forEach(linha => {
-           let mostrarLinha = false;
-
-           // Obter os campos da linha
-           const campos = {
-               codigo: linha.querySelector("td:nth-child(1)")?.textContent.toLowerCase(),
-               nome: linha.querySelector("td:nth-child(2)")?.textContent.toLowerCase(),
-           };
-
-           // ✅ Se o campo de busca estiver vazio, mostrar tudo
-           if (!filtro) {
-               mostrarLinha = true;
-           } else {
-               // Verifica se o texto aparece nos campos selecionados
-               mostrarLinha = (
-                   (document.getElementById("campoCodigoDepartamento").checked && campos.codigo?.includes(filtro)) ||
-                   (document.getElementById("campoNomeDepartamento").checked && campos.nome?.includes(filtro))
-               );
-           }
-
-           linha.style.display = mostrarLinha ? "" : "none";
-       });
-   }
-
-   // Toggle do dropdown
-   document.getElementById("dropdownMenuButtonDepartamentos").addEventListener("click", function (event) {
-       event.stopPropagation(); // Impede que o clique propague para o document
-       const dropdownMenu = document.getElementById("dropdownCamposDepartamentos");
-       dropdownMenu.classList.toggle("show");
-   });
-
-   // Impede que cliques dentro do menu fechem o dropdown
-   document.getElementById("dropdownCamposDepartamentos").addEventListener("click", function (event) {
-       event.stopPropagation();
-   });
-
-   // Fechar dropdown ao clicar fora
-   document.addEventListener("click", function () {
-       const dropdown = document.getElementById("dropdownCamposDepartamentos");
-       dropdown.classList.remove("show");
-   });
+    // Configura o Modal de Departamentos
+    configurarModalDeSelecao(
+        'modalListaDepartamentos',
+        'campoDepartamento',
+        'userDepartment',
+        'textoDepartamentoSelecionada',
+        'filtroDepartamentos',
+        'fecharModalListaDepartamento',
+        'linha-departamento',
+        { 
+            'campoCodigoDepartamento': 0, 
+            'campoNomeDepartamento': 1 
+        }
+    );
+    
+    // Carrega o nome da profissão, função e departamento salvos ao carregar a página
+    function carregarTextoInicial(inputId, textoId) {
+        const valorSalvo = document.getElementById(inputId).value;
+        const elementoTexto = document.getElementById(textoId);
+        
+        if (valorSalvo && elementoTexto.innerText.includes('Selecione')) {
+            const nomeSalvo = elementoTexto.getAttribute('data-nome');
+            if (nomeSalvo) {
+                elementoTexto.innerText = `${valorSalvo} - ${nomeSalvo}`;
+            }
+        }
+    }
+    
+    carregarTextoInicial('userOccupation', 'textoProfissaoSelecionada');
+    carregarTextoInicial('userFunction', 'textoFuncaoSelecionada');
+    carregarTextoInicial('userDepartment', 'textoDepartamentoSelecionada');
 });

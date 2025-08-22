@@ -18,7 +18,7 @@ function getCurrentFilter() {
     return filterFromUrl;
 }
 
-async function loadDepartments(resetTable = false) {
+async function loadAconyms(resetTable = false) {
     if (loading || !hasNext) return;
     
     loading = true;
@@ -39,27 +39,21 @@ async function loadDepartments(resetTable = false) {
             hasNext = true;
         }
 
-        const response = await fetch(`/input/admin/reports/pageDepartment?page=${currentPage}&size=${pageSize}&filter=${encodeURIComponent(filter)}`);
+        const response = await fetch(`/input/admin/reports/pageAcronym?page=${currentPage}&size=${pageSize}&filter=${encodeURIComponent(filter)}`);
         const data = await response.json();
 
-        data.content.forEach(department => {
+        data.content.forEach(acronym => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td class="text-left">
-                    <a href="/input/admin/reports/editDepartment/${department.departmentId}" class="row-link">${department.departmentId}</a>
+                    <a href="/input/admin/reports/editAcronym${acronym.acronymId}" class="row-link">${acronym.acronymId}</a>
                 </td>
                 <td class="text-left">
-                    <a href="/input/admin/reports/editDepartment/${department.departmentId}" class="row-link">${department.departmentName}</a>
+                    <a href="/input/admin/reports/editAcronym/${acronym.acronymId}" class="row-link">${acronym.contractualAcronymName}</a>
                 </td>
-				<td class="text-left">
-                    <a href="/input/admin/reports/editDepartment/${department.departmentId}" class="row-link">${department.departmentManager}</a>
+                <td class="text-left">
+                    <a href="/input/admin/reports/editAcronym/${acronym.acronymId}" class="row-link">${acronym.acronym}</a>
                 </td>
-				<td class="text-left">
-				    <a href="/input/admin/reports/editDepartment/${department.departmentId}" class="row-link">${department.departmentEmail}</a>
-				</td>
-				<td class="text-left">
-				    <a href="/input/admin/reports/editDepartment/${department.departmentId}" class="row-link">${department.departmentTel}</a>
-				</td>
             `;
             tableBody.appendChild(row);
         });
@@ -78,7 +72,7 @@ async function loadDepartments(resetTable = false) {
 // Detecta quando o usuário chega perto do fim da página
 window.addEventListener('scroll', () => {
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 300) {
-        loadDepartments();
+        loadAconyms();
     }
 
     // Mostra ou esconde o botão Voltar ao Topo
@@ -98,5 +92,5 @@ function topFunction() {
 // Carrega a primeira página ao abrir
 document.addEventListener('DOMContentLoaded', function() {
     currentFilter = getCurrentFilter();
-    loadDepartments(true);
+    loadAconyms(true);
 });

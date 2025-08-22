@@ -633,213 +633,185 @@
 
 	<!-- MODAL DE SELEÇÃO DE PROFISSÃO -->
 	<div id="modalListaProfissoes" class="modal">
-		<div class="modal-container" style="max-width: 90vw; width: 1000px;">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h2 class="modal-title">Selecionar profissão</h2>
-					<button type="button" class="modal-close" id="fecharModalLista">
-						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-							fill="none" stroke="currentColor" stroke-width="2"
-							stroke-linecap="round" stroke-linejoin="round">
+	    <div class="modal-container" style="max-width: 90vw; width: 1000px;">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h2 class="modal-title">Selecionar profissão</h2>
+	                <!-- 1. ID ÚNICO para o botão de fechar -->
+	                <button type="button" class="modal-close" id="fecharModalListaProfissao">
+	                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+	                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 	                        <line x1="18" y1="6" x2="6" y2="18"></line>
 	                        <line x1="6" y1="6" x2="18" y2="18"></line>
 	                    </svg>
-					</button>
-				</div>
-				<div class="modal-body">
-
-					<!-- BARRA DE FILTRO E DROPDOWN -->
-					<div class="form-inline mb-3">
-						<div class="navegacaoLista custom-button-container">
-							<!-- Botão à esquerda -->
-							<div class="botoes-esquerda"></div>
-							<!-- Campo de pesquisa + botão de dropdown à direita -->
-							<div class="botoes-direita">
-								<input type="text" id="filtro"
-									class="form-control shadow-cantos" placeholder="Pesquisar...">
-								<div class="dropdown botoes">
-									<button class="btn btn-primary" type="button"
-										id="dropdownMenuButton">Selecionar</button>
-									<div class="dropdown-menu" id="dropdownCampos">
-										<h1 class="dropdown-item-titulo text-center">Campos
-											Visíveis</h1>
-										<label class="dropdown-item-1"><input type="checkbox"
-											id="selecionarTodos"> <span>Selecionar Todos</span></label> <label
-											class="dropdown-item-1"><input type="checkbox"
-											class="campoCheckbox" id="campoCodigo" checked> <span>Codigo</span></label>
-										<label class="dropdown-item-1"><input type="checkbox"
-											class="campoCheckbox" id="campoNome" checked> <span>Nome</span></label>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!-- TABELA DE PROFISSÕES -->
-					<div class="table-container-modal">
-						<table class="table table-striped" id="tabela">
-							<thead>
-								<tr>
-									<th class="text-left">Cod</th>
-									<th class="text-left">Nome</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr th:each="occupation : ${occupations}"
-									class="linha-profissao" style="cursor: pointer;"
-									th:data-id="${occupation.occupationId}"
-									th:data-nome="${occupation.occupationName}">
-									<td th:text="${occupation.occupationId}"></td>
-									<td th:text="${occupation.occupationName}"></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	                <div class="form-inline mb-3">
+	                    <div class="navegacaoLista custom-button-container">
+	                        <div class="botoes-direita">
+	                            <!-- 2. ID ÚNICO para o campo de filtro -->
+	                            <input type="text" id="filtroProfissao" class="form-control shadow-cantos" placeholder="Pesquisar...">
+	                            <div class="dropdown botoes">
+	                                <!-- 3. Adicionar classe 'dropdown-toggle' para o JS -->
+	                                <button class="btn btn-primary dropdown-toggle" type="button">
+	                                    Selecionar
+	                                </button>
+	                                <div class="dropdown-menu">
+	                                    <h1 class="dropdown-item-titulo text-center">Campos Visíveis</h1>
+	                                    <!-- 4. ID e classe ÚNICOS para o "Selecionar Todos" -->
+	                                    <label class="dropdown-item-1"><input type="checkbox" class="selecionarTodos"> <span>Selecionar Todos</span></label>
+	                                    <!-- 5. IDs ÚNICOS para os checkboxes de campo -->
+	                                    <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoCodigoProfissao" checked> <span>Código</span></label>
+	                                    <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoNomeProfissao" checked> <span>Nome</span></label>
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+	                <!-- 6. A tabela NÃO precisa mais de ID, pois o JS a encontrará dentro do modal -->
+	                <div class="table-container-modal">
+	                    <table class="table table-striped">
+	                    	<thead>
+		                    	<tr>
+	                                <th class="text-left">Cod</th>
+	                                <th class="text-left">Nome</th>
+	                            </tr>
+                            <thead>
+	                        <tbody>
+	                            <tr th:each="occupation : ${occupations}" class="linha-profissao" style="cursor: pointer;"
+	                                th:data-id="${occupation.occupationId}" th:data-nome="${occupation.occupationName}">
+	                                <td th:text="${occupation.occupationId}"></td>
+	                                <td th:text="${occupation.occupationName}"></td>
+	                            </tr>
+	                        </tbody>
+	                    </table>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
 	</div>
-
-	<!-- MODAL DE SELEÇÃO DE PROFISSÃO -->
+	
+	<!-- MODAL DE SELEÇÃO DE FUNÇÃO -->
 	<div id="modalListaFuncoes" class="modal">
-		<div class="modal-container" style="max-width: 90vw; width: 1000px;">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h2 class="modal-title">Selecionar função</h2>
-					<button type="button" class="modal-close"
-						id="fecharModalListaFuncao">
-						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-							fill="none" stroke="currentColor" stroke-width="2"
-							stroke-linecap="round" stroke-linejoin="round">
+	    <div class="modal-container" style="max-width: 90vw; width: 1000px;">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h2 class="modal-title">Selecionar função</h2>
+	                <!-- 1. ID ÚNICO para o botão de fechar -->
+	                <button type="button" class="modal-close" id="fecharModalListaFuncao">
+	                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+	                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 	                        <line x1="18" y1="6" x2="6" y2="18"></line>
 	                        <line x1="6" y1="6" x2="18" y2="18"></line>
 	                    </svg>
-					</button>
-				</div>
-				<div class="modal-body">
-
-					<!-- BARRA DE FILTRO E DROPDOWN -->
-					<div class="form-inline mb-3">
-						<div class="navegacaoLista custom-button-container">
-							<!-- Botão à esquerda -->
-							<div class="botoes-esquerda"></div>
-							<!-- Campo de pesquisa + botão de dropdown à direita -->
-							<div class="botoes-direita">
-								<input type="text" id="filtroFuncoes"
-									class="form-control shadow-cantos" placeholder="Pesquisar...">
-								<div class="dropdown botoes">
-									<button class="btn btn-primary" type="button"
-										id="dropdownMenuButtonFuncoes">Selecionar</button>
-									<div class="dropdown-menu" id="dropdownCamposFuncoes">
-										<h1 class="dropdown-item-titulo text-center">Campos
-											Visíveis</h1>
-										<label class="dropdown-item-1"><input type="checkbox"
-											id="selecionarTodosFuncoes"> <span>Selecionar
-												Todos</span></label> <label class="dropdown-item-1"><input
-											type="checkbox" class="campoCheckbox" id="campoCodigoFuncao"
-											checked> <span>Codigo</span></label> <label
-											class="dropdown-item-1"><input type="checkbox"
-											class="campoCheckbox" id="campoNomeFuncao" checked> <span>Nome</span></label>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!-- TABELA DE PROFISSÕES -->
-					<div class="table-container-modal">
-						<table class="table table-striped" id="tabela">
-							<thead>
-								<tr>
-									<th class="text-left">Cod</th>
-									<th class="text-left">Nome</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr th:each="function : ${functions}" class="linha-funcao"
-									style="cursor: pointer;" th:data-id="${function.functionId}"
-									th:data-nome="${function.functionName}">
-									<td th:text="${function.functionId}"></td>
-									<td th:text="${function.functionName}"></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	                <div class="form-inline mb-3">
+	                    <div class="navegacaoLista custom-button-container">
+	                        <div class="botoes-direita">
+	                            <!-- 2. ID ÚNICO para o campo de filtro -->
+	                            <input type="text" id="filtroFuncoes" class="form-control shadow-cantos" placeholder="Pesquisar...">
+	                            <div class="dropdown botoes">
+	                                <!-- 3. Adicionar classe 'dropdown-toggle' para o JS -->
+	                                <button class="btn btn-primary dropdown-toggle" type="button">
+	                                    Selecionar
+	                                </button>
+	                                <div class="dropdown-menu">
+	                                    <h1 class="dropdown-item-titulo text-center">Campos Visíveis</h1>
+	                                    <!-- 4. ID e classe ÚNICOS para o "Selecionar Todos" -->
+	                                    <label class="dropdown-item-1"><input type="checkbox" class="selecionarTodos"> <span>Selecionar Todos</span></label>
+	                                    <!-- 5. IDs ÚNICOS para os checkboxes de campo -->
+								      <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoCodigoFuncao" checked> <span>Codigo</span></label>
+								      <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoNomeFuncao" checked> <span>Nome</span></label>
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+	                <!-- 6. A tabela NÃO precisa mais de ID, pois o JS a encontrará dentro do modal -->
+	                <div class="table-container-modal">
+	                    <table class="table table-striped">
+	                    	<thead>
+		                    	<tr>
+	                                <th class="text-left">Cod</th>
+	                                <th class="text-left">Nome</th>
+	                            </tr>
+                             <thead>
+	                         <tbody>
+	                            <tr th:each="function : ${functions}" class="linha-funcao" style="cursor: pointer;"
+	                                th:data-id="${function.functionId}" th:data-nome="${function.functionName}">
+	                                <td th:text="${function.functionId}"></td>
+	                                <td th:text="${function.functionName}"></td>
+	                            </tr>
+	                        </tbody>
+	                    </table>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
 	</div>
-
-	<!-- MODAL DE SELEÇÃO DE PROFISSÃO -->
+	
+	<!-- MODAL DE SELEÇÃO DE FUNÇÃO -->
 	<div id="modalListaDepartamentos" class="modal">
-		<div class="modal-container" style="max-width: 90vw; width: 1000px;">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h2 class="modal-title">Selecionar departamento</h2>
-					<button type="button" class="modal-close"
-						id="fecharModalListaDepartamento">
-						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-							fill="none" stroke="currentColor" stroke-width="2"
-							stroke-linecap="round" stroke-linejoin="round">
+	    <div class="modal-container" style="max-width: 90vw; width: 1000px;">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h2 class="modal-title">Selecionar departamento</h2>
+	                <!-- 1. ID ÚNICO para o botão de fechar -->
+	                <button type="button" class="modal-close" id="fecharModalListaDepartamento">
+	                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+	                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 	                        <line x1="18" y1="6" x2="6" y2="18"></line>
 	                        <line x1="6" y1="6" x2="18" y2="18"></line>
 	                    </svg>
-					</button>
-				</div>
-				<div class="modal-body">
-
-					<!-- BARRA DE FILTRO E DROPDOWN -->
-					<div class="form-inline mb-3">
-						<div class="navegacaoLista custom-button-container">
-							<!-- Botão à esquerda -->
-							<div class="botoes-esquerda"></div>
-							<!-- Campo de pesquisa + botão de dropdown à direita -->
-							<div class="botoes-direita">
-								<input type="text" id="filtroDepartamentos"
-									class="form-control shadow-cantos" placeholder="Pesquisar...">
-								<div class="dropdown botoes">
-									<button class="btn btn-primary" type="button"
-										id="dropdownMenuButtonDepartamentos">Selecionar</button>
-									<div class="dropdown-menu" id="dropdownCamposDepartamentos">
-										<h1 class="dropdown-item-titulo text-center">Campos
-											Visíveis</h1>
-										<label class="dropdown-item-1"><input type="checkbox"
-											id="selecionarTodosDepartamentos"> <span>Selecionar
-												Todos</span></label> <label class="dropdown-item-1"><input
-											type="checkbox" class="campoCheckbox"
-											id="campoCodigoDepartamento" checked> <span>Codigo</span></label>
-										<label class="dropdown-item-1"><input type="checkbox"
-											class="campoCheckbox" id="campoNomeDepartamento" checked>
-											<span>Nome</span></label>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!-- TABELA DE PROFISSÕES -->
-					<div class="table-container-modal">
-						<table class="table table-striped" id="tabela">
-							<thead>
-								<tr>
-									<th class="text-left">Cod</th>
-									<th class="text-left">Nome</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr th:each="department : ${departments}"
-									class="linha-departamento" style="cursor: pointer;"
-									th:data-id="${department.departmentId}"
-									th:data-nome="${department.departmentName}">
-									<td th:text="${department.departmentId}"></td>
-									<td th:text="${department.departmentName}"></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	                <div class="form-inline mb-3">
+	                    <div class="navegacaoLista custom-button-container">
+	                        <div class="botoes-direita">
+	                            <!-- 2. ID ÚNICO para o campo de filtro -->
+	                            <input type="text" id="filtroDepartamentos" class="form-control shadow-cantos" placeholder="Pesquisar...">
+	                            <div class="dropdown botoes">
+	                                <!-- 3. Adicionar classe 'dropdown-toggle' para o JS -->
+	                                <button class="btn btn-primary dropdown-toggle" type="button">
+	                                    Selecionar
+	                                </button>
+	                                <div class="dropdown-menu">
+	                                    <h1 class="dropdown-item-titulo text-center">Campos Visíveis</h1>
+	                                    <!-- 4. ID e classe ÚNICOS para o "Selecionar Todos" -->
+	                                    <label class="dropdown-item-1"><input type="checkbox" class="selecionarTodos"> <span>Selecionar Todos</span></label>
+	                                    <!-- 5. IDs ÚNICOS para os checkboxes de campo -->
+								      <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoCodigoDepartamento" checked> <span>Codigo</span></label>
+								      <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoNomeDepartamento" checked> <span>Nome</span></label>
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+	                <!-- 6. A tabela NÃO precisa mais de ID, pois o JS a encontrará dentro do modal -->
+	                <div class="table-container-modal">
+	                    <table class="table table-striped">
+	                    	<thead>
+		                    	<tr>
+	                                <th class="text-left">Cod</th>
+	                                <th class="text-left">Nome</th>
+	                            </tr>
+                             <thead>
+	                         <tbody>
+	                            <tr th:each="department : ${departments}" class="linha-departamento" style="cursor: pointer;"
+	                                th:data-id="${department.departmentId}" th:data-nome="${department.departmentName}">
+	                                <td th:text="${department.departmentId}"></td>
+	                                <td th:text="${department.departmentName}"></td>
+	                            </tr>
+	                        </tbody>
+	                    </table>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
 	</div>
 
 	<div th:replace="~{fragments/sidebar :: modals}"></div>

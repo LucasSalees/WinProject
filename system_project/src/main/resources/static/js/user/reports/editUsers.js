@@ -251,7 +251,7 @@ function openExclusaoModal(link, redirectUrl = null) {
         .then(data => {
             exclusaoModal.classList.remove('show');
             showMessageModal(data.mensagem, data.status === "success", {
-                redirectUrl: redirectUrl || "/input/admin/reports/list"
+                redirectUrl: redirectUrl || "/input/user/reports/list"
             });
         })
         .catch(async error => {

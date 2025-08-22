@@ -6,7 +6,7 @@ form.addEventListener('submit', async function(event) {
     
     // Envia via fetch (modal)
     const formData = new FormData(form);
-    fetch('/input/admin/occupations/edit', {
+    fetch('/input/director/occupations/edit', {
         method: 'POST',
         body: formData
     })
@@ -17,7 +17,7 @@ form.addEventListener('submit', async function(event) {
 	.then(data => {
 	    if (data.status === "success") {
 	        showMessageModal(data.mensagem, true, {
-	            redirectUrl: "/input/admin/occupations/list"
+	            redirectUrl: "/input/director/occupations/list"
 	        });
 	    }
 	})
@@ -62,7 +62,7 @@ function openExclusaoModal(link, redirectUrl = null) {
             .then(data => {
                 exclusaoModal.classList.remove('show');
                 showMessageModal(data.mensagem, data.status === "success", {
-                    redirectUrl: "/input/admin/occupations/list"
+                    redirectUrl: "/input/director/occupations/list"
                 });
             })
             .catch(error => {

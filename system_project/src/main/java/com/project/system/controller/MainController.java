@@ -36,15 +36,15 @@ public class MainController {
     public String mostrarTelaLogin(
             @RequestParam(value = "erro", required = false) String erro,
             @RequestParam(value = "logout", required = false) String logout,
-            @RequestParam(value = "expired", required = false) String expired, // Parâmetro da sessão expirada
+            @RequestParam(value = "expired", required = false) String expired,
             HttpServletRequest request,
             Authentication authentication,
             Model model) {
 
-        // Somente loga se realmente tiver usuário autenticado e não for erro/logout
-        if (authentication != null && authentication.isAuthenticated()
-                && erro == null && logout == null && expired == null) {
-            auditService.logLogin(authentication);
+        // Se o usuário já está autenticado, redireciona para a home.
+        // Isso impede que um usuário logado acesse a página de login novamente.
+        if (authentication != null && authentication.isAuthenticated()) {
+            return "redirect:/home";
         }
 
         // Adiciona uma mensagem específica se a sessão expirou
@@ -57,6 +57,7 @@ public class MainController {
 
         return "login";
     }
+
 
     @GetMapping("/home")
     public String home(Authentication authentication) {
