@@ -29,6 +29,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.system.dto.StandardResponseDTO;
 import com.project.system.entity.User;
+import com.project.system.enums.input.OccupationType;
 import com.project.system.enums.input.UserPermission;
 import com.project.system.security.UserDetailsImpl;
 import com.project.system.service.CommomUserService;
@@ -62,6 +63,8 @@ public class AdminController {
         ModelAndView mv = new ModelAndView("input/admin/users/register");
 
         mv.addObject("allPermissions", UserPermission.values());
+        
+        mv.addObject("occupationType", OccupationType.values());
 
         mv.addObject("availablePermissions", UserPermission.values());
 
@@ -129,6 +132,7 @@ public class AdminController {
 
         mv.addObject("permissionsMap", permissionsMap);
         mv.addObject("allPermissions", UserPermission.values());
+        mv.addObject("occupationType", OccupationType.values());
         mv.addObject("LoggedUser", loggedUser);
         mv.addObject("departments", adminService.getAllDepartments());
         mv.addObject("occupations", adminService.getAllOccupations());

@@ -1,5 +1,6 @@
 package com.project.system.service.input;
 
+import java.io.IOException; // IMPORTAR IOException
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,15 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.project.system.dto.StandardResponseDTO;
+import com.project.system.audit.Auditable; // IMPORTAR A ANOTAÇÃO
+import com.project.system.entity.AuditLog;
 import com.project.system.entity.User;
 import com.project.system.enums.input.UserPermission;
 import com.project.system.enums.input.UserRole;
+import com.project.system.repositories.AuditLogRepository;
 import com.project.system.repositories.ContractualAcronymRepository;
 import com.project.system.repositories.DepartmentRepository;
 import com.project.system.repositories.FunctionRepository;
@@ -58,6 +59,9 @@ public class DirectorService {
 
     @Autowired
     private FileStorageService fileStorageService;
+    
+    @Autowired
+    private AuditLogRepository auditLogRepository;
     
     public Page<User> getAllUsersPaginated(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -110,56 +114,49 @@ public class DirectorService {
         return projectRepository.findAll();
     }
 
-    public ResponseEntity<StandardResponseDTO> removeUser(Long userId, User loggedUser) {
-        Optional<User> userOpt = userRepository.findById(userId);
-        if (userOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(StandardResponseDTO.error("Usuário não encontrado!"));
-        }
-        User userExists = userOpt.get();
+    @Auditable(action = "DELETE_USER")
+    public User removeUser(Long userId, User loggedUser) {
+        User userExists = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
         
         if (loggedUser.getUserId().equals(userExists.getUserId())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(StandardResponseDTO.error("Você não pode excluir a si mesmo."));
+            throw new RuntimeException("Você não pode excluir a si mesmo.");
         }
-        userRepository.deleteById(userId);
-        return ResponseEntity.ok(StandardResponseDTO.success("Usuário removido com sucesso!"));
+        
+        userRepository.delete(userExists);
+        
+        return userExists;
     }
 
-    public ResponseEntity<StandardResponseDTO> saveEditions(User user, MultipartFile profileImage, Boolean removePhoto,
+    @Auditable(action = "UPDATE_USER")
+    public User saveEditions(User user, MultipartFile profileImage, Boolean removePhoto,
             String newUserPassword, User loggedUser) {
 
+        User userExists = userRepository.findById(user.getUserId())
+            .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+
+        Optional<User> userWithSameEmail = userRepository.findByEmail(user.getUserEmail());
+        if (userWithSameEmail.isPresent() && !userWithSameEmail.get().getUserId().equals(user.getUserId())) {
+            throw new RuntimeException("Este e-mail já está em uso por outro usuário.");
+        }
+        
         try {
-            Optional<User> userExistsOpt = userRepository.findById(user.getUserId());
-            if (userExistsOpt.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(StandardResponseDTO.error("Usuário não encontrado."));
-            }
+            RoleValidator.validateRoleChange(loggedUser, user.getUserRole(), userExists, user.getPermissions());
+        } catch (SecurityException e) {
+            throw new SecurityException(e.getMessage());
+        }
 
-            Optional<User> userWithSameEmail = userRepository.findByEmail(user.getUserEmail());
-            if (userWithSameEmail.isPresent() && !userWithSameEmail.get().getUserId().equals(user.getUserId())) {
-                return ResponseEntity.status(HttpStatus.CONFLICT)
-                        .body(StandardResponseDTO.error("Este e-mail já está em uso por outro usuário."));
-            }
+        Set<UserPermission> allowedPermissionsForLoggedUser = loggedUser.getUserRole().getBasePermissions();
+        Set<UserPermission> allowedPermissionsForTargetRole = user.getUserRole().getBasePermissions();
+        
+        Set<UserPermission> validPermissions = user.getPermissions().stream()
+            .filter(allowedPermissionsForLoggedUser::contains)
+            .filter(allowedPermissionsForTargetRole::contains)
+            .collect(Collectors.toSet());
 
-            User userExists = userExistsOpt.get();
-            
-            try {
+        userExists.setPermissions(validPermissions);
 
-                RoleValidator.validateRoleChange(loggedUser, user.getUserRole(), userExists, user.getPermissions());
-            } catch (SecurityException e) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(StandardResponseDTO.error(e.getMessage()));
-            }
-
-            Set<UserPermission> allowedPermissionsForLoggedUser = loggedUser.getUserRole().getBasePermissions();
-            Set<UserPermission> allowedPermissionsForTargetRole = user.getUserRole().getBasePermissions();
-            
-            Set<UserPermission> validPermissions = user.getPermissions().stream()
-                .filter(allowedPermissionsForLoggedUser::contains)
-                .filter(allowedPermissionsForTargetRole::contains)
-                .collect(Collectors.toSet());
-
-            userExists.setPermissions(validPermissions);
-
+        try {
             if (Boolean.TRUE.equals(removePhoto)) {
                 if (userExists.getPhotoPath() != null && !userExists.getPhotoPath().equals("DefaultAvatar.png")) {
                     fileStorageService.deleteFile(userExists.getPhotoPath());
@@ -174,66 +171,62 @@ public class DirectorService {
             } else if (userExists.getPhotoPath() == null || userExists.getPhotoPath().isEmpty()) {
                 userExists.setPhotoPath("DefaultAvatar.png");
             }
-
-            userExists.setUserName(user.getUserName());
-            userExists.setUserEmail(user.getUserEmail());
-            userExists.setUserRole(user.getUserRole());
-            userExists.setUserFunction(user.getUserFunction());
-            userExists.setUserOccupation(user.getUserOccupation());
-            userExists.setUserTel(user.getUserTel());
-            userExists.setUserRegion(user.getUserRegion());
-            userExists.setUserDepartment(user.getUserDepartment());
-            userExists.setAllowedDays(user.getAllowedDays());
-            userExists.setStartTime(user.getStartTime());
-            userExists.setEndTime(user.getEndTime());
-            userExists.setUserLocked(user.isUserLocked());
-            userExists.setUserInactive(user.isUserInactive());
-            userExists.setUserSuspended(user.isUserSuspended());
-            userExists.setUserActive(user.isUserActive());
-
-            if (newUserPassword != null && !newUserPassword.isBlank()) {
-                String erroSenha = commomUserService.validarSenha(newUserPassword, newUserPassword);
-                if (erroSenha != null) {
-                    return ResponseEntity.status(HttpStatus.CONFLICT)
-                                         .body(StandardResponseDTO.error(erroSenha));
-                }
-                userExists.setUserPassword(PasswordUtils.hashPassword(newUserPassword));
-            }
-
-            userRepository.save(userExists);
-            return ResponseEntity.ok(StandardResponseDTO.success("Usuário atualizado com sucesso."));
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(StandardResponseDTO.error("Erro ao editar o usuário." + e.getMessage()));
+        } catch (IOException e) {
+            // Converte a exceção verificada (IOException) em uma não verificada (RuntimeException)
+            throw new RuntimeException("Falha na operação com o arquivo de imagem.", e);
         }
+
+        userExists.setUserName(user.getUserName());
+        userExists.setUserEmail(user.getUserEmail());
+        userExists.setUserRole(user.getUserRole());
+        userExists.setUserFunction(user.getUserFunction());
+        userExists.setUserOccupation(user.getUserOccupation());
+        userExists.setUserTel(user.getUserTel());
+        userExists.setUserRegion(user.getUserRegion());
+        userExists.setUserDepartment(user.getUserDepartment());
+        userExists.setAllowedDays(user.getAllowedDays());
+        userExists.setStartTime(user.getStartTime());
+        userExists.setEndTime(user.getEndTime());
+        userExists.setUserLocked(user.isUserLocked());
+        userExists.setUserInactive(user.isUserInactive());
+        userExists.setUserSuspended(user.isUserSuspended());
+        userExists.setUserActive(user.isUserActive());
+
+        if (newUserPassword != null && !newUserPassword.isBlank()) {
+            String erroSenha = commomUserService.validarSenha(newUserPassword, newUserPassword);
+            if (erroSenha != null) {
+                throw new RuntimeException(erroSenha);
+            }
+            userExists.setUserPassword(PasswordUtils.hashPassword(newUserPassword));
+        }
+
+        return userRepository.save(userExists);
     }
 
-    public ResponseEntity<StandardResponseDTO> saveNewUser(
+    @Auditable(action = "CREATE_USER")
+    public User saveNewUser(
             User user, 
             MultipartFile profileImage, 
             Boolean removePhoto, 
             Set<UserPermission> permissions, 
             User loggedUser) {
+        
+        userRepository.findByEmail(user.getUserEmail()).ifPresent(u -> {
+            throw new RuntimeException("Este e-mail já está cadastrado.");
+        });
+
+        if (loggedUser.getUserRole().getLevel() < user.getUserRole().getLevel()) {
+            throw new SecurityException("Você não pode atribuir um nível de acesso acima do seu.");
+        }
+
+        user.setPermissions(permissions != null ? permissions : Collections.emptySet());
+
+        String senha = "Senha123@";
+        user.setUserPassword(PasswordUtils.hashPassword(senha));
+        user.setUserRegistrationDate(LocalDateTime.now());
+
+        // *** INÍCIO DA CORREÇÃO ***
         try {
-            Optional<User> emailOwner = userRepository.findByEmail(user.getUserEmail());
-            if (emailOwner.isPresent()) {
-                return ResponseEntity.status(HttpStatus.CONFLICT)
-                        .body(StandardResponseDTO.error("Este e-mail já está cadastrado."));
-            }
-
-            if (loggedUser.getUserRole().getLevel() < user.getUserRole().getLevel()) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(StandardResponseDTO.error("Você não pode atribuir um nível de acesso acima do seu."));
-            }
-
-            // Define as permissões no objeto 'user' antes de salvar
-            user.setPermissions(permissions != null ? permissions : Collections.emptySet());
-
-            String senha = "Senha123@";
-            user.setUserPassword(PasswordUtils.hashPassword(senha));
-            user.setUserRegistrationDate(LocalDateTime.now());
-
             if (Boolean.TRUE.equals(removePhoto)) {
                 user.setPhotoPath("DefaultAvatar.png");
             } else if (profileImage != null && !profileImage.isEmpty()) {
@@ -242,15 +235,13 @@ public class DirectorService {
             } else {
                 user.setPhotoPath("DefaultAvatar.png");
             }
-
-            userRepository.save(user);
-
-            return ResponseEntity.ok(StandardResponseDTO.success("Usuário cadastrado com sucesso!"));
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(StandardResponseDTO.error("Erro ao cadastrar usuário: " + e.getMessage()));
+        } catch (IOException e) {
+            // Converte a exceção verificada (IOException) em uma não verificada (RuntimeException)
+            throw new RuntimeException("Falha ao salvar o arquivo de imagem do novo usuário.", e);
         }
+        // *** FIM DA CORREÇÃO ***
+
+        return userRepository.save(user);
     }
     
     public List<User> searchUsers(String filter) {
@@ -258,19 +249,24 @@ public class DirectorService {
         List<String> roleNames = new ArrayList<>();
 
         for (UserRole role : UserRole.values()) {
-
             if (role.getLabel().toLowerCase().contains(filter.toLowerCase())) {
                 roleNames.add(role.name()); 
             }
         }
 
         if (!roleNames.isEmpty()) {
-
             return userRepository.searchByFilterAndRole(filter, roleNames);
         } else {
-
             return userRepository.searchByFilterAndRole(filter, Collections.emptyList());
         }
     }
-
+    
+    public Page<AuditLog> searchLogsPaginated(String filter, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        if (filter != null && !filter.trim().isEmpty()) {
+            return auditLogRepository.searchByFilterPaginated(filter, pageable);
+        } else {
+            return auditLogRepository.findAll(pageable);
+        }
+    }
 }

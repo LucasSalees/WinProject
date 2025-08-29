@@ -18,14 +18,22 @@ public interface OccupationRepository extends JpaRepository<Occupation, Long> {
     @Query("SELECT o FROM Occupation o " +
            "WHERE LOWER(o.occupationName) LIKE LOWER(CONCAT('%', :filter, '%')) " +
            "OR LOWER(o.occupationCBO) LIKE LOWER(CONCAT('%', :filter, '%')) " +
+           "OR LOWER(o.occupationType) LIKE LOWER(CONCAT('%', :filter, '%')) " +
            "OR CAST(o.occupationId AS string) LIKE CONCAT('%', :filter, '%')")
     List<Occupation> searchByFilter(@Param("filter") String filter);
 
     // NOVO: método paginado
     @Query("SELECT o FROM Occupation o " +
-           "WHERE LOWER(o.occupationName) LIKE LOWER(CONCAT('%', :filter, '%')) " +
-           "OR LOWER(o.occupationCBO) LIKE LOWER(CONCAT('%', :filter, '%')) " +
-           "OR CAST(o.occupationId AS string) LIKE CONCAT('%', :filter, '%')")
-    Page<Occupation> searchByFilterPaginated(@Param("filter") String filter, Pageable pageable);
+	       "WHERE LOWER(o.occupationName) LIKE LOWER(CONCAT('%', :filter, '%')) " +
+	       "OR LOWER(o.occupationCBO) LIKE LOWER(CONCAT('%', :filter, '%')) " +
+	       "OR (o.occupationType = com.project.system.enums.input.OccupationType.FAMILY AND LOWER(:filter) LIKE '%família%') " +
+	       "OR (o.occupationType = com.project.system.enums.input.OccupationType.OCCUPATION AND LOWER(:filter) LIKE '%ocupação%') " +
+	       "OR (o.occupationType = com.project.system.enums.input.OccupationType.SYNONYMOUS AND LOWER(:filter) LIKE '%sinônimos%') " +
+	       "OR CAST(o.occupationId AS string) LIKE CONCAT('%', :filter, '%')")
+	Page<Occupation> searchByFilterPaginated(@Param("filter") String filter, Pageable pageable);
+
+    
+    Page<Occupation> findByOccupationNameContainingIgnoreCaseOrOccupationCBOContainingIgnoreCaseOrOccupationTypeContainingIgnoreCaseOrOccupationId(
+            String name, String cbo, String type, Long id, Pageable pageable);
 }
 

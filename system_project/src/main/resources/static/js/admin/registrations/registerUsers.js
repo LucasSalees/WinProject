@@ -317,6 +317,7 @@ async function validarEmail(emailInput) {
         return true;
     }
 }
+
 document.addEventListener("DOMContentLoaded", function () {
 
     /**
@@ -332,22 +333,36 @@ document.addEventListener("DOMContentLoaded", function () {
      */
     function configurarModalDeSelecao(modalId, campoId, inputId, textoId, filtroInputId, fecharBtnId, linhaClasse, camposFiltro) {
         const modal = document.getElementById(modalId);
-        if (!modal) return; // Se o modal não existir na página, não faz nada.
+        if (!modal) return; 
 
         const campo = document.getElementById(campoId);
         const inputValor = document.getElementById(inputId);
         const textoSelecionado = document.getElementById(textoId);
         const filtroInput = document.getElementById(filtroInputId);
         const fecharBtn = document.getElementById(fecharBtnId);
-        const tabela = modal.querySelector('table'); // Pega a tabela específica DENTRO do modal
+        const tabela = modal.querySelector('table'); 
         const linhas = tabela.querySelectorAll(`.${linhaClasse}`);
+		
+		// ------------------------------------------------
+		// BLOCO AJUSTADO: OCULTAR "FAMILY" ao carregar o modal de Profissões
+		// ------------------------------------------------
+		if (modalId === 'modalListaProfissoes') {
+            linhas.forEach(linha => {
+                // Oculta a linha se o atributo 'data-tipo' for 'FAMILY'
+                if (linha.getAttribute('data-tipo') === 'FAMILY') {
+                    linha.style.display = "none";
+                }
+            });
+		}
+		// ------------------------------------------------
+		
         const checkboxesFiltro = modal.querySelectorAll('.campoCheckbox');
         const selecionarTodosCheckbox = modal.querySelector('.selecionarTodos');
 
         // 1. Abrir o modal
         campo.addEventListener('click', () => {
             modal.style.display = 'flex';
-            filtroInput.focus(); // Foca no campo de busca ao abrir
+            filtroInput.focus(); 
         });
 
         // 2. Fechar o modal
@@ -375,15 +390,21 @@ document.addEventListener("DOMContentLoaded", function () {
             const camposAtivos = {};
             checkboxesFiltro.forEach(cb => {
                 if (cb.checked) {
-                    // Extrai o nome do campo do ID do checkbox (ex: 'campoCodigoProfissao' -> 'campoCodigo')
                     const nomeCampo = cb.id.replace(modalId.replace('modalLista', ''), '');
                     camposAtivos[nomeCampo] = true;
                 }
             });
 
             linhasTabela.forEach(linha => {
+                
+                // MANTÉM A LINHA OCULTA SE FOR DO TIPO 'FAMILY' (se o filtro for limpo ou se o filtro não corresponder)
+                if (modalId === 'modalListaProfissoes' && linha.getAttribute('data-tipo') === 'FAMILY') {
+                    linha.style.display = "none";
+                    return; // Pula a filtragem de texto para esta linha
+                }
+                
                 if (!filtro) {
-                    linha.style.display = ""; // Mostra a linha se o filtro estiver vazio
+                    linha.style.display = ""; // Mostra a linha (exceto 'FAMILY', já tratada acima)
                     return;
                 }
 
@@ -394,7 +415,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         const cell = linha.querySelector(`td:nth-child(${colunaIndex + 1})`);
                         if (cell && cell.textContent.toLowerCase().includes(filtro)) {
                             mostrarLinha = true;
-                            break; // Encontrou uma correspondência, não precisa verificar outras colunas
+                            break; 
                         }
                     }
                 }
@@ -441,7 +462,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // --- INICIALIZAÇÃO DOS MODAIS ---
-    // Cada modal é configurado com seus próprios IDs e classes, evitando conflitos.
 
     // Configura o Modal de Profissões
     configurarModalDeSelecao(
@@ -449,12 +469,13 @@ document.addEventListener("DOMContentLoaded", function () {
         'campoProfissao',
         'userOccupation',
         'textoProfissaoSelecionada',
-        'filtroProfissao', // ID único para o input de filtro
-        'fecharModalListaProfissao', // ID único para o botão de fechar
+        'filtroProfissao', 
+        'fecharModalListaProfissao', 
         'linha-profissao',
         { 
-            'campoCodigoProfissao': 0, // ID único para o checkbox + índice da coluna
-            'campoNomeProfissao': 1    // ID único para o checkbox + índice da coluna
+            'campoCodigoProfissao': 0, 
+            'campoNomeProfissao': 1,    
+			'campoTipoFamilia': 2    
         }
     );
 

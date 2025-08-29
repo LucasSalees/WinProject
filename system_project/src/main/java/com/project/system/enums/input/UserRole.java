@@ -40,15 +40,15 @@ public enum UserRole {
     
     public Set<UserPermission> getBasePermissions() {
         Set<UserPermission> permissions = new HashSet<>();
-        
+
         if (this == USER) {
             permissions.addAll(getPermissionsByPrefix("REPORT_"));
-        } 
+        }
         else if (this == MANAGER) {
             permissions.addAll(getPermissionsByPrefix("USER_"));
             permissions.addAll(getPermissionsByPrefix("PROJECT_"));
             permissions.addAll(getPermissionsByPrefix("REPORT_"));
-        } 
+        }
         else if (this == ADMIN || this == DIRECTOR) {
             permissions.addAll(getPermissionsByPrefix("USER_"));
             permissions.addAll(getPermissionsByPrefix("DEPARTMENT_"));
@@ -57,8 +57,9 @@ public enum UserRole {
             permissions.addAll(getPermissionsByPrefix("PROJECT_"));
             permissions.addAll(getPermissionsByPrefix("CONTRACTUAL_"));
             permissions.addAll(getPermissionsByPrefix("REPORT_"));
+            permissions.addAll(getPermissionsByPrefix("AUDIT_")); // <-- ADICIONE ESTA LINHA
         }
-        
+
         return permissions;
     }
     

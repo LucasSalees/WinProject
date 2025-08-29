@@ -50,7 +50,10 @@ public enum UserPermission {
 	REPORT_DEPARTMENT("Departamentos"),
 	REPORT_USER("Usuários"),
 	REPORT_CONTRACTUAL_ACRONYM("Siglas Contratuais"),
-	REPORT_PROJECT("Projetos");
+	REPORT_PROJECT("Projetos"),
+    
+    // *** PERMISSÃO ADICIONADA AQUI ***
+    AUDIT_VIEW("Visualizar Auditoria");
 
     private final String label;
 

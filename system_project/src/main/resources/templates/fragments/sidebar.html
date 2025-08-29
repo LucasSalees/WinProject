@@ -782,12 +782,27 @@
 								    <!-- Aba da pasta -->
 								    <path d="M3 5V3h6l2 2" />
 								</svg>
-
                                 Projetos
                             </a>
 					    </div>
 					</li>
 					
+					<li th:if="${#authorization.expression('hasRole(''DIRECTOR'') and hasAuthority(''AUDIT_VIEW'')')}">
+					    <a th:href="@{/input/director/audits/list}" class="sidebar-item">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							    <!-- O caminho para o documento/prancheta -->
+							    <path d="M15.5 2H8.6c-.4 0-.8.2-1.1.5-.3.3-.5.7-.5 1.1v12.8c0 .4.2.8.5 1.1.3.3.7.5 1.1.5h9.8c.4 0 .8-.2 1.1-.5.3-.3.5-.7.5-1.1V6.5L15.5 2z"></path>
+							    <!-- A dobra na página do documento -->
+							    <path d="M15 2v5h5"></path>
+							    <!-- A lente da lupa -->
+							    <circle cx="10.5" cy="13.5" r="2.5"></circle>
+							    <!-- O cabo da lupa -->
+							    <path d="m12.5 15.5 2 2"></path>
+							</svg>
+					        <span>Auditoria</span>
+					    </a>
+					</li>
+										
 					
                     <!-- -------------------------------------- -->
                     <!-- Menu Auxiliares (apenas para DIRECTOR) -->

@@ -10,11 +10,14 @@ import org.springframework.stereotype.Service;
 
 import com.project.system.dto.StandardResponseDTO;
 import com.project.system.entity.Occupation;
+import com.project.system.enums.input.OccupationType;
 import com.project.system.repositories.OccupationRepository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+
+import org.springframework.data.domain.Sort;
 
 @Service
 public class DirectorOccupationService {
@@ -22,16 +25,16 @@ public class DirectorOccupationService {
     @Autowired
     private OccupationRepository occupationRepository;
     
-    // Método paginado para pegar todas as ocupações
-    public Page<Occupation> getAllOccupationsPaginated(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return occupationRepository.findAll(pageable);
+    public Page<Occupation> searchOccupationsPaginated(String filter, int page, int size, String sortBy, String sortDirection) {
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return occupationRepository.searchByFilterPaginated(filter, pageable);
     }
 
-    // Método paginado para buscar com filtro
-    public Page<Occupation> searchOccupationsPaginated(String filter, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return occupationRepository.searchByFilterPaginated(filter, pageable);
+    public Page<Occupation> getAllOccupationsPaginated(int page, int size, String sortBy, String sortDirection) {
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return occupationRepository.findAll(pageable);
     }
     
     public List<Occupation> getAllOccupations() {
@@ -64,6 +67,7 @@ public class DirectorOccupationService {
 
             occupationExists.setOccupationName(occupation.getOccupationName());
             occupationExists.setOccupationCBO(occupation.getOccupationCBO());
+            occupationExists.setOccupationType(occupation.getOccupationType());
             
             occupationRepository.save(occupationExists);
 
@@ -85,7 +89,24 @@ public class DirectorOccupationService {
         }
     }
     
+    // Lista simples
     public List<Occupation> searchOccupations(String filter) {
         return occupationRepository.searchByFilter(filter);
+    }
+
+    // Converte o label em português para o nome da enum
+    private String mapOccupationLabelToEnumName(String filter) {
+        for (OccupationType type : OccupationType.values()) {
+            if (type.getLabel().equalsIgnoreCase(filter)) {
+                return type.name(); // FAMILY, OCCUPATION ou SYNONYMOUS
+            }
+        }
+        return filter;
+    }
+
+    // Lista paginada, usando filtro mapeado
+    public Page<Occupation> searchOccupations(String filter, Pageable pageable) {
+        String enumFilter = mapOccupationLabelToEnumName(filter);
+        return occupationRepository.searchByFilterPaginated(enumFilter, pageable);
     }
 }

@@ -174,18 +174,20 @@ public class UserReportController {
         return mv;
     }
 	
-	@GetMapping("/input/user/reports/pageOccupation")
+    @GetMapping("/input/user/reports/pageOccupation")
     @PreAuthorize("hasAuthority('REPORT_OCCUPATION')")
     @ResponseBody
     public Page<Occupation> occupationsPage(
             @RequestParam(value = "filter", required = false) String filter,
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "50") int size) {
+            @RequestParam(value = "size", defaultValue = "50") int size,
+            @RequestParam(value = "sortBy", defaultValue = "occupationCBO") String sortBy,
+            @RequestParam(value = "sortDirection", defaultValue = "asc") String sortDirection) {
 
         if (filter != null && !filter.trim().isEmpty()) {
-            return Service.searchOccupationsPaginated(filter, page, size);
+            return occupationService.searchOccupationsPaginated(filter, page, size, sortBy, sortDirection);
         } else {
-            return Service.getAllOccupationsPaginated(page, size);
+            return occupationService.getAllOccupationsPaginated(page, size, sortBy, sortDirection);
         }
     }
 

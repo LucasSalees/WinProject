@@ -101,7 +101,7 @@ public class CommomUserService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
         ModelAndView mv = new ModelAndView("input/admin/users/profile");
-        mv.addObject("loggedUser", loggedUser);
+        mv.addObject("LoggedUser", loggedUser); 
         mv.addObject("user", loggedUser);
         mv.addObject("allowedDays", loggedUser.getAllowedDays());
         mv.addObject("startTime",
@@ -109,7 +109,6 @@ public class CommomUserService {
         mv.addObject("endTime", loggedUser.getEndTime() != null ? loggedUser.getEndTime().format(formatter) : "");
         return mv;
     }
-
 
     public Map<String, Boolean> verifyEmail(String email, Long id) {
         Map<String, Boolean> response = new HashMap<>();

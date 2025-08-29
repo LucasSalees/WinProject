@@ -20,6 +20,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.project.system.dto.StandardResponseDTO;
 import com.project.system.entity.Occupation;
 import com.project.system.entity.User;
+import com.project.system.enums.input.OccupationType;
+import com.project.system.enums.input.UserPermission;
 import com.project.system.service.input.AdminOccupationService;
 import com.project.system.utils.AuthenticationUtils;
 
@@ -35,6 +37,9 @@ public class AdminOccupationController {
         User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
 
         ModelAndView mv = new ModelAndView("input/admin/occupations/register");
+
+        mv.addObject("occupationType", OccupationType.values());
+        
         mv.addObject("LoggedUser", loggedUser);
         mv.addObject("occupation", occupation);
         return mv;
@@ -60,12 +65,14 @@ public class AdminOccupationController {
     public Page<Occupation> occupationsPage(
             @RequestParam(value = "filter", required = false) String filter,
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "50") int size) {
+            @RequestParam(value = "size", defaultValue = "50") int size,
+            @RequestParam(value = "sortBy", defaultValue = "occupationCBO") String sortBy,
+            @RequestParam(value = "sortDirection", defaultValue = "asc") String sortDirection) {
 
         if (filter != null && !filter.trim().isEmpty()) {
-            return occupationService.searchOccupationsPaginated(filter, page, size);
+            return occupationService.searchOccupationsPaginated(filter, page, size, sortBy, sortDirection);
         } else {
-            return occupationService.getAllOccupationsPaginated(page, size);
+            return occupationService.getAllOccupationsPaginated(page, size, sortBy, sortDirection);
         }
     }
 
@@ -82,6 +89,7 @@ public class AdminOccupationController {
         Occupation occupation = occupationOpt.get();
 
         ModelAndView mv = new ModelAndView("input/admin/occupations/edit");
+        mv.addObject("occupationType", OccupationType.values());
         mv.addObject("LoggedUser", loggedUser);
         mv.addObject("occupation", occupation);
         return mv;

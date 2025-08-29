@@ -628,7 +628,6 @@
 	        <div class="modal-content">
 	            <div class="modal-header">
 	                <h2 class="modal-title">Selecionar profissão</h2>
-	                <!-- 1. ID ÚNICO para o botão de fechar -->
 	                <button type="button" class="modal-close" id="fecharModalListaProfissao">
 	                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
 	                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -641,41 +640,42 @@
 	                <div class="form-inline mb-3">
 	                    <div class="navegacaoLista custom-button-container">
 	                        <div class="botoes-direita">
-	                            <!-- 2. ID ÚNICO para o campo de filtro -->
 	                            <input type="text" id="filtroProfissao" class="form-control shadow-cantos" placeholder="Pesquisar...">
 	                            <div class="dropdown botoes">
-	                                <!-- 3. Adicionar classe 'dropdown-toggle' para o JS -->
 	                                <button class="btn btn-primary dropdown-toggle" type="button">
 	                                    Selecionar
 	                                </button>
 	                                <div class="dropdown-menu">
 	                                    <h1 class="dropdown-item-titulo text-center">Campos Visíveis</h1>
-	                                    <!-- 4. ID e classe ÚNICOS para o "Selecionar Todos" -->
 	                                    <label class="dropdown-item-1"><input type="checkbox" class="selecionarTodos"> <span>Selecionar Todos</span></label>
-	                                    <!-- 5. IDs ÚNICOS para os checkboxes de campo -->
 	                                    <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoCodigoProfissao" checked> <span>Código</span></label>
 	                                    <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoNomeProfissao" checked> <span>Nome</span></label>
+	                                    <label class="dropdown-item-1"><input type="checkbox" class="campoCheckbox" id="campoTipoFamilia" checked> <span>Tipo</span></label>
 	                                </div>
 	                            </div>
 	                        </div>
 	                    </div>
 	                </div>
-	                <!-- 6. A tabela NÃO precisa mais de ID, pois o JS a encontrará dentro do modal -->
 	                <div class="table-container-modal">
 	                    <table class="table table-striped">
 	                    	<thead>
 		                    	<tr>
 	                                <th class="text-left">Cod</th>
 	                                <th class="text-left">Nome</th>
+	                                <th class="text-left">Tipo</th>
 	                            </tr>
                             <thead>
 	                        <tbody>
-	                            <tr th:each="occupation : ${occupations}" class="linha-profissao" style="cursor: pointer;"
-	                                th:data-id="${occupation.occupationId}" th:data-nome="${occupation.occupationName}">
-	                                <td th:text="${occupation.occupationId}"></td>
-	                                <td th:text="${occupation.occupationName}"></td>
-	                            </tr>
-	                        </tbody>
+							    <tr th:each="occupation : ${occupations}" 
+							        th:if="${occupation.occupationType != 'FAMILY'}"  class="linha-profissao" style="cursor: pointer;"
+							        th:data-id="${occupation.occupationId}" 
+							        th:data-nome="${occupation.occupationName}"
+							        th:data-tipo="${occupation.occupationType}">
+							        <td th:text="${occupation.occupationId}"></td>
+							        <td th:text="${occupation.occupationName}"></td>
+							        <td th:text="${occupation.occupationType.getLabel()}"></td>
+							    </tr>
+							</tbody>
 	                    </table>
 	                </div>
 	            </div>

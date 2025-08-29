@@ -1,6 +1,9 @@
 package com.project.system.entity;
 
+import com.project.system.enums.input.OccupationType; // Importe o enum
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -8,7 +11,7 @@ import jakarta.persistence.Table;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "occupations")  // nome da tabela no plural, lowercase (boa prática)
+@Table(name = "occupations")
 public class Occupation implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -19,7 +22,11 @@ public class Occupation implements Serializable {
     private String occupationName;
     private String occupationCBO;
 
-    public Occupation() { }
+    // A mudança está aqui:
+    @Enumerated(EnumType.STRING) 
+    private OccupationType occupationType;
+
+	public Occupation() { }
 
     public Occupation(String occupationName, String occupationCBO) {
         this.occupationName = occupationName;
@@ -49,6 +56,15 @@ public class Occupation implements Serializable {
     public void setOccupationName(String occupationName) {
         this.occupationName = occupationName;
     }
+    
+    // Mude os getters e setters para o novo tipo
+    public OccupationType getOccupationType() {
+		return occupationType;
+	}
+
+	public void setOccupationType(OccupationType occupationType) {
+		this.occupationType = occupationType;
+	}
 
     @Override
     public String toString() {

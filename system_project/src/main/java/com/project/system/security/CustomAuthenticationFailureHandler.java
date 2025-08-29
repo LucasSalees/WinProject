@@ -14,7 +14,6 @@ import com.project.system.exceptions.DayAccessRestrictedException;
 import com.project.system.exceptions.TimeAccessRestrictedException;
 import com.project.system.exceptions.UserBlockedException;
 import com.project.system.repositories.UserRepository;
-import com.project.system.service.AuditService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,8 +24,6 @@ import java.io.IOException;
 @Component
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
-    @Autowired
-    private AuditService auditService;
 
     @Autowired
     private UserRepository userRepository;
@@ -81,18 +78,6 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
                     userEmail = user.getUserEmail();
                 }
             }
-
-            auditService.logAudit(
-                AuditAction.LOGIN_FAILED,
-                AuditClassName.AUTHENTICATION.name(),
-                userId != null ? String.valueOf(userId) : null,
-                "email ou senha incorreto",
-                null,
-                null,
-                UserRole.USER.name(),
-                userId != null ? String.valueOf(userId) : null,
-                userEmail
-            );
         }
 
         request.getSession().setAttribute("SPRING_SECURITY_LAST_EXCEPTION", errorMessage);

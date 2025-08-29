@@ -25,6 +25,7 @@ import com.project.system.entity.Occupation;
 import com.project.system.entity.Project;
 import com.project.system.entity.User;
 import com.project.system.enums.input.BrazilianStateUF;
+import com.project.system.enums.input.OccupationType;
 import com.project.system.enums.input.ProjectBusinessVertical;
 import com.project.system.enums.input.ProjectPriority;
 import com.project.system.enums.input.ProjectStatus;
@@ -67,8 +68,9 @@ public class AdminReportController {
 			Authentication authentication) {
 		User loggedUser = AuthenticationUtils.getLoggedUser(authentication);
 
-
 		ModelAndView mv = new ModelAndView("input/admin/reports/listUser");
+		
+        mv.addObject("occupationType", OccupationType.values());
 		mv.addObject("LoggedUser", loggedUser);
 		mv.addObject("filter", filter);
 		return mv;
@@ -114,6 +116,7 @@ public class AdminReportController {
 
         mv.addObject("permissionsMap", permissionsMap);
         mv.addObject("allPermissions", UserPermission.values());
+        mv.addObject("occupationType", OccupationType.values());
         mv.addObject("LoggedUser", loggedUser);
         mv.addObject("departments", adminService.getAllDepartments());
         mv.addObject("occupations", adminService.getAllOccupations());
@@ -175,18 +178,20 @@ public class AdminReportController {
         return mv;
     }
 	
-	@GetMapping("/input/admin/reports/pageOccupation")
+    @GetMapping("/input/admin/reports/pageOccupation")
     @PreAuthorize("hasAuthority('REPORT_OCCUPATION')")
     @ResponseBody
     public Page<Occupation> occupationsPage(
             @RequestParam(value = "filter", required = false) String filter,
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "50") int size) {
+            @RequestParam(value = "size", defaultValue = "50") int size,
+            @RequestParam(value = "sortBy", defaultValue = "occupationCBO") String sortBy,
+            @RequestParam(value = "sortDirection", defaultValue = "asc") String sortDirection) {
 
         if (filter != null && !filter.trim().isEmpty()) {
-            return occupationService.searchOccupationsPaginated(filter, page, size);
+            return occupationService.searchOccupationsPaginated(filter, page, size, sortBy, sortDirection);
         } else {
-            return occupationService.getAllOccupationsPaginated(page, size);
+            return occupationService.getAllOccupationsPaginated(page, size, sortBy, sortDirection);
         }
     }
 
